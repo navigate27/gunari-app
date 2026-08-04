@@ -29,7 +29,8 @@ const themeOptions: PickerOption<ThemeId>[] = THEME_ORDER.map((id) => {
     value: id,
     label: t.label,
     swatch: `linear-gradient(180deg, ${t.canvas.top}, ${t.canvas.bottom})`,
-  };
+    tone: id === "blank" ? "off" : "default",
+  } as PickerOption<ThemeId>;
 });
 
 const frameOptions: PickerOption<FrameId>[] = (
@@ -37,6 +38,7 @@ const frameOptions: PickerOption<FrameId>[] = (
 ).map((id) => ({
   value: id,
   label: FRAMES[id].label,
+  tone: id === "blank" ? "off" : "default",
 }));
 
 const compassOptions: PickerOption<CompassStyleId>[] = (
@@ -44,6 +46,7 @@ const compassOptions: PickerOption<CompassStyleId>[] = (
 ).map((id) => ({
   value: id,
   label: COMPASS_STYLES[id].label,
+  tone: id === "blank" ? "off" : "default",
 }));
 
 const starChartOptions: PickerOption<StarChartStyleId>[] = (
@@ -155,7 +158,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         <Picker
           options={[
             { value: "on", label: "Visible" },
-            { value: "off", label: "Hidden" },
+            { value: "off", label: "Hidden", tone: "off" },
           ]}
           value={input.moon ? "on" : "off"}
           onChange={(v) => update("moon", v === "on")}
