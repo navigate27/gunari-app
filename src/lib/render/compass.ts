@@ -90,7 +90,7 @@ export const COMPASS_STYLES: Record<CompassStyleId, CompassStyle> = {
       //   cardRing : degOuter .. rOuter    — cardinal + intercardinal labels
       const tickOuter = rInner + band * 0.38;
       const degOuter = rInner + band * 0.72;
-      const tickBaseR = rInner + 2.5;
+      const tickBaseR = rInner + 1;
 
       // --- Gold accent ring (between compass and star map) ---
       ctx.strokeStyle = GOLD;
