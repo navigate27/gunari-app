@@ -127,7 +127,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       if (moon) {
         const mx = cx + (moon.x - 0.5) * 2 * r;
         const my = cy + (moon.y - 0.5) * 2 * r;
-        drawMoon(ctx, mx, my, r * 0.06, moon.phase, palette);
+        drawMoon(ctx, mx, my, r * 0.036, moon.phase, palette);
       }
       ctx.restore();
     },
@@ -179,7 +179,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       if (moon) {
         const mx = cx + (moon.x - 0.5) * 2 * r;
         const my = cy + (moon.y - 0.5) * 2 * r;
-        drawMoon(ctx, mx, my, r * 0.07, moon.phase, palette, true);
+        drawMoon(ctx, mx, my, r * 0.042, moon.phase, palette, true);
       }
       ctx.restore();
     },

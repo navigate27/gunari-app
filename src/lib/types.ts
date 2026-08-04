@@ -26,6 +26,7 @@ export interface GunariInput {
   frame: FrameId;
   compass: CompassStyleId;
   starChart: StarChartStyleId;
+  moon: boolean;
 }
 
 export interface GunariLocation {

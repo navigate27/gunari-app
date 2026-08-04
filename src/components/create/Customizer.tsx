@@ -148,6 +148,20 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
           columns={2}
         />
       </section>
+
+      {/* Moon */}
+      <section>
+        <SectionTitle>Moon</SectionTitle>
+        <Picker
+          options={[
+            { value: "on", label: "Visible" },
+            { value: "off", label: "Hidden" },
+          ]}
+          value={input.moon ? "on" : "off"}
+          onChange={(v) => update("moon", v === "on")}
+          columns={2}
+        />
+      </section>
     </motion.div>
   );
 }

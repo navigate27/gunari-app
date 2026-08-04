@@ -37,6 +37,7 @@ const DEFAULT_INPUT: GunariInput = {
   frame: "classic",
   compass: "minimal",
   starChart: "astronomical",
+  moon: true,
 };
 
 interface AnimState {

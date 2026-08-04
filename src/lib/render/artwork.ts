@@ -58,7 +58,7 @@ export function renderArtwork(
     circle.rInner,
     stars,
     palette,
-    moon
+    input.moon === false ? undefined : moon
   );
   // 6. Compass ring (surrounds chart)
   if (input.compass !== "blank") {
