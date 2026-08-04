@@ -19,6 +19,7 @@ const COMPASS_SPIN_MS = 700;
 const LAYOUT_TRANSITION_MS = 800;
 const MESSAGE_ANIM_MS = 600;
 const CHART_SCALE_MS = 400;
+const PREVIEW_SCALE = 0.6;
 
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -352,7 +353,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
       layoutFrom: layoutFromRef.current ?? undefined,
       messageProgress: messageProgressRef.current,
       chartScale: chartScaleRef.current,
-    });
+    }, PREVIEW_SCALE);
   }, [
     input,
     sky,

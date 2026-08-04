@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Download, Facebook, Instagram, Share2, Shuffle } from "lucide-react";
+import { ArrowLeft, Download, Facebook, Instagram, Share2, Shuffle, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/Button";
 import { Customizer } from "@/components/create/Customizer";
@@ -18,6 +18,7 @@ export default function CreatePage() {
   const [flash, setFlash] = React.useState<string | null>(null);
   const [spinning, setSpinning] = React.useState(false);
   const [cooldownMsg, setCooldownMsg] = React.useState<string | null>(null);
+  const [showShareHint, setShowShareHint] = React.useState(false);
   const randomizeBtnRef = React.useRef<HTMLButtonElement | null>(null);
   const clickCountRef = React.useRef(0);
   const lastClickRef = React.useRef(0);
@@ -46,10 +47,10 @@ export default function CreatePage() {
         }
       : { y: 0.7 };
     const opts = { origin, colors, scalar: 0.3, startVelocity: 22, ticks: 200 };
-    confetti({ particleCount: 80, spread: 70, ...opts });
+    confetti({ particleCount: 80, angle: 270, spread: 70, ...opts });
     setTimeout(() => {
-      confetti({ particleCount: 40, angle: 60, spread: 55, ...opts });
-      confetti({ particleCount: 40, angle: 120, spread: 55, ...opts });
+      confetti({ particleCount: 40, angle: 240, spread: 55, ...opts });
+      confetti({ particleCount: 40, angle: 300, spread: 55, ...opts });
     }, 150);
   };
 
@@ -124,7 +125,7 @@ export default function CreatePage() {
         blob,
         `gunari-${input.date}-${slug(input.title || "untitled")}.png`
       );
-      setFlash("Saved to your device");
+      setFlash("Saved — add it to your story");
       setTimeout(() => setFlash(null), 1800);
     } finally {
       setGenerating(false);
@@ -157,14 +158,18 @@ export default function CreatePage() {
                 sky={sky}
                 loading={catalogLoading}
               />
+            </div>
+          </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-                className="mx-auto mt-6 max-w-[420px] space-y-3"
-              >
-                <div className="flex items-center gap-3">
+          {/* Action area + Customizer */}
+          <div className="order-2 lg:order-2">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+              className="mb-8 space-y-3"
+            >
+              <div className="flex items-center gap-3">
                 <div className="relative flex-1">
                   <Button
                     ref={randomizeBtnRef}
@@ -196,6 +201,11 @@ export default function CreatePage() {
                     )}
                   </AnimatePresence>
                 </div>
+                <div
+                  className="relative"
+                  onMouseEnter={() => setShowShareHint(true)}
+                  onMouseLeave={() => setShowShareHint(false)}
+                >
                   <Button
                     variant="outline"
                     size="md"
@@ -205,56 +215,74 @@ export default function CreatePage() {
                     <Download size={14} />
                     Save
                   </Button>
+                  <AnimatePresence>
+                    {showShareHint && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -14, scale: 0.85 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 16 }}
+                        className="absolute top-full left-1/2 mt-3 w-72 -translate-x-1/2 rounded-2xl border border-gold/40 bg-ink/95 px-5 py-4 text-center shadow-[0_20px_60px_-20px_rgba(201,163,90,0.6)] backdrop-blur-md"
+                      >
+                        <div className="mb-1.5 flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-[0.3em] text-gold">
+                          <Sparkles size={12} />
+                          The stars demand an audience
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-stone">
+                          Save it here, then share it to your story.
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <div className="flex items-center gap-2">
-                  <ShareIconButton
-                    label="Share"
-                    onClick={onShare}
-                    disabled={generating || !sky}
-                  >
-                    <Share2 size={16} />
-                  </ShareIconButton>
-                  <ShareIconButton
-                    label="Facebook"
-                    onClick={onShare}
-                    disabled={generating || !sky}
-                  >
-                    <Facebook size={16} />
-                  </ShareIconButton>
-                  <ShareIconButton
-                    label="Instagram"
-                    onClick={onShare}
-                    disabled={generating || !sky}
-                  >
-                    <Instagram size={16} />
-                  </ShareIconButton>
-                  <ShareIconButton
-                    label="X"
-                    onClick={onShare}
-                    disabled={generating || !sky}
-                  >
-                    <XIcon size={16} />
-                  </ShareIconButton>
-                  <ShareIconButton
-                    label="Reddit"
-                    onClick={onShare}
-                    disabled={generating || !sky}
-                  >
-                    <RedditIcon size={16} />
-                  </ShareIconButton>
-                </div>
-              </motion.div>
-
+              </div>
+              <div className="flex items-center gap-2">
+                <ShareIconButton
+                  label="Share"
+                  onClick={onShare}
+                  disabled={generating || !sky}
+                >
+                  <Share2 size={16} />
+                </ShareIconButton>
+                <ShareIconButton
+                  label="Facebook"
+                  onClick={onShare}
+                  disabled={generating || !sky}
+                >
+                  <Facebook size={16} />
+                </ShareIconButton>
+                <ShareIconButton
+                  label="Instagram"
+                  onClick={onShare}
+                  disabled={generating || !sky}
+                >
+                  <Instagram size={16} />
+                </ShareIconButton>
+                <ShareIconButton
+                  label="X"
+                  onClick={onShare}
+                  disabled={generating || !sky}
+                >
+                  <XIcon size={16} />
+                </ShareIconButton>
+                <ShareIconButton
+                  label="Reddit"
+                  onClick={onShare}
+                  disabled={generating || !sky}
+                >
+                  <RedditIcon size={16} />
+                </ShareIconButton>
+              </div>
+              <p className="text-center text-[10px] uppercase tracking-[0.25em] text-stone">
+                Save your sky. Add it to your story.
+              </p>
               {flash && (
-                <p className="mt-3 text-center text-[10px] uppercase tracking-[0.25em] text-gold">
+                <p className="text-center text-[10px] uppercase tracking-[0.25em] text-gold">
                   {flash}
                 </p>
               )}
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Customizer */}
-          <div className="order-2 lg:order-2">
             <Customizer
               input={input}
               update={update}

@@ -8,19 +8,18 @@ export { ARTWORK_W, ARTWORK_H };
 export async function renderToCanvas(
   canvas: HTMLCanvasElement,
   data: ArtworkRenderInput,
-  width = ARTWORK_W,
-  height = ARTWORK_H
+  scale = 1
 ): Promise<void> {
-  // Set high-DPI for the canvas while keeping logical CSS size for preview.
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const width = Math.round(ARTWORK_W * scale);
+  const height = Math.round(ARTWORK_H * scale);
   canvas.width = width;
   canvas.height = height;
   canvas.style.width = "100%";
   canvas.style.height = "100%";
-  void dpr;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   ctx.clearRect(0, 0, width, height);
+  ctx.scale(scale, scale);
   renderArtwork(ctx, data);
 }
 
