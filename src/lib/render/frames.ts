@@ -3,7 +3,7 @@ import type { FrameId, ThemePalette } from "../types";
 export interface FrameStyle {
   id: FrameId;
   label: string;
-  /** Outer margin (fraction of canvas short edge). */
+  /** Content padding (fraction of canvas short edge). Frame strokes are drawn at the canvas edge, independent of this padding. */
   margin: number;
   /** Stroke width of inner keyline (px at 1080 wide). */
   keyline: number;
@@ -58,39 +58,41 @@ export function drawFrame(
   if (style.id === "blank") {
     return { inner: { x: 0, y: 0, w: W, h: H } };
   }
+  // Content padding — independent of frame position. Frame strokes are
+  // drawn at the canvas edge, offset inward by half their stroke width so
+  // the full stroke sits inside the canvas (no clipping).
   const m = style.margin * Math.min(W, H);
-  const ix = m;
-  const iy = m;
-  const iw = W - 2 * m;
-  const ih = H - 2 * m;
 
   ctx.save();
-  // Outer hairline
+  // Outer rail — at the canvas edge
   if (style.rail > 0) {
     ctx.strokeStyle = palette.accent;
     ctx.globalAlpha = 0.85;
     ctx.lineWidth = style.rail;
-    ctx.strokeRect(ix, iy, iw, ih);
+    const off = style.rail / 2;
+    ctx.strokeRect(off, off, W - 2 * off, H - 2 * off);
   }
-  // Inner keyline
+  // Inner keyline — just inside the rail
   if (style.keyline > 0) {
     ctx.strokeStyle = palette.compass;
     ctx.globalAlpha = 0.9;
     ctx.lineWidth = style.keyline;
-    const inset = 4;
-    ctx.strokeRect(ix + inset, iy + inset, iw - 2 * inset, ih - 2 * inset);
+    const railW = style.rail > 0 ? style.rail : 0;
+    const off = railW + 4 + style.keyline / 2;
+    ctx.strokeRect(off, off, W - 2 * off, H - 2 * off);
   }
-  // Corner ticks
+  // Corner ticks — at the canvas corners
   if (style.corner === "tick") {
     ctx.strokeStyle = palette.accent;
     ctx.globalAlpha = 0.9;
     ctx.lineWidth = 1.2;
     const t = 16;
+    const off = 4;
     const corners: [number, number, number, number][] = [
-      [ix, iy, 1, 1],
-      [ix + iw, iy, -1, 1],
-      [ix, iy + ih, 1, -1],
-      [ix + iw, iy + ih, -1, -1],
+      [off, off, 1, 1],
+      [W - off, off, -1, 1],
+      [off, H - off, 1, -1],
+      [W - off, H - off, -1, -1],
     ];
     for (const [x, y, dx, dy] of corners) {
       ctx.beginPath();
@@ -103,5 +105,5 @@ export function drawFrame(
   }
   ctx.restore();
 
-  return { inner: { x: ix, y: iy, w: iw, h: ih } };
+  return { inner: { x: m, y: m, w: W - 2 * m, h: H - 2 * m } };
 }
