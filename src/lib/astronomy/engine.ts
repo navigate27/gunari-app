@@ -89,8 +89,8 @@ function clamp1(v: number): number {
  * Compute apparent magnitude → brightness 0..1 with subtle nonlinear curve.
  */
 export function magnitudeToBrightness(mag: number): number {
-  // Sirius ≈ -1.46, faintest visible ≈ 6.5. Map [−2, 6.5] → [1, 0].
-  const t = (mag - -2) / (6.5 - -2);
+  // Sirius ≈ -1.46, faintest visible ≈ 7.0. Map [−2, 7.0] → [1, 0].
+  const t = (mag - -2) / (7.0 - -2);
   const clamped = Math.min(1, Math.max(0, t));
   // Bright stars pop, faint stars stay visible — gentler gamma plus a small
   // floor so the new fainter end of the catalog actually renders as a dot.

@@ -92,7 +92,7 @@ const MIRRORS = [
 ];
 
 // Magnitude cap — fainter stars (higher mag number) are included.
-const MAG_LIMIT = 6.5;
+const MAG_LIMIT = 7.0;
 
 function detPrng(seed) {
   let s = seed >>> 0;
@@ -111,7 +111,7 @@ function proceduralFallback() {
   // Generate a richer field with a realistic magnitude distribution
   // (mostly faint). Goes up to MAG_LIMIT so the sky looks dense.
   const rand = detPrng(0x5eed);
-  const COUNT = 1500;
+  const COUNT = 2500;
   for (let i = 0; i < COUNT; i++) {
     const ra = rand() * 24;
     const dec = Math.asin(rand() * 2 - 1) * (180 / Math.PI);
