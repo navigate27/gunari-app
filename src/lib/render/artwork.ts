@@ -56,7 +56,13 @@ export function renderArtwork(
     : null;
 
   // 5. Star chart circle (center)
-  const circle = computeCircle(inner, messageY != null, input.compass);
+  const circle = computeCircle(
+    inner,
+    messageY != null,
+    input.compass,
+    data.compassFrom,
+    data.compassSpin ?? 1
+  );
   // The instrument compass has its own gold inner ring and floating outer
   // labels — skip the faint outer chart border there so labels truly float.
   if (input.compass !== "instrument") {
@@ -219,10 +225,18 @@ function drawMessage(
   return y;
 }
 
+function compassBandRatio(id: CompassStyleId): number {
+  // The instrument compass is a triple-ring scientific layout that needs
+  // more radial room than the minimal hairline ring.
+  return id === "instrument" ? 0.80 : 0.92;
+}
+
 function computeCircle(
   inner: { x: number; y: number; w: number; h: number },
   hasMessage: boolean,
-  compassId: CompassStyleId
+  compassId: CompassStyleId,
+  fromId: CompassStyleId | undefined,
+  spin: number
 ): { cx: number; cy: number; rOuter: number; rInner: number } {
   const cx = inner.x + inner.w / 2;
   // Vertical center: pull up slightly when message present so layout breathes.
@@ -230,9 +244,14 @@ function computeCircle(
   const bottom = inner.y + inner.h * 0.82;
   const available = bottom - top;
   const rOuter = Math.min(inner.w * 0.42, available * 0.48);
-  // The instrument compass is a triple-ring scientific layout that needs
-  // more radial room than the minimal hairline ring.
-  const rInner = rOuter * (compassId === "instrument" ? 0.80 : 0.92);
+  // Interpolate the band ratio during a compass transition so the chart
+  // and compass band scale smoothly instead of snapping.
+  const newRatio = compassBandRatio(compassId);
+  const inTransition = fromId != null && spin < 1;
+  const ratio = inTransition
+    ? compassBandRatio(fromId!) + (newRatio - compassBandRatio(fromId!)) * spin
+    : newRatio;
+  const rInner = rOuter * ratio;
   const cy = (top + bottom) / 2;
   return { cx, cy, rOuter, rInner };
 }
