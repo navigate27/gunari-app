@@ -287,7 +287,7 @@ function drawMetadata(
   const size = inner.w * 0.026;
   ctx.font = `400 ${Math.round(size)}px "Geist", sans-serif`;
   const cx = inner.x + inner.w / 2;
-  const yBase = inner.y + inner.h * 0.92;
+  const yBase = inner.y + inner.h * 0.88;
 
   const dateStr = formatDateLong(date).toUpperCase();
   const timeStr = formatTimeLong(date).toUpperCase();
