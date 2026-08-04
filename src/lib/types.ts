@@ -12,7 +12,7 @@ export type ThemeId =
 
 export type FrameId = "blank" | "classic" | "midnight" | "aurora";
 
-export type CompassStyleId = "blank" | "minimal" | "compass-rose";
+export type CompassStyleId = "blank" | "minimal" | "instrument";
 
 export type StarChartStyleId = "astronomical" | "dreamscape";
 

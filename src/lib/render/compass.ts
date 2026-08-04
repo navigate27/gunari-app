@@ -73,82 +73,127 @@ export const COMPASS_STYLES: Record<CompassStyleId, CompassStyle> = {
       ctx.restore();
     },
   },
-  "compass-rose": {
-    id: "compass-rose",
-    label: "Compass Rose",
+  instrument: {
+    id: "instrument",
+    label: "Instrument",
     draw: (ctx, cx, cy, rOuter, rInner, p) => {
-      const mid = (rOuter + rInner) / 2;
+      const band = rOuter - rInner;
+      if (band <= 0) return;
       ctx.save();
       ctx.translate(cx, cy);
 
-      // Outer + inner rings
-      ctx.strokeStyle = p.compass;
-      ctx.globalAlpha = 0.75;
+      const GOLD = "#C9A35A";
+
+      // Three radial bands (inner → outer):
+      //   tickRing : rInner .. tickOuter   — 1°/5°/10° precision ticks
+      //   degRing  : tickOuter .. degOuter — degree labels every 10°
+      //   cardRing : degOuter .. rOuter    — cardinal + intercardinal labels
+      const tickOuter = rInner + band * 0.38;
+      const degOuter = rInner + band * 0.72;
+      const tickBaseR = rInner + 2.5;
+
+      // --- Gold accent ring (between compass and star map) ---
+      ctx.strokeStyle = GOLD;
+      ctx.globalAlpha = 0.9;
       ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(0, 0, rOuter, 0, Math.PI * 2);
-      ctx.stroke();
       ctx.beginPath();
       ctx.arc(0, 0, rInner, 0, Math.PI * 2);
       ctx.stroke();
-
-      // Degree ticks every 2°
-      ctx.globalAlpha = 0.35;
-      for (let deg = 0; deg < 360; deg += 2) {
-        const a = (deg - 90) * (Math.PI / 180);
-        const major = deg % 30 === 0;
-        const med = deg % 10 === 0;
-        const tick = major ? 10 : med ? 6 : 3;
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(a) * rOuter, Math.sin(a) * rOuter);
-        ctx.lineTo(
-          Math.cos(a) * (rOuter - tick),
-          Math.sin(a) * (rOuter - tick)
-        );
-        ctx.stroke();
-      }
-
-      // Eight-point rose at center of ring
-      ctx.globalAlpha = 0.9;
-      ctx.strokeStyle = p.compassLabel;
-      ctx.lineWidth = 1;
-      const roseR = mid * 0.45;
-      const points = 8;
-      for (let i = 0; i < points; i++) {
-        const a = (i / points) * Math.PI * 2 - Math.PI / 2;
-        const long = i % 2 === 0 ? 1 : 0.55;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(Math.cos(a) * roseR * long, Math.sin(a) * roseR * long);
-        ctx.stroke();
-      }
-      // Small fleur at N
-      ctx.fillStyle = p.accent;
-      ctx.globalAlpha = 0.95;
+      // Soft metallic halo just inside the gold ring
+      ctx.globalAlpha = 0.16;
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(0, -roseR * 1.05);
-      ctx.lineTo(roseR * 0.18, 0);
-      ctx.lineTo(0, -roseR * 0.25);
-      ctx.lineTo(-roseR * 0.18, 0);
-      ctx.closePath();
-      ctx.fill();
+      ctx.arc(0, 0, rInner - 1.5, 0, Math.PI * 2);
+      ctx.stroke();
 
-      // Cardinal labels
+      // --- Inner precision tick ring ---
+      // Boundary hairline at tickOuter
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = p.compass;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, tickOuter, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 360 ticks: 1° minor, 5° medium, 10° major
+      for (let deg = 0; deg < 360; deg++) {
+        const a = (deg - 90) * (Math.PI / 180);
+        const isMajor = deg % 10 === 0;
+        const isMed = !isMajor && deg % 5 === 0;
+        const len = isMajor ? 11 : isMed ? 7 : 4;
+        const r0 = tickBaseR;
+        const r1 = r0 + len;
+        ctx.globalAlpha = isMajor ? 0.85 : isMed ? 0.5 : 0.28;
+        ctx.lineWidth = isMajor ? 0.8 : 0.45;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a) * r0, Math.sin(a) * r0);
+        ctx.lineTo(Math.cos(a) * r1, Math.sin(a) * r1);
+        ctx.stroke();
+      }
+
+      // --- Middle degree label ring (every 10°) ---
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = p.compass;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, degOuter, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const degR = (tickOuter + degOuter) / 2;
+      const degFontSize = Math.max(8, Math.round(band * 0.14));
       ctx.fillStyle = p.compassLabel;
-      ctx.globalAlpha = 1;
-      ctx.font = `500 ${Math.round(mid * 0.18)}px "Cormorant Garamond", serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      const labels: [string, number][] = [
-        ["N", -90],
-        ["E", 0],
-        ["S", 90],
-        ["W", 180],
-      ];
-      for (const [text, deg] of labels) {
-        const a = (deg * Math.PI) / 180;
-        ctx.fillText(text, Math.cos(a) * mid, Math.sin(a) * mid);
+      for (let deg = 0; deg < 360; deg += 10) {
+        const a = (deg - 90) * (Math.PI / 180);
+        const label = String(deg).padStart(3, "0");
+        ctx.globalAlpha = 0.72;
+        ctx.font = `400 ${degFontSize}px "Geist", ui-sans-serif, sans-serif`;
+        ctx.fillText(
+          label,
+          Math.cos(a) * degR,
+          Math.sin(a) * degR
+        );
       }
+
+      // --- Outer cardinal / intercardinal label ring (16 points) ---
+      const cardR = (degOuter + rOuter) / 2;
+      const cardLabels = [
+        "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+        "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
+      ];
+      for (let i = 0; i < 16; i++) {
+        const deg = i * 22.5;
+        const a = (deg - 90) * (Math.PI / 180);
+        const isCardinal = deg % 90 === 0;
+        const isIntercardinal = !isCardinal && deg % 45 === 0;
+        const fontSize = Math.round(
+          band * (isCardinal ? 0.2 : isIntercardinal ? 0.16 : 0.13)
+        );
+        const weight = isCardinal ? 600 : isIntercardinal ? 500 : 400;
+        ctx.globalAlpha = isCardinal ? 1 : isIntercardinal ? 0.85 : 0.65;
+        ctx.fillStyle = isCardinal ? GOLD : p.compassLabel;
+        ctx.font = `${weight} ${fontSize}px "Geist", ui-sans-serif, sans-serif`;
+        ctx.fillText(
+          cardLabels[i],
+          Math.cos(a) * cardR,
+          Math.sin(a) * cardR
+        );
+      }
+
+      // --- Outer double border (two thin concentric hairlines) ---
+      ctx.strokeStyle = p.compass;
+      ctx.lineWidth = 0.9;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(0, 0, rOuter, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.lineWidth = 0.5;
+      ctx.globalAlpha = 0.55;
+      ctx.beginPath();
+      ctx.arc(0, 0, rOuter - 4, 0, Math.PI * 2);
+      ctx.stroke();
+
       ctx.restore();
     },
   },

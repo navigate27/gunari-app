@@ -1,6 +1,7 @@
 "use client";
 
 import type {
+  CompassStyleId,
   GunariInput,
   ThemePalette,
   VisibleStar,
@@ -51,7 +52,7 @@ export function renderArtwork(
     : null;
 
   // 5. Star chart circle (center)
-  const circle = computeCircle(inner, messageY != null);
+  const circle = computeCircle(inner, messageY != null, input.compass);
   drawChartSurfaceBorder(ctx, circle, palette);
   // Always pass the moon through; visibility is controlled by moonOpacity
   // (0 hides it). This lets the live preview animate the fade in/out.
@@ -186,7 +187,8 @@ function drawMessage(
 
 function computeCircle(
   inner: { x: number; y: number; w: number; h: number },
-  hasMessage: boolean
+  hasMessage: boolean,
+  compassId: CompassStyleId
 ): { cx: number; cy: number; rOuter: number; rInner: number } {
   const cx = inner.x + inner.w / 2;
   // Vertical center: pull up slightly when message present so layout breathes.
@@ -194,7 +196,9 @@ function computeCircle(
   const bottom = inner.y + inner.h * 0.82;
   const available = bottom - top;
   const rOuter = Math.min(inner.w * 0.42, available * 0.48);
-  const rInner = rOuter * 0.92;
+  // The instrument compass is a triple-ring scientific layout that needs
+  // more radial room than the minimal hairline ring.
+  const rInner = rOuter * (compassId === "instrument" ? 0.80 : 0.92);
   const cy = (top + bottom) / 2;
   return { cx, cy, rOuter, rInner };
 }
