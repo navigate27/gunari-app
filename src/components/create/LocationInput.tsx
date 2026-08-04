@@ -20,18 +20,27 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
   const [loading, setLoading] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [highlight, setHighlight] = React.useState(-1);
+  // True once the user has typed in the field. Suppresses the initial
+  // programmatic query sync (from value.label) from triggering a search
+  // and opening the dropdown on mount.
+  const userTouchedRef = React.useRef(false);
 
   // Keep input in sync if value.label changes from elsewhere (e.g. geolocation).
   React.useEffect(() => {
+    userTouchedRef.current = false;
     setQuery(value.label);
+    setResults([]);
+    setOpen(false);
   }, [value.label]);
 
-  // Debounced search.
+  // Debounced search — only after the user actually types.
   React.useEffect(() => {
+    if (!userTouchedRef.current) return;
     const q = query.trim();
     if (q.length < 3) {
       setResults([]);
       setLoading(false);
+      setOpen(false);
       return;
     }
     setLoading(true);
@@ -116,7 +125,10 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
         />
         <Input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            userTouchedRef.current = true;
+            setQuery(e.target.value);
+          }}
           onFocus={() => results.length && setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           onKeyDown={onKey}
