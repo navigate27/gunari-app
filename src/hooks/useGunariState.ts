@@ -27,9 +27,9 @@ const DEFAULT_INPUT: GunariInput = {
   date: new Date().toISOString().slice(0, 10),
   time: "21:00",
   location: {
-    label: "Reykjavík, Iceland",
-    lat: 64.1466,
-    lng: -21.9426,
+    label: "Manila, Philippines",
+    lat: 14.5995,
+    lng: 120.9842,
   },
   title: "The night we said yes",
   message: "And the sky held its breath with us.",
