@@ -26,14 +26,14 @@ function drawStar(
   color: string,
   soft: boolean
 ) {
-  const r = baseR * (0.4 + brightness * 1.6);
+  const r = baseR * (0.3 + brightness * 3.0);
   if (r <= 0) return;
   ctx.save();
   // Glow halo
-  const glowR = soft ? r * 6 : r * 4;
+  const glowR = soft ? r * 6 : r * 4.5;
   const g = ctx.createRadialGradient(x, y, 0, x, y, glowR);
   g.addColorStop(0, hexWithAlpha(color, soft ? 0.85 : 0.95));
-  g.addColorStop(0.4, hexWithAlpha(color, 0.18 * brightness));
+  g.addColorStop(0.4, hexWithAlpha(color, 0.22 * brightness));
   g.addColorStop(1, hexWithAlpha(color, 0));
   ctx.fillStyle = g;
   ctx.beginPath();
@@ -48,11 +48,11 @@ function drawStar(
   ctx.fill();
 
   // Cross diffraction spike for bright stars
-  if (brightness > 0.7 && !soft) {
-    ctx.globalAlpha = 0.5 * brightness;
+  if (brightness > 0.6 && !soft) {
+    ctx.globalAlpha = 0.55 * brightness;
     ctx.strokeStyle = color;
-    ctx.lineWidth = 0.6;
-    const spike = r * 3.5;
+    ctx.lineWidth = 0.8;
+    const spike = r * 5;
     ctx.beginPath();
     ctx.moveTo(x - spike, y);
     ctx.lineTo(x + spike, y);
