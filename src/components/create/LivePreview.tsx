@@ -40,23 +40,29 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
   const [rendering, setRendering] = React.useState(false);
 
-  // 3D grab-rotate: horizontal pointer drag drives rotateY (yaw) + a subtle
-  // rotateZ roll, with perspective depth. The card never translates — it
-  // stays put and only spins. Springs back to face-on on release.
+  // 3D grab-rotate: horizontal drag → rotateY (yaw) + subtle rotateZ roll;
+  // vertical drag → rotateX (pitch). Perspective depth. The card never
+  // translates — it stays put and only spins. Springs back on release.
   const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
   const rotateY = useTransform(dragX, [-200, 200], [-28, 28]);
   const rotateZ = useTransform(dragX, [-200, 200], [-4, 4]);
+  const rotateX = useTransform(dragY, [-200, 200], [-28, 28]);
 
   const dragRef = React.useRef<{
     startX: number;
+    startY: number;
     startDragX: number;
+    startDragY: number;
     pointerId: number;
   } | null>(null);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     dragRef.current = {
       startX: e.clientX,
+      startY: e.clientY,
       startDragX: dragX.get(),
+      startDragY: dragY.get(),
       pointerId: e.pointerId,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -65,8 +71,11 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     const st = dragRef.current;
     if (!st || st.pointerId !== e.pointerId) return;
     const dx = e.clientX - st.startX;
-    const next = Math.max(-200, Math.min(200, st.startDragX + dx));
-    dragX.set(next);
+    const dy = e.clientY - st.startY;
+    const nextX = Math.max(-200, Math.min(200, st.startDragX + dx));
+    const nextY = Math.max(-200, Math.min(200, st.startDragY + dy));
+    dragX.set(nextX);
+    dragY.set(nextY);
   };
   const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     const st = dragRef.current;
@@ -74,6 +83,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     dragRef.current = null;
     e.currentTarget.releasePointerCapture(e.pointerId);
     animate(dragX, 0, { type: "spring", stiffness: 180, damping: 18 });
+    animate(dragY, 0, { type: "spring", stiffness: 180, damping: 18 });
   };
 
   // Animated moon opacity (0..1).
@@ -214,6 +224,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         onPointerCancel={endDrag}
         whileTap={{ scale: 1.02 }}
         style={{
+          rotateX,
           rotateY,
           rotateZ,
           transformPerspective: 900,
