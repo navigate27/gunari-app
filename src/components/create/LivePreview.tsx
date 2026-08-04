@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "motion/react";
 import { renderToCanvas, ARTWORK_W, ARTWORK_H } from "@/lib/render/png";
 import type { GunariInput } from "@/lib/types";
 import type { SkyState } from "@/lib/astronomy/engine";
@@ -39,6 +39,12 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
   const [rendering, setRendering] = React.useState(false);
+
+  // 3D grab-rotate: horizontal drag drives rotateY (yaw) with perspective
+  // depth. Springs back to face-on when released.
+  const dragX = useMotionValue(0);
+  const rotateY = useTransform(dragX, [-200, 200], [28, -28]);
+  const rotateZ = useTransform(dragX, [-200, 200], [4, -4]);
 
   // Animated moon opacity (0..1).
   const moonOpacityRef = React.useRef(input.moon ? 1 : 0);
@@ -172,12 +178,18 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        drag="y"
-        dragConstraints={{ top: -140, bottom: 140 }}
+        drag="x"
+        dragConstraints={{ left: -200, right: 200 }}
         dragElastic={0.18}
         dragSnapToOrigin
-        whileDrag={{ scale: 1.015 }}
-        style={{ cursor: "grab" }}
+        whileDrag={{ scale: 1.02 }}
+        style={{
+          x: dragX,
+          rotateY,
+          rotateZ,
+          transformPerspective: 900,
+          cursor: "grab",
+        }}
         className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-white/8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] active:cursor-grabbing"
       >
         <canvas
