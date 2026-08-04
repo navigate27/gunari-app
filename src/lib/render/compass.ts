@@ -156,8 +156,8 @@ export const COMPASS_STYLES: Record<CompassStyleId, CompassStyle> = {
         );
       }
 
-      // --- Outer cardinal / intercardinal label ring (16 points) ---
-      const cardR = (degOuter + rOuter) / 2;
+      // --- Outer cardinal / intercardinal labels (floating, no ring) ---
+      const cardR = rOuter;
       const cardLabels = [
         "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
         "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
@@ -168,10 +168,10 @@ export const COMPASS_STYLES: Record<CompassStyleId, CompassStyle> = {
         const isCardinal = deg % 90 === 0;
         const isIntercardinal = !isCardinal && deg % 45 === 0;
         const fontSize = Math.round(
-          band * (isCardinal ? 0.2 : isIntercardinal ? 0.16 : 0.13)
+          band * (isCardinal ? 0.34 : isIntercardinal ? 0.24 : 0.18)
         );
         const weight = isCardinal ? 600 : isIntercardinal ? 500 : 400;
-        ctx.globalAlpha = isCardinal ? 1 : isIntercardinal ? 0.85 : 0.65;
+        ctx.globalAlpha = isCardinal ? 1 : isIntercardinal ? 0.88 : 0.68;
         ctx.fillStyle = isCardinal ? GOLD : p.compassLabel;
         ctx.font = `${weight} ${fontSize}px "Geist", ui-sans-serif, sans-serif`;
         ctx.fillText(
@@ -180,19 +180,6 @@ export const COMPASS_STYLES: Record<CompassStyleId, CompassStyle> = {
           Math.sin(a) * cardR
         );
       }
-
-      // --- Outer double border (two thin concentric hairlines) ---
-      ctx.strokeStyle = p.compass;
-      ctx.lineWidth = 0.9;
-      ctx.globalAlpha = 0.9;
-      ctx.beginPath();
-      ctx.arc(0, 0, rOuter, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.lineWidth = 0.5;
-      ctx.globalAlpha = 0.55;
-      ctx.beginPath();
-      ctx.arc(0, 0, rOuter - 4, 0, Math.PI * 2);
-      ctx.stroke();
 
       ctx.restore();
     },

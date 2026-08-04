@@ -53,7 +53,11 @@ export function renderArtwork(
 
   // 5. Star chart circle (center)
   const circle = computeCircle(inner, messageY != null, input.compass);
-  drawChartSurfaceBorder(ctx, circle, palette);
+  // The instrument compass has its own gold inner ring and floating outer
+  // labels — skip the faint outer chart border there so labels truly float.
+  if (input.compass !== "instrument") {
+    drawChartSurfaceBorder(ctx, circle, palette);
+  }
   // Always pass the moon through; visibility is controlled by moonOpacity
   // (0 hides it). This lets the live preview animate the fade in/out.
   const moonOpacity =
