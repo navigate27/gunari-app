@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "motion/react";
 import { renderToCanvas, ARTWORK_W, ARTWORK_H } from "@/lib/render/png";
-import type { GunariInput } from "@/lib/types";
+import type { CompassStyleId, GunariInput } from "@/lib/types";
 import type { SkyState } from "@/lib/astronomy/engine";
 
 interface LivePreviewProps {
@@ -103,9 +103,12 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const compassAnimRef = React.useRef<{ startTime: number } | null>(null);
   const [compassTick, setCompassTick] = React.useState(0);
   const prevCompassRef = React.useRef(input.compass);
+  // Previous compass id during a crossfade transition (null when settled).
+  const compassFromRef = React.useRef<CompassStyleId | null>(null);
 
   React.useEffect(() => {
     if (prevCompassRef.current === input.compass) return;
+    compassFromRef.current = prevCompassRef.current;
     prevCompassRef.current = input.compass;
     compassSpinRef.current = 0;
     compassAnimRef.current = { startTime: performance.now() };
@@ -120,6 +123,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         raf = requestAnimationFrame(tick);
       } else {
         compassAnimRef.current = null;
+        compassFromRef.current = null;
       }
     };
     raf = requestAnimationFrame(tick);
@@ -203,6 +207,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         moon: sky.moon,
         moonOpacity: moonOpacityRef.current,
         compassSpin: compassSpinRef.current,
+        compassFrom: compassFromRef.current ?? undefined,
       }).finally(() => setRendering(false));
     };
     raf = requestAnimationFrame(run);

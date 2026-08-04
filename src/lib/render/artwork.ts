@@ -22,8 +22,10 @@ export interface ArtworkRenderInput {
   moon?: { x: number; y: number; phase: number };
   /** 0..1 opacity for the moon. Used to fade it in/out when toggling visibility. */
   moonOpacity?: number;
-  /** 0..1 spin-in progress for the compass (0 = just changed, 1 = settled). */
+  /** 0..1 spin progress for the compass (0 = just changed, 1 = settled). */
   compassSpin?: number;
+  /** Previous compass id during a crossfade transition. */
+  compassFrom?: CompassStyleId;
 }
 
 export function renderArtwork(
@@ -79,39 +81,43 @@ export function renderArtwork(
     moonOpacity
   );
   // 6. Compass ring (surrounds chart)
+  // During a style change, the old compass spins out (rotate + fade out)
+  // while the new one spins in (rotate + fade in) for a smooth crossfade.
+  const spin = data.compassSpin != null ? data.compassSpin : 1;
+  const fromId = data.compassFrom;
+  const inTransition = fromId != null && spin < 1;
+
+  const drawCompassWith = (
+    style: typeof compass,
+    alpha: number,
+    angle: number
+  ) => {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(circle.cx, circle.cy);
+    ctx.rotate(angle);
+    ctx.translate(-circle.cx, -circle.cy);
+    style.draw(ctx, circle.cx, circle.cy, circle.rOuter, circle.rInner, palette);
+    ctx.restore();
+  };
+
   if (input.compass !== "blank") {
-    const spin = data.compassSpin != null ? data.compassSpin : 1;
-    if (spin >= 1) {
-      compass.draw(
-        ctx,
-        circle.cx,
-        circle.cy,
-        circle.rOuter,
-        circle.rInner,
-        palette
-      );
+    if (inTransition && fromId !== "blank") {
+      // Old compass: fade out + rotate 0 → 180°
+      drawCompassWith(COMPASS_STYLES[fromId], 1 - spin, spin * Math.PI);
+    }
+    if (inTransition) {
+      // New compass: fade in + rotate 180° → 0°
+      drawCompassWith(compass, spin, (1 - spin) * Math.PI);
     } else {
-      // Spin-in: rotate from 180° back to 0°, fade 0.25 → 1, scale 0.94 → 1.
-      ctx.save();
-      ctx.globalAlpha = 0.25 + 0.75 * spin;
-      const angle = (1 - spin) * Math.PI;
-      const s = 0.94 + 0.06 * spin;
-      ctx.translate(circle.cx, circle.cy);
-      ctx.rotate(angle);
-      ctx.scale(s, s);
-      ctx.translate(-circle.cx, -circle.cy);
-      compass.draw(
-        ctx,
-        circle.cx,
-        circle.cy,
-        circle.rOuter,
-        circle.rInner,
-        palette
-      );
-      ctx.restore();
+      compass.draw(ctx, circle.cx, circle.cy, circle.rOuter, circle.rInner, palette);
     }
   } else {
-    // Even with compass blank, draw a hairline ring around the chart for definition.
+    // Switching to blank — still spin out the old compass if transitioning.
+    if (inTransition && fromId !== "blank") {
+      drawCompassWith(COMPASS_STYLES[fromId], 1 - spin, spin * Math.PI);
+    }
+    // Hairline ring around the chart for definition.
     ctx.save();
     ctx.strokeStyle = palette.compass;
     ctx.globalAlpha = 0.4;
