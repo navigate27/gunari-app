@@ -65,8 +65,8 @@ export function drawFrame(
 
   ctx.save();
   // Safety inset keeps the stroke's anti-aliased outer pixels fully inside
-  // the canvas so corners don't clip. 2.6px (2px × 1.3) per user request.
-  const SAFE = 2.6;
+  // the canvas so corners don't clip. 3.9px (2.6px × 1.5) per user request.
+  const SAFE = 3.9;
   // Outer rail — at the canvas edge
   if (style.rail > 0) {
     ctx.strokeStyle = palette.accent;
