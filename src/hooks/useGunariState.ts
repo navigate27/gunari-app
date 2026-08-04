@@ -12,6 +12,7 @@ import { THEME_ORDER } from "@/lib/render/themes";
 import { FRAMES } from "@/lib/render/frames";
 import { COMPASS_STYLES } from "@/lib/render/compass";
 import { STAR_CHART_STYLES } from "@/lib/render/starChart";
+import { pickRandomPair } from "@/lib/content/pairs";
 import type {
   CelestialContext,
   CompassStyleId,
@@ -38,6 +39,8 @@ function shortestDelta(a: number, b: number): number {
   return d;
 }
 
+const RANDOM_PAIR = pickRandomPair();
+
 const DEFAULT_INPUT: GunariInput = {
   date: new Date().toISOString().slice(0, 10),
   time: "21:00",
@@ -46,8 +49,8 @@ const DEFAULT_INPUT: GunariInput = {
     lat: 14.5995,
     lng: 120.9842,
   },
-  title: "The night we said yes",
-  message: "And the sky held its breath with us.",
+  title: RANDOM_PAIR.title,
+  message: RANDOM_PAIR.message,
   theme: "midnight",
   frame: "classic",
   compass: "minimal",
