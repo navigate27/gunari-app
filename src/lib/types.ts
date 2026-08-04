@@ -46,6 +46,8 @@ export interface StarRecord {
   hip?: number;
   /** Optional Bayer / Flamsteed designation. */
   name?: string;
+  /** B-V color index (roughly −0.3 hot/blue to +2.0 cool/red). */
+  bv?: number;
 }
 
 export interface ThemePalette {

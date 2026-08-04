@@ -1,5 +1,73 @@
 import type { StarChartStyleId, ThemePalette, VisibleStar } from "../types";
 
+/**
+ * Map a B-V color index to an RGB string.
+ *
+ *   B-V < 0.0   → Blue   (hot O/B stars)
+ *   B-V 0.0-0.4 → White  (A/F stars, blue-white to white)
+ *   B-V 0.4-0.8 → Yellow (G stars, like the Sun)
+ *   B-V 0.8-1.4 → Orange (K stars)
+ *   B-V > 1.4   → Red    (M stars)
+ */
+const BV_STOPS: Array<[number, [number, number, number]]> = [
+  [-0.4, [155, 176, 255]], // hot blue
+  [-0.1, [180, 200, 255]], // blue-white
+  [0.15, [220, 230, 255]], // white-blue
+  [0.45, [255, 255, 245]], // white
+  [0.7, [255, 245, 210]],  // yellow-white
+  [1.0, [255, 225, 170]],  // yellow-orange
+  [1.3, [255, 195, 140]],  // orange
+  [1.6, [255, 165, 120]],  // red-orange
+  [2.0, [255, 130, 100]],  // red
+];
+
+function bvToRgb(bv: number): [number, number, number] {
+  if (bv <= BV_STOPS[0][0]) return BV_STOPS[0][1];
+  if (bv >= BV_STOPS[BV_STOPS.length - 1][0])
+    return BV_STOPS[BV_STOPS.length - 1][1];
+  for (let i = 0; i < BV_STOPS.length - 1; i++) {
+    const [t0, c0] = BV_STOPS[i];
+    const [t1, c1] = BV_STOPS[i + 1];
+    if (bv >= t0 && bv <= t1) {
+      const f = (bv - t0) / (t1 - t0);
+      return [
+        Math.round(c0[0] + (c1[0] - c0[0]) * f),
+        Math.round(c0[1] + (c1[1] - c0[1]) * f),
+        Math.round(c0[2] + (c1[2] - c0[2]) * f),
+      ];
+    }
+  }
+  return BV_STOPS[BV_STOPS.length - 1][1];
+}
+
+function rgbToHex([r, g, b]: [number, number, number]): string {
+  const h = (n: number) => n.toString(16).padStart(2, "0");
+  return `#${h(r)}${h(g)}${h(b)}`;
+}
+
+/**
+ * Compute the render color for a star. If the star has a B-V index, map it
+ * to a stellar color. For light-theme palettes (Ivory, Blank) the color is
+ * darkened so stars remain visible on a light background. Falls back to the
+ * palette's star color when B-V is missing.
+ */
+function starColor(
+  star: { bv?: number },
+  palette: ThemePalette
+): string {
+  if (star.bv == null) return palette.star;
+  const rgb = bvToRgb(star.bv);
+  if (palette.light) {
+    // Darken to ~35% so colored stars read against a light canvas.
+    return rgbToHex([
+      Math.round(rgb[0] * 0.35),
+      Math.round(rgb[1] * 0.35),
+      Math.round(rgb[2] * 0.35),
+    ]);
+  }
+  return rgbToHex(rgb);
+}
+
 export interface StarChartStyle {
   id: StarChartStyleId;
   label: string;
@@ -121,7 +189,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       for (const s of stars) {
         const x = cx + (s.x - 0.5) * 2 * r;
         const y = cy + (s.y - 0.5) * 2 * r;
-        drawStar(ctx, x, y, s.b, baseR, palette.star, false);
+        drawStar(ctx, x, y, s.b, baseR, starColor(s, palette), false);
       }
 
       // Moon
@@ -174,7 +242,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       for (const s of stars) {
         const x = cx + (s.x - 0.5) * 2 * r;
         const y = cy + (s.y - 0.5) * 2 * r;
-        drawStar(ctx, x, y, s.b, baseR, palette.star, true);
+        drawStar(ctx, x, y, s.b, baseR, starColor(s, palette), true);
       }
 
       if (moon) {
