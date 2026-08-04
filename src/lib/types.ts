@@ -10,7 +10,7 @@ export type ThemeId =
   | "cosmos"
   | "dusk";
 
-export type FrameId = "blank" | "classic" | "midnight" | "aurora";
+export type FrameId = "blank" | "classic" | "midnight" | "aurora" | "ornate" | "filigree";
 
 export type CompassStyleId = "blank" | "minimal" | "instrument";
 
