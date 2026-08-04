@@ -38,7 +38,7 @@ export function Picker<T extends string>({
             type="button"
             onClick={() => onChange(o.value)}
             className={cn(
-              "relative h-14 rounded-2xl border px-3 text-left transition-all duration-200",
+              "relative h-14 rounded-md border px-3 text-left transition-all duration-200",
               active
                 ? "border-gold/70 bg-white/[0.06]"
                 : "border-white/10 bg-white/[0.02] hover:border-white/25"

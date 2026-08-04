@@ -160,7 +160,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
 
         {open && results.length > 0 && (
           <ul
-            className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-white/10 bg-ink-soft/95 backdrop-blur shadow-xl"
+            className="absolute z-30 mt-2 w-full overflow-hidden rounded-md border border-white/10 bg-ink-soft/95 backdrop-blur shadow-xl"
             role="listbox"
           >
             {results.map((r, i) => (
