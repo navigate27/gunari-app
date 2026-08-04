@@ -1,13 +1,28 @@
 "use client";
 
 import * as React from "react";
-import { loadStarCatalog, FALLBACK_CATALOG } from "@/lib/astronomy/catalog";
+import {
+  loadStarCatalog,
+  loadMilkyWay,
+  FALLBACK_CATALOG,
+  type MilkyWayLevel,
+} from "@/lib/astronomy/catalog";
 import { computeSky, localSiderealTime, type SkyState } from "@/lib/astronomy/engine";
+import { THEME_ORDER } from "@/lib/render/themes";
+import { FRAMES } from "@/lib/render/frames";
+import { COMPASS_STYLES } from "@/lib/render/compass";
+import { STAR_CHART_STYLES } from "@/lib/render/starChart";
 import type {
   CelestialContext,
+  CompassStyleId,
+  ElementId,
+  FrameId,
   GunariInput,
   GunariLocation,
+  LayoutId,
+  StarChartStyleId,
   StarRecord,
+  ThemeId,
 } from "@/lib/types";
 
 const ROTATION_RAD = 0;
@@ -27,7 +42,7 @@ const DEFAULT_INPUT: GunariInput = {
   date: new Date().toISOString().slice(0, 10),
   time: "21:00",
   location: {
-    label: "Manila, Philippines",
+    label: "Manila, Metro Manila, Philippines",
     lat: 14.5995,
     lng: 120.9842,
   },
@@ -37,7 +52,9 @@ const DEFAULT_INPUT: GunariInput = {
   frame: "classic",
   compass: "minimal",
   starChart: "astronomical",
-  moon: true,
+  layout: "classic",
+  elements: ["moon"],
+  magnitude: 6,
 };
 
 interface AnimState {
@@ -58,6 +75,7 @@ export function useGunariState(initial?: Partial<GunariInput>) {
 
   const [catalog, setCatalog] = React.useState<StarRecord[] | null>(null);
   const [catalogError, setCatalogError] = React.useState(false);
+  const [milkyway, setMilkyway] = React.useState<MilkyWayLevel[] | null>(null);
   const [sky, setSky] = React.useState<SkyState | null>(null);
 
   React.useEffect(() => {
@@ -71,6 +89,13 @@ export function useGunariState(initial?: Partial<GunariInput>) {
           setCatalog(FALLBACK_CATALOG);
           setCatalogError(true);
         }
+      });
+    loadMilkyWay()
+      .then((data) => {
+        if (mounted) setMilkyway(data.levels);
+      })
+      .catch(() => {
+        // Milky Way is optional — silently ignore.
       });
     return () => {
       mounted = false;
@@ -99,27 +124,26 @@ export function useGunariState(initial?: Partial<GunariInput>) {
         rotation: ROTATION_RAD,
         lstOverride: lst,
       };
-      setSky(computeSky(ctx, list));
+      setSky(computeSky(ctx, list, milkyway ?? undefined));
     },
-    [catalog]
+    [catalog, milkyway]
   );
 
-  // Initial computation when catalog lands or input first valid.
+  // Compute on mount (with fallback catalog) and recompute when the real
+  // catalog lands so the chart doesn't stay stuck on the fallback stars.
   React.useEffect(() => {
     const date = parseDateInput(input.date, input.time);
     if (!date) return;
     const lst = localSiderealTime(date, input.location.lng);
-    if (!displayedRef.current) {
-      displayedRef.current = {
-        lat: input.location.lat,
-        lst,
-        date,
-        lng: input.location.lng,
-      };
-      recompute(input.location.lat, lst, date, input.location.lng);
-    }
+    displayedRef.current = {
+      lat: input.location.lat,
+      lst,
+      date,
+      lng: input.location.lng,
+    };
+    recompute(input.location.lat, lst, date, input.location.lng);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog]);
+  }, [catalog, milkyway]);
 
   // Kick off an animation whenever date / time / location changes.
   const dateKey = `${input.date}|${input.time}|${input.location.lat.toFixed(
@@ -202,14 +226,61 @@ export function useGunariState(initial?: Partial<GunariInput>) {
     []
   );
 
+  const randomize = React.useCallback(() => {
+    setInput((prev) => {
+      // Pick values DIFFERENT from current so every animation fires
+      // (theme wipe, compass spin, layout slide, chart pulse, moon fade).
+      const themes = THEME_ORDER.filter(
+        (t) => t !== "blank" && t !== prev.theme
+      );
+      const frames = Object.keys(FRAMES).filter(
+        (f) => f !== "blank" && f !== prev.frame
+      );
+      const compasses = Object.keys(COMPASS_STYLES).filter(
+        (c) => c !== "blank" && c !== prev.compass
+      );
+      const charts = Object.keys(STAR_CHART_STYLES).filter(
+        (s) => s !== prev.starChart
+      );
+      const layouts = (["classic", "poster"] as LayoutId[]).filter(
+        (l) => l !== prev.layout
+      );
+      return {
+        ...prev,
+        theme: pick(themes) as ThemeId,
+        frame: pick(frames) as FrameId,
+        compass: pick(compasses) as CompassStyleId,
+        starChart: pick(charts) as StarChartStyleId,
+        layout: pick(layouts) as LayoutId,
+        elements: randomElements(prev.elements),
+        magnitude: 3 + Math.random() * 4,
+      };
+    });
+  }, []);
+
   return {
     input,
     update,
     updateLocation,
+    randomize,
     sky,
     catalogLoading: catalog === null,
     catalogError,
   };
+}
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomElements(prev: ElementId[]): ElementId[] {
+  const others: ElementId[] = ["constellation", "milkyway", "grid"];
+  // Flip moon inclusion so the moon fade animation always fires.
+  const moon: ElementId[] = prev.includes("moon") ? [] : ["moon"];
+  // Pick 0..2 of the remaining elements.
+  const n = Math.floor(Math.random() * 3);
+  const shuffled = [...others].sort(() => Math.random() - 0.5);
+  return [...moon, ...shuffled.slice(0, n)];
 }
 
 function parseDateInput(date: string, time: string): Date | null {

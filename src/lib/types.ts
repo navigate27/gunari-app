@@ -14,7 +14,15 @@ export type FrameId = "blank" | "classic" | "midnight" | "aurora" | "ornate" | "
 
 export type CompassStyleId = "blank" | "minimal" | "instrument";
 
-export type StarChartStyleId = "astronomical" | "dreamscape";
+export type StarChartStyleId =
+  | "astronomical"
+  | "dreamscape"
+  | "nebula"
+  | "galactic";
+
+export type LayoutId = "classic" | "poster";
+
+export type ElementId = "moon" | "constellation" | "milkyway" | "grid";
 
 export interface GunariInput {
   date: string; // YYYY-MM-DD
@@ -26,7 +34,48 @@ export interface GunariInput {
   frame: FrameId;
   compass: CompassStyleId;
   starChart: StarChartStyleId;
-  moon: boolean;
+  layout: LayoutId;
+  /** Selected element overlays (empty = none). Multiselect. */
+  elements: ElementId[];
+  /** Star magnitude limit (only stars with mag <= this are shown). */
+  magnitude: number;
+}
+
+/** Whether the element selection includes the moon. */
+export function elementHasMoon(els: ElementId[]): boolean {
+  return els.includes("moon");
+}
+
+/** Whether the element selection includes constellation lines. */
+export function elementHasConstellation(els: ElementId[]): boolean {
+  return els.includes("constellation");
+}
+
+/** Whether the element selection includes the Milky Way band. */
+export function elementHasMilkyWay(els: ElementId[]): boolean {
+  return els.includes("milkyway");
+}
+
+/** Whether the element selection includes the celestial grid. */
+export function elementHasGrid(els: ElementId[]): boolean {
+  return els.includes("grid");
+}
+
+/** A projected celestial grid line (RA meridian or Dec parallel). */
+export interface CelestialGridLine {
+  type: "ra" | "dec";
+  /** RA hours (for "ra") or Dec degrees (for "dec"). */
+  value: number;
+  /** Projected points in canvas-normalized [x, y] (0..1). */
+  points: { x: number; y: number }[];
+}
+
+/** A projected Milky Way polygon ring (canvas-normalized 0..1). */
+export interface MilkyWayRing {
+  /** Brightness level 1 (faintest) .. 5 (brightest core). */
+  level: number;
+  /** Projected points in canvas-normalized [x, y] (0..1). */
+  points: { x: number; y: number }[];
 }
 
 export interface GunariLocation {

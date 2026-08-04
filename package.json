@@ -8,10 +8,13 @@
     "start": "next start -p 7842",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "stars": "node scripts/build-starcatalog.mjs"
+    "stars": "node scripts/build-starcatalog.mjs",
+    "milkyway": "node scripts/build-milkyway.mjs",
+    "catalogs": "node scripts/build-starcatalog.mjs && node scripts/build-milkyway.mjs"
   },
   "dependencies": {
     "astronomy-engine": "^2.1.0",
+    "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

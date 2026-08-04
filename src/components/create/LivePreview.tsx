@@ -3,7 +3,8 @@
 import * as React from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "motion/react";
 import { renderToCanvas, ARTWORK_W, ARTWORK_H } from "@/lib/render/png";
-import type { CompassStyleId, GunariInput } from "@/lib/types";
+import type { CompassStyleId, GunariInput, LayoutId } from "@/lib/types";
+import { elementHasMoon } from "@/lib/types";
 import type { SkyState } from "@/lib/astronomy/engine";
 
 interface LivePreviewProps {
@@ -15,6 +16,9 @@ interface LivePreviewProps {
 const MOON_ANIM_MS = 600;
 const THEME_WIPE_MS = 800;
 const COMPASS_SPIN_MS = 700;
+const LAYOUT_TRANSITION_MS = 800;
+const MESSAGE_ANIM_MS = 600;
+const CHART_SCALE_MS = 400;
 
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -39,7 +43,6 @@ function diagonalClipPath(p: number): string {
 export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
-  const [rendering, setRendering] = React.useState(false);
 
   // 3D grab-rotate: horizontal drag → rotateY (yaw) + subtle rotateZ roll;
   // vertical drag → rotateX (pitch). Perspective depth. The card never
@@ -88,7 +91,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   };
 
   // Animated moon opacity (0..1).
-  const moonOpacityRef = React.useRef(input.moon ? 1 : 0);
+  const moonOpacityRef = React.useRef(elementHasMoon(input.elements) ? 1 : 0);
   const moonAnimRef = React.useRef<{
     startTime: number;
     from: number;
@@ -105,6 +108,114 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const prevCompassRef = React.useRef(input.compass);
   // Previous compass id during a crossfade transition (null when settled).
   const compassFromRef = React.useRef<CompassStyleId | null>(null);
+
+  // Layout transition (0 = just changed, 1 = settled). All sections slide
+  // from their old layout positions to the new ones simultaneously.
+  const layoutProgressRef = React.useRef(1);
+  const layoutAnimRef = React.useRef<{ startTime: number } | null>(null);
+  const [layoutTick, setLayoutTick] = React.useState(0);
+  const prevLayoutRef = React.useRef(input.layout);
+  const layoutFromRef = React.useRef<LayoutId | null>(null);
+
+  React.useEffect(() => {
+    if (prevLayoutRef.current === input.layout) return;
+    layoutFromRef.current = prevLayoutRef.current;
+    prevLayoutRef.current = input.layout;
+    layoutProgressRef.current = 0;
+    layoutAnimRef.current = { startTime: performance.now() };
+    let raf = 0;
+    const tick = (now: number) => {
+      const a = layoutAnimRef.current;
+      if (!a) return;
+      const t = Math.min(1, (now - a.startTime) / LAYOUT_TRANSITION_MS);
+      layoutProgressRef.current = easeInOutCubic(t);
+      setLayoutTick((n) => n + 1);
+      if (t < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        layoutAnimRef.current = null;
+        layoutFromRef.current = null;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      layoutAnimRef.current = null;
+    };
+  }, [input.layout]);
+
+  // Message-clear transition (0 = has message, 1 = cleared). Title, chart,
+  // and metadata slide between their with-message and no-message positions.
+  const messageProgressRef = React.useRef(input.message?.trim() ? 0 : 1);
+  const messageAnimRef = React.useRef<{
+    startTime: number;
+    from: number;
+    to: number;
+  } | null>(null);
+  const [messageTick, setMessageTick] = React.useState(0);
+
+  React.useEffect(() => {
+    const target = input.message?.trim() ? 0 : 1;
+    const current = messageProgressRef.current;
+    if (current === target) return;
+    messageAnimRef.current = {
+      startTime: performance.now(),
+      from: current,
+      to: target,
+    };
+    let raf = 0;
+    const tick = (now: number) => {
+      const a = messageAnimRef.current;
+      if (!a) return;
+      const t = Math.min(1, (now - a.startTime) / MESSAGE_ANIM_MS);
+      messageProgressRef.current = a.from + (a.to - a.from) * easeInOutCubic(t);
+      setMessageTick((n) => n + 1);
+      if (t < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        messageAnimRef.current = null;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      messageAnimRef.current = null;
+    };
+  }, [input.message]);
+
+  // Chart scale pulse when the magnitude slider changes. The chart briefly
+  // shrinks then grows back to 1, giving visual feedback on adjustment.
+  const chartScaleRef = React.useRef(1);
+  const chartScaleAnimRef = React.useRef<{ startTime: number } | null>(null);
+  const [chartScaleTick, setChartScaleTick] = React.useState(0);
+  const prevMagnitudeRef = React.useRef(input.magnitude);
+
+  React.useEffect(() => {
+    if (prevMagnitudeRef.current === input.magnitude) return;
+    prevMagnitudeRef.current = input.magnitude;
+    chartScaleRef.current = 0.93;
+    chartScaleAnimRef.current = { startTime: performance.now() };
+    let raf = 0;
+    const tick = (now: number) => {
+      const a = chartScaleAnimRef.current;
+      if (!a) return;
+      const t = Math.min(1, (now - a.startTime) / CHART_SCALE_MS);
+      // Ease back to 1 from 0.93.
+      chartScaleRef.current = 0.93 + (1 - 0.93) * easeInOutCubic(t);
+      setChartScaleTick((n) => n + 1);
+      if (t < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        chartScaleAnimRef.current = null;
+        chartScaleRef.current = 1;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      chartScaleAnimRef.current = null;
+    };
+  }, [input.magnitude]);
 
   React.useEffect(() => {
     if (prevCompassRef.current === input.compass) return;
@@ -133,9 +244,11 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     };
   }, [input.compass]);
 
-  // Moon visibility animation.
+  // Moon visibility animation — triggers when the moon is toggled in the
+  // elements multiselect.
+  const moonSelected = elementHasMoon(input.elements);
   React.useEffect(() => {
-    const target = input.moon ? 1 : 0;
+    const target = moonSelected ? 1 : 0;
     const current = moonOpacityRef.current;
     if (current === target) return;
 
@@ -164,84 +277,97 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
       if (raf) cancelAnimationFrame(raf);
       moonAnimRef.current = null;
     };
-  }, [input.moon]);
+  }, [moonSelected]);
+
+  // Theme wipe — its own effect so animation ticks (compass spin, layout
+  // slide, chart pulse, moon fade) don't cancel the wipe rAF. Captures the
+  // old frame to the overlay BEFORE the render effect paints the new frame,
+  // then retreats the overlay to reveal it. Declared before the render
+  // effect so it runs first on theme changes.
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    const overlay = overlayRef.current;
+    if (!canvas || !overlay) return;
+
+    const themeChanged = prevThemeRef.current !== input.theme;
+    if (!themeChanged || canvas.width === 0) {
+      prevThemeRef.current = input.theme;
+      return;
+    }
+
+    if (overlay.width !== canvas.width) {
+      overlay.width = canvas.width;
+      overlay.height = canvas.height;
+    }
+    const octx = overlay.getContext("2d");
+    if (!octx) {
+      prevThemeRef.current = input.theme;
+      return;
+    }
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+    octx.drawImage(canvas, 0, 0);
+    overlay.style.opacity = "1";
+    overlay.style.clipPath = diagonalClipPath(0);
+    prevThemeRef.current = input.theme;
+
+    let wipeRaf = 0;
+    const startT = performance.now();
+    const wipeTick = (now: number) => {
+      const t = Math.min(1, (now - startT) / THEME_WIPE_MS);
+      overlay.style.clipPath = diagonalClipPath(easeInOutCubic(t));
+      if (t < 1) {
+        wipeRaf = requestAnimationFrame(wipeTick);
+      } else {
+        octx.clearRect(0, 0, overlay.width, overlay.height);
+        overlay.style.opacity = "0";
+        wipeRaf = 0;
+      }
+    };
+    wipeRaf = requestAnimationFrame(wipeTick);
+
+    return () => {
+      if (wipeRaf) cancelAnimationFrame(wipeRaf);
+    };
+  }, [input.theme]);
 
   // Redraw whenever input / sky / animated moon opacity changes.
-  // Theme changes trigger a diagonal wipe: the old frame is captured onto
-  // the overlay canvas, the new frame renders underneath, and the overlay's
-  // clip-path is animated directly via the ref (no React state) to avoid
-  // any race between state commit and the new canvas paint.
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !sky) return;
-    const overlay = overlayRef.current;
 
-    const themeChanged = prevThemeRef.current !== input.theme;
-    let willWipe = false;
-
-    if (themeChanged && overlay && canvas.width > 0) {
-      if (overlay.width !== canvas.width) {
-        overlay.width = canvas.width;
-        overlay.height = canvas.height;
-      }
-      const octx = overlay.getContext("2d");
-      if (octx) {
-        octx.clearRect(0, 0, overlay.width, overlay.height);
-        octx.drawImage(canvas, 0, 0);
-        // Show the overlay immediately, covering the canvas with the OLD
-        // frame before we render the NEW frame underneath.
-        overlay.style.opacity = "1";
-        overlay.style.clipPath = diagonalClipPath(0);
-        willWipe = true;
-      }
-    }
-    prevThemeRef.current = input.theme;
-
-    let raf = 0;
-    setRendering(true);
-    const run = () => {
-      raf = 0;
-      renderToCanvas(canvas, {
-        input,
-        stars: sky.stars,
-        moon: sky.moon,
-        moonOpacity: moonOpacityRef.current,
-        compassSpin: compassSpinRef.current,
-        compassFrom: compassFromRef.current ?? undefined,
-      }).finally(() => setRendering(false));
-    };
-    raf = requestAnimationFrame(run);
-
-    let wipeRaf = 0;
-    if (willWipe && overlay) {
-      const startT = performance.now();
-      const wipeTick = (now: number) => {
-        const t = Math.min(1, (now - startT) / THEME_WIPE_MS);
-        overlay.style.clipPath = diagonalClipPath(easeInOutCubic(t));
-        if (t < 1) {
-          wipeRaf = requestAnimationFrame(wipeTick);
-        } else {
-          const octx2 = overlay.getContext("2d");
-          octx2?.clearRect(0, 0, overlay.width, overlay.height);
-          overlay.style.opacity = "0";
-        }
-      };
-      wipeRaf = requestAnimationFrame(wipeTick);
-    }
-
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      if (wipeRaf) cancelAnimationFrame(wipeRaf);
-    };
+    // Render directly — no rAF. The chart-scale pulse ticks state every
+    // frame, which re-runs this effect; deferring via rAF meant the render
+    // was constantly cancelled before it fired, so the canvas never updated
+    // during the pulse. Drawing synchronously guarantees the paint happens.
+    renderToCanvas(canvas, {
+      input,
+      stars: sky.stars,
+      moon: sky.moon,
+      milkyWay: sky.milkyWay,
+      celestialGrid: sky.celestialGrid,
+      moonOpacity: moonOpacityRef.current,
+      compassSpin: compassSpinRef.current,
+      compassFrom: compassFromRef.current ?? undefined,
+      layoutProgress: layoutProgressRef.current,
+      layoutFrom: layoutFromRef.current ?? undefined,
+      messageProgress: messageProgressRef.current,
+      chartScale: chartScaleRef.current,
+    });
   }, [
     input,
     sky,
     moonTick,
     compassTick,
+    layoutTick,
+    messageTick,
+    chartScaleTick,
     input.theme,
     input.frame,
     input.compass,
     input.starChart,
+    input.layout,
+    input.elements,
+    input.magnitude,
     input.title,
     input.message,
     input.date,
@@ -296,10 +422,6 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {rendering && !loading && (
-          <div className="absolute right-3 top-3 h-1.5 w-1.5 animate-pulse rounded-full bg-gold/80" />
-        )}
       </motion.div>
     </div>
   );

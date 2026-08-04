@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "motion/react";
 import { Input, Label, Textarea } from "@/components/ui/Input";
 import { Picker, type PickerOption } from "@/components/ui/Picker";
+import { MultiPicker } from "@/components/ui/MultiPicker";
 import { LocationInput } from "./LocationInput";
 import { THEMES, THEME_ORDER } from "@/lib/render/themes";
 import { FRAMES } from "@/lib/render/frames";
@@ -11,8 +12,10 @@ import { COMPASS_STYLES } from "@/lib/render/compass";
 import { STAR_CHART_STYLES } from "@/lib/render/starChart";
 import type {
   CompassStyleId,
+  ElementId,
   FrameId,
   GunariInput,
+  LayoutId,
   StarChartStyleId,
   ThemeId,
 } from "@/lib/types";
@@ -55,6 +58,18 @@ const starChartOptions: PickerOption<StarChartStyleId>[] = (
   value: id,
   label: STAR_CHART_STYLES[id].label,
 }));
+
+const layoutOptions: PickerOption<LayoutId>[] = [
+  { value: "classic", label: "Classic" },
+  { value: "poster", label: "Poster" },
+];
+
+const elementOptions: PickerOption<ElementId>[] = [
+  { value: "moon", label: "Moon" },
+  { value: "constellation", label: "Constellation" },
+  { value: "milkyway", label: "Milky Way" },
+  { value: "grid", label: "Grid" },
+];
 
 export function Customizer({ input, update, updateLocation }: CustomizerProps) {
   return (
@@ -141,6 +156,25 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         />
       </section>
 
+      {/* Star density (magnitude limit) */}
+      <section>
+        <SectionTitle>Star Density</SectionTitle>
+        <div className="flex items-center gap-3">
+          <input
+            type="range"
+            min={3}
+            max={7}
+            step={0.1}
+            value={input.magnitude}
+            onChange={(e) => update("magnitude", parseFloat(e.target.value))}
+            className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-white/10 accent-gold"
+          />
+          <span className="w-10 text-right font-ui text-sm tabular-nums text-mist">
+            {Math.round(10 + ((input.magnitude - 3) / 4) * 90)}%
+          </span>
+        </div>
+      </section>
+
       {/* Star chart */}
       <section>
         <SectionTitle>Star Chart</SectionTitle>
@@ -152,16 +186,24 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         />
       </section>
 
-      {/* Moon */}
+      {/* Layout */}
       <section>
-        <SectionTitle>Moon</SectionTitle>
+        <SectionTitle>Layout</SectionTitle>
         <Picker
-          options={[
-            { value: "on", label: "Visible" },
-            { value: "off", label: "Hidden", tone: "off" },
-          ]}
-          value={input.moon ? "on" : "off"}
-          onChange={(v) => update("moon", v === "on")}
+          options={layoutOptions}
+          value={input.layout}
+          onChange={(v) => update("layout", v)}
+          columns={2}
+        />
+      </section>
+
+      {/* Element overlays (multiselect) */}
+      <section>
+        <SectionTitle>Elements</SectionTitle>
+        <MultiPicker
+          options={elementOptions}
+          value={input.elements}
+          onChange={(v) => update("elements", v)}
           columns={2}
         />
       </section>

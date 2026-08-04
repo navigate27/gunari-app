@@ -184,12 +184,12 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       ctx.stroke();
       ctx.globalAlpha = 1;
 
-      // Stars
+      // Stars — monochrome (palette star color), no B-V tinting
       const baseR = palette.light ? 1.3 : 1.8;
       for (const s of stars) {
         const x = cx + (s.x - 0.5) * 2 * r;
         const y = cy + (s.y - 0.5) * 2 * r;
-        drawStar(ctx, x, y, s.b, baseR, starColor(s, palette), false);
+        drawStar(ctx, x, y, s.b, baseR, palette.star, false);
       }
 
       // Moon
@@ -237,12 +237,12 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       ctx.fillStyle = inner;
       ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
-      // Stars — larger halos, no diffraction spikes
+      // Stars — larger halos, no diffraction spikes, monochrome
       const baseR = palette.light ? 1.6 : 2.1;
       for (const s of stars) {
         const x = cx + (s.x - 0.5) * 2 * r;
         const y = cy + (s.y - 0.5) * 2 * r;
-        drawStar(ctx, x, y, s.b, baseR, starColor(s, palette), true);
+        drawStar(ctx, x, y, s.b, baseR, palette.star, true);
       }
 
       if (moon) {
@@ -253,7 +253,163 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       ctx.restore();
     },
   },
+  nebula: {
+    id: "nebula",
+    label: "Nebula",
+    render: (ctx, cx, cy, r, stars, palette, moon, moonOpacity) => {
+      ctx.save();
+      clipCircle(ctx, cx, cy, r);
+
+      // Deep chart surface
+      const grad = ctx.createRadialGradient(
+        cx,
+        cy,
+        r * 0.05,
+        cx,
+        cy,
+        r
+      );
+      grad.addColorStop(0, palette.chart.center);
+      grad.addColorStop(1, palette.chart.edge);
+      ctx.fillStyle = grad;
+      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+      // Nebula color clouds — soft radial blobs in screen blend so they
+      // glow without occluding the stars drawn on top.
+      const clouds: Array<[number, number, number, string]> = [
+        [-0.25, -0.15, 0.55, "rgba(255,120,180,0.35)"],
+        [0.3, 0.1, 0.5, "rgba(120,200,255,0.30)"],
+        [0.05, 0.35, 0.4, "rgba(180,140,255,0.28)"],
+      ];
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      for (const [ox, oy, sz, color] of clouds) {
+        const gx = cx + ox * r;
+        const gy = cy + oy * r;
+        const gr = r * sz;
+        const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
+        g.addColorStop(0, color);
+        g.addColorStop(1, color.replace(/[\d.]+\)$/, "0)"));
+        ctx.fillStyle = g;
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+      }
+      ctx.restore();
+
+      // Stars — astronomical-style on top of the nebula
+      const baseR = palette.light ? 1.3 : 1.8;
+      for (const s of stars) {
+        const x = cx + (s.x - 0.5) * 2 * r;
+        const y = cy + (s.y - 0.5) * 2 * r;
+        drawStar(ctx, x, y, s.b, baseR, starColor(s, palette), false);
+      }
+
+      if (moon) {
+        const mx = cx + (moon.x - 0.5) * 2 * r;
+        const my = cy + (moon.y - 0.5) * 2 * r;
+        drawMoon(ctx, mx, my, r * 0.036, moon.phase, palette, false, moonOpacity);
+      }
+      ctx.restore();
+    },
+  },
+  galactic: {
+    id: "galactic",
+    label: "Galactic",
+    render: (ctx, cx, cy, r, stars, palette, moon, moonOpacity) => {
+      ctx.save();
+      clipCircle(ctx, cx, cy, r);
+
+      // Chart surface
+      const grad = ctx.createRadialGradient(
+        cx,
+        cy - r * 0.1,
+        r * 0.05,
+        cx,
+        cy,
+        r
+      );
+      grad.addColorStop(0, palette.chart.center);
+      grad.addColorStop(1, palette.chart.edge);
+      ctx.fillStyle = grad;
+      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+      // Milky Way band — a soft diagonal dust cloud across the chart.
+      // Use a thin rotated linear gradient + mottled radial blobs.
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-Math.PI * 0.22);
+      const bandG = ctx.createLinearGradient(0, -r * 0.18, 0, r * 0.18);
+      bandG.addColorStop(0, hexWithAlpha(palette.star, 0));
+      bandG.addColorStop(0.5, hexWithAlpha(palette.star, 0.10));
+      bandG.addColorStop(1, hexWithAlpha(palette.star, 0));
+      ctx.fillStyle = bandG;
+      ctx.fillRect(-r * 1.2, -r * 0.18, r * 2.4, r * 0.36);
+      // Mottled blobs along the band for texture
+      ctx.globalCompositeOperation = "screen";
+      for (let i = 0; i < 7; i++) {
+        const t = i / 6;
+        const bx = -r * 1.0 + t * r * 2.0;
+        const by = (Math.sin(i * 1.7) * 0.06) * r;
+        const br = r * (0.18 + 0.1 * Math.cos(i * 2.3));
+        const bg = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+        bg.addColorStop(0, hexWithAlpha(palette.star, 0.08));
+        bg.addColorStop(1, hexWithAlpha(palette.star, 0));
+        ctx.fillStyle = bg;
+        ctx.fillRect(bx - br, by - br, br * 2, br * 2);
+      }
+      ctx.restore();
+
+      // Dense faint procedural stars along the band (deterministic seed)
+      const seedRand = mulberry32(12345);
+      ctx.fillStyle = palette.star;
+      for (let i = 0; i < 320; i++) {
+        const t = seedRand();
+        const bx = (t - 0.5) * 2.2;
+        const bandY = (seedRand() - 0.5) * 0.34;
+        // Rotate band point by -0.22π to match the visual band
+        const rot = -Math.PI * 0.22;
+        const rx = bx * Math.cos(rot) - bandY * Math.sin(rot);
+        const ry = bx * Math.sin(rot) + bandY * Math.cos(rot);
+        // Keep inside the circle
+        if (rx * rx + ry * ry > 0.92) continue;
+        const x = cx + rx * r;
+        const y = cy + ry * r;
+        const rad = 0.3 + seedRand() * 0.7;
+        ctx.globalAlpha = 0.25 + seedRand() * 0.4;
+        ctx.beginPath();
+        ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // Catalog stars on top
+      const baseR = palette.light ? 1.3 : 1.8;
+      for (const s of stars) {
+        const x = cx + (s.x - 0.5) * 2 * r;
+        const y = cy + (s.y - 0.5) * 2 * r;
+        drawStar(ctx, x, y, s.b, baseR, starColor(s, palette), false);
+      }
+
+      if (moon) {
+        const mx = cx + (moon.x - 0.5) * 2 * r;
+        const my = cy + (moon.y - 0.5) * 2 * r;
+        drawMoon(ctx, mx, my, r * 0.036, moon.phase, palette, false, moonOpacity);
+      }
+      ctx.restore();
+    },
+  },
 };
+
+/** Deterministic PRNG so the procedural galactic field is stable between frames. */
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
 
 function drawMoon(
   ctx: CanvasRenderingContext2D,

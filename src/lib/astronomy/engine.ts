@@ -1,7 +1,13 @@
 "use client";
 
 import * as Astronomy from "astronomy-engine";
-import type { CelestialContext, StarRecord, VisibleStar } from "../types";
+import type {
+  CelestialContext,
+  CelestialGridLine,
+  MilkyWayRing,
+  StarRecord,
+  VisibleStar,
+} from "../types";
 
 const DEG = Math.PI / 180;
 
@@ -9,6 +15,8 @@ export interface SkyState {
   ctx: CelestialContext;
   stars: VisibleStar[];
   moon?: MoonState;
+  milkyWay?: MilkyWayRing[];
+  celestialGrid?: CelestialGridLine[];
 }
 
 export interface MoonState {
@@ -99,10 +107,13 @@ export function magnitudeToBrightness(mag: number): number {
 
 /**
  * Build the full sky state for a given context and catalog.
+ * If `milkyway` is provided, each polygon ring is projected through the same
+ * alt-az transform as the stars and included in the returned state.
  */
 export function computeSky(
   ctx: CelestialContext,
-  catalog: StarRecord[]
+  catalog: StarRecord[],
+  milkyway?: { level: number; polygons: number[][][] }[]
 ): SkyState {
   const lst =
     ctx.lstOverride != null ? ctx.lstOverride : localSiderealTime(ctx.date, ctx.lng);
@@ -120,6 +131,92 @@ export function computeSky(
     });
   }
 
+  // Project Milky Way polygons. Each polygon point is [ra_hours, dec_deg].
+  // We project through the same pipeline as stars; polygons where every point
+  // is below the horizon are skipped. Points just below the horizon (r ≤ 1.4)
+  // are kept so the chart-circle clip produces a clean horizon edge instead
+  // of a hard gap.
+  let milkyWay: MilkyWayRing[] | undefined;
+  if (milkyway && milkyway.length > 0) {
+    milkyWay = [];
+    for (const lvl of milkyway) {
+      for (const ring of lvl.polygons) {
+        const pts: { x: number; y: number }[] = [];
+        let anyVisible = false;
+        let allFar = true;
+        for (const [ra, dec] of ring) {
+          const { alt, az } = equatorialToHorizontal(ra, dec, lst, ctx.lat);
+          const theta = (90 - alt) * DEG;
+          const r = Math.tan(theta / 2);
+          if (r <= 1.4) allFar = false;
+          if (r > 1.4) {
+            // Clamp to just below horizon so the polygon keeps its shape;
+            // the chart-circle clip will cut off the invisible part.
+            const az2 = az * DEG + ctx.rotation;
+            pts.push({
+              x: 0.5 + 1.4 * Math.sin(az2),
+              y: 0.5 - 1.4 * Math.cos(az2),
+            });
+          } else {
+            const az2 = az * DEG + ctx.rotation;
+            pts.push({
+              x: 0.5 + r * Math.sin(az2),
+              y: 0.5 - r * Math.cos(az2),
+            });
+            if (r <= 1) anyVisible = true;
+          }
+        }
+        if (!allFar && pts.length >= 3) {
+          milkyWay.push({ level: lvl.level, points: pts });
+        }
+      }
+    }
+    if (milkyWay.length === 0) milkyWay = undefined;
+  }
+
+  // Celestial grid: RA meridians (every 1h) and Dec parallels (every 15°).
+  // Sample densely so the curves stay smooth through the stereographic
+  // projection, especially near the horizon.
+  const grid: CelestialGridLine[] = [];
+  const projectPt = (ra: number, dec: number): { x: number; y: number; vis: boolean } => {
+    const { alt, az } = equatorialToHorizontal(ra, dec, lst, ctx.lat);
+    const theta = (90 - alt) * DEG;
+    const r = Math.tan(theta / 2);
+    const az2 = az * DEG + ctx.rotation;
+    if (r > 1.4) {
+      return {
+        x: 0.5 + 1.4 * Math.sin(az2),
+        y: 0.5 - 1.4 * Math.cos(az2),
+        vis: false,
+      };
+    }
+    return { x: 0.5 + r * Math.sin(az2), y: 0.5 - r * Math.cos(az2), vis: r <= 1 };
+  };
+
+  // RA lines: 24 meridians, Dec sampled from -85° to +85° every 1°.
+  for (let ra = 0; ra < 24; ra++) {
+    const pts: { x: number; y: number }[] = [];
+    let anyVis = false;
+    for (let dec = -85; dec <= 85; dec += 1) {
+      const p = projectPt(ra, dec);
+      pts.push({ x: p.x, y: p.y });
+      if (p.vis) anyVis = true;
+    }
+    if (anyVis) grid.push({ type: "ra", value: ra, points: pts });
+  }
+
+  // Dec lines: parallels every 15° from -75° to +75°, RA sampled every 0.2h.
+  for (let dec = -75; dec <= 75; dec += 15) {
+    const pts: { x: number; y: number }[] = [];
+    let anyVis = false;
+    for (let ra = 0; ra < 24; ra += 0.2) {
+      const p = projectPt(ra, dec);
+      pts.push({ x: p.x, y: p.y });
+      if (p.vis) anyVis = true;
+    }
+    if (anyVis) grid.push({ type: "dec", value: dec, points: pts });
+  }
+
   let moon: MoonState | undefined;
   try {
     moon = computeMoon(ctx, lst);
@@ -127,7 +224,7 @@ export function computeSky(
     moon = undefined;
   }
 
-  return { ctx, stars: visible, moon };
+  return { ctx, stars: visible, moon, milkyWay, celestialGrid: grid };
 }
 
 function computeMoon(ctx: CelestialContext, lst: number): MoonState | undefined {

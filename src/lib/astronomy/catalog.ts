@@ -9,6 +9,16 @@ export interface CatalogPayload {
   stars: StarRecord[];
 }
 
+export interface MilkyWayLevel {
+  level: number;
+  polygons: number[][][];
+}
+export interface MilkyWayPayload {
+  generatedAt: string;
+  source: string;
+  levels: MilkyWayLevel[];
+}
+
 let cache: CatalogPayload | null = null;
 let inflight: Promise<CatalogPayload> | null = null;
 
@@ -30,6 +40,29 @@ export async function loadStarCatalog(): Promise<CatalogPayload> {
     });
 
   return inflight;
+}
+
+let mwCache: MilkyWayPayload | null = null;
+let mwInflight: Promise<MilkyWayPayload> | null = null;
+
+export async function loadMilkyWay(): Promise<MilkyWayPayload> {
+  if (mwCache) return mwCache;
+  if (mwInflight) return mwInflight;
+
+  mwInflight = fetch("/milkyway.json", { cache: "force-cache" })
+    .then((r) => {
+      if (!r.ok) throw new Error(`milkyway.json: ${r.status}`);
+      return r.json() as Promise<MilkyWayPayload>;
+    })
+    .then((data) => {
+      mwCache = data;
+      return data;
+    })
+    .finally(() => {
+      mwInflight = null;
+    });
+
+  return mwInflight;
 }
 
 /**

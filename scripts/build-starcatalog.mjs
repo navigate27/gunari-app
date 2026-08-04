@@ -86,14 +86,15 @@ const NAMED_ANCHORS = [
 ];
 
 const MIRRORS = [
-  // Yale Bright Star Catalogue subset as JSON (community mirror).
-  "https://raw.githubusercontent.com/aaroncalderon/bright-star-catalogue/master/bsc5p.json",
-  // Alternate: a Hipparcos subset mirror.
-  "https://raw.githubusercontent.com/ut-astropa/astronomy-data/main/hipparcos-mag5.json",
+  // Hipparcos catalog (J2000) binned by magnitude, concise format:
+  // [HIP, Vmag, RAdeg, DEdeg, B-V]. CC0 / public domain.
+  "https://raw.githubusercontent.com/gmiller123456/hip2000/master/hipparcos_9_concise.js",
+  "https://raw.githubusercontent.com/gmiller123456/hip2000/master/hipparcos_8_concise.js",
+  "https://raw.githubusercontent.com/gmiller123456/hip2000/master/hipparcos_7_concise.js",
 ];
 
 // Magnitude cap — fainter stars (higher mag number) are included.
-const MAG_LIMIT = 7.0;
+const MAG_LIMIT = 9.0;
 
 function detPrng(seed) {
   let s = seed >>> 0;
@@ -134,46 +135,40 @@ function proceduralFallback() {
   return stars;
 }
 
-function normalizeRecord(r) {
-  // Accept several field shapes.
-  const ra =
-    r.ra_hours ??
-    r.ra ??
-    (r.RAh != null ? r.RAh + (r.RAm ?? 0) / 60 + (r.RAs ?? 0) / 3600 : null);
-  const dec =
-    r.dec_degrees ??
-    r.dec ??
-    r.DE ??
-    (r.DEd != null
-      ? (r.DEd + (r.DEm ?? 0) / 60 + (r.DEs ?? 0) / 3600) * (r.DE === "-" ? -1 : 1)
-      : null);
-  const mag = r.mag ?? r.Vmag ?? r.magnitude ?? r.Mag;
-  const hip = r.hip ?? r.HIP ?? r.Hipparcos ?? null;
-  const name = r.name ?? r.bayer ?? r.Bayer ?? null;
-  const bv = r.bv ?? r.BV ?? r["B-V"] ?? r.b_v ?? null;
-  if (ra == null || dec == null || mag == null) return null;
-  return {
-    ra,
-    dec,
-    mag,
-    hip: hip ?? undefined,
-    name: name ?? undefined,
-    bv: bv != null ? Number(bv) : undefined,
-  };
-}
-
 async function tryFetch() {
   for (const url of MIRRORS) {
     try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
       if (!res.ok) continue;
-      const data = await res.json();
-      const list = Array.isArray(data) ? data : data.stars ?? data.data;
+      const text = await res.text();
+      // The concise files are JS: `hipparcos_catalog=[[...],...]`
+      // Strip the assignment prefix, fix empty trailing fields (`,]` → `,null]`),
+      // then parse the array literal as JSON.
+      const eq = text.indexOf("=");
+      const jsonText = text
+        .slice(eq + 1)
+        .replace(/,]/g, ",null]")
+        .replace(/;?\s*$/, "");
+      const list = JSON.parse(jsonText);
       if (!Array.isArray(list)) continue;
       const out = [];
       for (const r of list) {
-        const n = normalizeRecord(r);
-        if (n && n.mag < MAG_LIMIT) out.push(n);
+        // Concise format: [HIP, Vmag, RAdeg, DEdeg, B-V]
+        if (!Array.isArray(r) || r.length < 4) continue;
+        const hip = r[0];
+        const mag = r[1];
+        const raDeg = r[2];
+        const dec = r[3];
+        const bv = r[4];
+        if (mag == null || raDeg == null || dec == null) continue;
+        if (mag > MAG_LIMIT) continue;
+        out.push({
+          ra: raDeg / 15, // degrees → hours
+          dec: dec,
+          mag: mag,
+          hip: hip,
+          bv: bv != null ? Number(bv) : undefined,
+        });
       }
       if (out.length > 100) return out;
     } catch {
