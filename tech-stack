@@ -1,0 +1,189 @@
+TECH STACK
+
+Version
+
+v1.0 (Locked)
+
+--------------------------------------------------
+FRAMEWORK
+--------------------------------------------------
+
+- Next.js 15
+
+--------------------------------------------------
+LANGUAGE
+--------------------------------------------------
+
+- TypeScript
+
+--------------------------------------------------
+UI
+--------------------------------------------------
+
+- Tailwind CSS v4
+- shadcn/ui
+
+--------------------------------------------------
+TYPOGRAPHY
+--------------------------------------------------
+
+Display
+
+- Cormorant Garamond
+
+UI
+
+- Geist
+
+Loaded using Next.js next/font.
+
+--------------------------------------------------
+ANIMATION
+--------------------------------------------------
+
+- Motion
+
+Used for:
+
+- Page transitions
+- Live preview transitions
+- Loading animations
+- UI micro interactions
+
+--------------------------------------------------
+ASTRONOMY
+--------------------------------------------------
+
+Engine
+
+- Astronomy Engine
+
+Star Catalog
+
+- Hipparcos Catalog
+  (Filtered to visible stars only)
+
+Used for:
+
+- Star positions
+- Constellations
+- Moon
+- Planets
+- Moon phase
+- Historical sky calculations
+
+--------------------------------------------------
+RENDERING
+--------------------------------------------------
+
+- HTML5 Canvas API
+
+Canvas is responsible for rendering the final artwork.
+
+Reasons
+
+- High performance
+- Pixel-perfect export
+- Smooth rendering
+- High-resolution PNG generation
+
+--------------------------------------------------
+LOCATION
+--------------------------------------------------
+
+Google Places API
+
+Used for
+
+- Location autocomplete
+
+Google Geocoding API
+
+Used for
+
+- Latitude
+- Longitude
+- Location details
+
+Expected MVP traffic is well within Google's free monthly usage.
+
+--------------------------------------------------
+ICONS
+--------------------------------------------------
+
+- Lucide React
+
+--------------------------------------------------
+HOSTING
+--------------------------------------------------
+
+- Vercel
+
+--------------------------------------------------
+ARCHITECTURE
+--------------------------------------------------
+
+Client-side only
+
+No
+
+- Database
+- Authentication
+- Backend API
+- File Storage
+- User Accounts
+- Saved Projects
+- CMS
+- Cron Jobs
+
+--------------------------------------------------
+RENDERING PIPELINE
+--------------------------------------------------
+
+User Input
+
+(Date)
+
+(Time)
+
+(Location)
+
+↓
+
+Google Places API
+
+↓
+
+Google Geocoding API
+
+↓
+
+Astronomy Engine
+
+↓
+
+Canvas Renderer
+
+↓
+
+Gunari Artwork
+
+↓
+
+PNG Export
+
+↓
+
+Download / Share
+
+--------------------------------------------------
+DESIGN PHILOSOPHY
+--------------------------------------------------
+
+Keep the application lightweight.
+
+Perform all processing in the browser whenever possible.
+
+Minimize external dependencies.
+
+Prioritize performance, simplicity, and a premium user experience.

@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-ui: "Geist", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #0b0d12;
+  --color-ink-soft: #131826;
+  --color-mist: #c8cdd6;
+  --color-stone: #8b8f99;
+  --color-gold: #c9a96a;
+  --color-gold-soft: #e6d2a8;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-mist);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Subtle starfield drift used on the landing hero. */
+  @keyframes gunari-drift {
+    0% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(-6px) translateX(-4px);
+    }
+    100% {
+      transform: translateY(0) translateX(0);
+    }
+  }
+
+  .animate-drift {
+    animation: gunari-drift 18s ease-in-out infinite;
+  }
+
+  @keyframes gunari-twinkle {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .animate-twinkle {
+    animation: gunari-twinkle 4s ease-in-out infinite;
+  }
+}
+
+/* Range input — minimal, premium */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 1px;
+  background: rgba(200, 205, 214, 0.2);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 999px;
+  background: var(--color-mist);
+  margin-top: -6px;
+  transition: transform 0.15s ease;
+}
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+/* Date / time inputs — strip native chrome */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  color-scheme: dark;
+}
+input::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  opacity: 0.7;
+}

@@ -1,0 +1,394 @@
+PRODUCT REQUIREMENTS DOCUMENT (PRD)
+
+Project Name
+
+Gunari
+
+Tagline
+
+Every night tells a story.
+
+Version
+
+v1.0 (MVP)
+
+--------------------------------------------------
+1. PRODUCT VISION
+--------------------------------------------------
+
+Gunari is a mobile-first web application that recreates the night sky from a meaningful moment in someone's life.
+
+Users enter a date, time, location, title, and an optional message. Gunari generates a beautifully designed, high-resolution artwork that can be downloaded and shared instantly.
+
+Gunari is not an astronomy application.
+
+It is a memory experience where the night sky becomes the medium for storytelling.
+
+--------------------------------------------------
+2. PRODUCT GOAL
+--------------------------------------------------
+
+Allow users to recreate a meaningful night in less than one minute and generate a beautiful artwork worth sharing.
+
+--------------------------------------------------
+3. PRODUCT PRINCIPLES
+--------------------------------------------------
+
+- Mobile-first
+- No login
+- No database
+- No user accounts
+- No saved projects
+- No subscriptions (MVP)
+- No printing service (MVP)
+- No checkout
+- Beautiful by default
+- Curation over configuration
+
+--------------------------------------------------
+4. TARGET USERS
+--------------------------------------------------
+
+Primary Users
+
+- Couples
+- Anniversary celebrations
+- Engagements
+- Weddings
+- Parents
+- Birthday celebrations
+- Memorials
+- Anyone preserving meaningful life moments
+
+--------------------------------------------------
+5. USER FLOW
+--------------------------------------------------
+
+Landing Page
+
+↓
+
+Create Your Gunari
+
+↓
+
+Customize
+
+↓
+
+Live Preview
+
+↓
+
+Generate
+
+↓
+
+Download / Share
+
+--------------------------------------------------
+6. LANDING PAGE
+--------------------------------------------------
+
+Hero Headline
+
+Every night tells a story.
+
+Hero Subheadline
+
+Recreate the night sky from your most unforgettable moments.
+
+Primary CTA
+
+Create Your Gunari
+
+Background
+
+A subtle animated night sky with elegant motion.
+
+--------------------------------------------------
+7. CREATE YOUR GUNARI
+--------------------------------------------------
+
+Required Fields
+
+- Date
+- Time
+- Location
+- Title
+
+Optional
+
+- Message
+
+The live preview is always visible.
+
+Changes should animate smoothly.
+
+No abrupt UI updates.
+
+--------------------------------------------------
+8. OUTPUT
+--------------------------------------------------
+
+Format
+
+PNG
+
+Primary Resolution
+
+1080 × 1920
+
+Optimized For
+
+- Instagram Story
+- Facebook Story
+- Messenger Story
+- WhatsApp Status
+- TikTok Story
+
+--------------------------------------------------
+9. ARTWORK STRUCTURE
+--------------------------------------------------
+
+Artwork Layers
+
+1. Frame
+2. Canvas
+3. Compass Ring (Optional)
+4. Star Chart
+5. Title
+6. Message (Optional)
+7. Gunari Wordmark
+
+Notes
+
+- The compass surrounds the star chart.
+- The star chart is transparent.
+- The canvas background is visible through the star chart.
+- There is no separate background inside the star chart.
+
+--------------------------------------------------
+10. CUSTOMIZATION
+--------------------------------------------------
+
+Theme (10)
+
+The Theme defines the overall mood of the artwork.
+
+Each theme automatically controls:
+
+- Canvas background
+- Star chart background
+- Typography colors
+- Compass colors
+- Constellation colors
+- Accent colors
+
+Themes
+
+1. Blank
+2. Midnight
+3. Obsidian
+4. Ivory
+5. Slate
+6. Twilight
+7. Aurora
+8. Moonlight
+9. Cosmos
+10. Dusk
+
+Notes
+
+- Every theme includes a matching Canvas Background and Star Chart Background.
+- The Star Chart Background is a circular surface that sits inside the canvas.
+- The Star Chart is rendered on top of the Star Chart Background.
+- The Compass Ring surrounds the Star Chart Background.
+- The Theme ensures all colors remain visually harmonious.
+
+--------------------
+
+Frame (4)
+
+1. Blank
+2. Classic
+3. Midnight
+4. Aurora
+
+The frame surrounds the artwork and never overlaps the canvas.
+
+--------------------
+
+Compass (3)
+
+Default
+
+Enabled
+
+Selecting Blank disables the compass.
+
+Compass Styles
+
+1. Blank
+2. Minimal
+3. Compass Rose
+
+Notes
+
+- The compass always encircles the Star Chart Background.
+- Theme determines its colors.
+- Only the compass artwork changes.
+
+--------------------
+
+Star Chart (2)
+
+1. Astronomical
+
+Scientifically accurate appearance with subtle glow.
+
+2. Dreamscape
+
+Same astronomical data with a softer, more romantic appearance.
+
+--------------------------------------------------
+11. LIVE PREVIEW
+--------------------------------------------------
+
+The preview updates continuously while editing.
+
+Animations
+
+Date
+
+Stars transition smoothly.
+
+Location
+
+Sky gently shifts.
+
+Theme
+
+Colors softly transition.
+
+Title
+
+Fade transition.
+
+Message
+
+Fade transition.
+
+Compass
+
+Fade in or out.
+
+Animations should feel calm, premium, and intentional.
+
+--------------------------------------------------
+12. GENERATED ARTWORK
+--------------------------------------------------
+
+Includes
+
+- Frame
+- Canvas
+- Compass Ring (optional)
+- Star Chart
+- Title
+- Message (optional)
+- Date
+- Time
+- Location
+- Gunari Wordmark
+
+--------------------------------------------------
+13. GUNARI WORDMARK
+--------------------------------------------------
+
+Purpose
+
+Acts as the artist's signature.
+
+Placement
+
+Inside the canvas.
+
+Bottom center.
+
+Small.
+
+Elegant.
+
+Low opacity.
+
+It should never feel like a watermark or advertisement.
+
+--------------------------------------------------
+14. RESPONSIVE LAYOUT
+--------------------------------------------------
+
+The composition automatically adapts.
+
+Examples
+
+Without Message
+
+- Title shifts downward slightly.
+
+Without Compass
+
+- Star chart scales slightly larger.
+
+Without Frame
+
+- Canvas gains additional breathing room.
+
+No customization should leave awkward empty spaces.
+
+--------------------------------------------------
+15. DESIGN LANGUAGE
+--------------------------------------------------
+
+Style
+
+- Premium
+- Elegant
+- Minimal
+- Emotional
+- Timeless
+
+Avoid
+
+- Busy interfaces
+- Excessive customization
+- Loud colors
+- Decorative clutter
+- Overly playful animations
+
+Every generated artwork should feel like a collectible print.
+
+--------------------------------------------------
+16. SUCCESS CRITERIA
+--------------------------------------------------
+
+A first-time user can:
+
+- Understand the product immediately.
+- Create a Gunari in under one minute.
+- Download a beautiful artwork without additional editing.
+- Share it directly on social media.
+
+The output should feel premium enough that users are proud to share it immediately.
+
+--------------------------------------------------
+17. PRODUCT PHILOSOPHY
+--------------------------------------------------
+
+Gunari is not about stars.
+
+It is about memories.
+
+The stars simply help people revisit the moments that shaped their lives.
+
+Every night tells a story.
