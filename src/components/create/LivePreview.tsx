@@ -28,10 +28,10 @@ function diagonalClipPath(p: number): string {
   if (p <= 0) return "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
   if (p >= 1) return "polygon(100% 100%, 100% 100%, 100% 100%)";
   if (p < 0.5) {
-    const a = 200 * p; // 0 → 100
+    const a = 200 * p;
     return `polygon(${a}% 0%, 100% 0%, 100% 100%, 0% 100%, 0% ${a}%)`;
   }
-  const a = 200 * p - 100; // 0 → 100
+  const a = 200 * p - 100;
   return `polygon(100% ${a}%, 100% 100%, ${a}% 100%)`;
 }
 
@@ -40,7 +40,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
   const [rendering, setRendering] = React.useState(false);
 
-  // Animated moon opacity (0..1). Target is 1 when input.moon is on, else 0.
+  // Animated moon opacity (0..1).
   const moonOpacityRef = React.useRef(input.moon ? 1 : 0);
   const moonAnimRef = React.useRef<{
     startTime: number;
@@ -49,11 +49,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   } | null>(null);
   const [moonTick, setMoonTick] = React.useState(0);
 
-  // Theme wipe: an animated progress value 0..1 drives the diagonal
-  // clip-path on the overlay canvas. The overlay canvas holds a snapshot
-  // of the previous frame so the new theme can sweep in underneath.
   const prevThemeRef = React.useRef(input.theme);
-  const [wipeProgress, setWipeProgress] = React.useState<number | null>(null);
 
   // Moon visibility animation.
   React.useEffect(() => {
@@ -89,17 +85,19 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   }, [input.moon]);
 
   // Redraw whenever input / sky / animated moon opacity changes.
-  // When the theme changes, snapshot the canvas onto the overlay canvas
-  // first, then run a diagonal wipe to reveal the new render underneath.
+  // Theme changes trigger a diagonal wipe: the old frame is captured onto
+  // the overlay canvas, the new frame renders underneath, and the overlay's
+  // clip-path is animated directly via the ref (no React state) to avoid
+  // any race between state commit and the new canvas paint.
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !sky) return;
-
     const overlay = overlayRef.current;
+
     const themeChanged = prevThemeRef.current !== input.theme;
-    let snapshotReady = false;
+    let willWipe = false;
+
     if (themeChanged && overlay && canvas.width > 0) {
-      // Sync the overlay buffer to the main canvas size, then copy pixels.
       if (overlay.width !== canvas.width) {
         overlay.width = canvas.width;
         overlay.height = canvas.height;
@@ -108,7 +106,11 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
       if (octx) {
         octx.clearRect(0, 0, overlay.width, overlay.height);
         octx.drawImage(canvas, 0, 0);
-        snapshotReady = true;
+        // Show the overlay immediately, covering the canvas with the OLD
+        // frame before we render the NEW frame underneath.
+        overlay.style.opacity = "1";
+        overlay.style.clipPath = diagonalClipPath(0);
+        willWipe = true;
       }
     }
     prevThemeRef.current = input.theme;
@@ -127,24 +129,17 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     raf = requestAnimationFrame(run);
 
     let wipeRaf = 0;
-    if (snapshotReady) {
-      setWipeProgress(0);
+    if (willWipe && overlay) {
       const startT = performance.now();
       const wipeTick = (now: number) => {
         const t = Math.min(1, (now - startT) / THEME_WIPE_MS);
-        setWipeProgress(easeInOutCubic(t));
+        overlay.style.clipPath = diagonalClipPath(easeInOutCubic(t));
         if (t < 1) {
           wipeRaf = requestAnimationFrame(wipeTick);
         } else {
-          // Clear the overlay buffer so it's empty for next time.
-          const octx2 = overlay?.getContext("2d");
-          octx2?.clearRect(
-            0,
-            0,
-            overlay?.width ?? 0,
-            overlay?.height ?? 0
-          );
-          setWipeProgress(null);
+          const octx2 = overlay.getContext("2d");
+          octx2?.clearRect(0, 0, overlay.width, overlay.height);
+          overlay.style.opacity = "0";
         }
       };
       wipeRaf = requestAnimationFrame(wipeTick);
@@ -184,19 +179,12 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
           className="block h-full w-full"
           aria-label="Gunari artwork preview"
         />
-
-        {/* Diagonal wipe overlay showing the previous theme. */}
         <canvas
           ref={overlayRef}
           aria-hidden
           className="pointer-events-none absolute inset-0 h-full w-full select-none"
-          style={{
-            clipPath:
-              wipeProgress != null ? diagonalClipPath(wipeProgress) : "none",
-            opacity: wipeProgress != null ? 1 : 0,
-          }}
+          style={{ opacity: 0, clipPath: "none" }}
         />
-
         <AnimatePresence>
           {loading && (
             <motion.div
@@ -212,7 +200,6 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
           )}
         </AnimatePresence>
 
-        {/* subtle render indicator */}
         {rendering && !loading && (
           <div className="absolute right-3 top-3 h-1.5 w-1.5 animate-pulse rounded-full bg-gold/80" />
         )}
