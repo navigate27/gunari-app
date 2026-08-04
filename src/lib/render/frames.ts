@@ -17,7 +17,7 @@ export const FRAMES: Record<FrameId, FrameStyle> = {
   blank: {
     id: "blank",
     label: "Blank",
-    margin: 0.05,
+    margin: 0.025,
     keyline: 0,
     rail: 0,
     corner: "none",
@@ -25,7 +25,7 @@ export const FRAMES: Record<FrameId, FrameStyle> = {
   classic: {
     id: "classic",
     label: "Classic",
-    margin: 0.05,
+    margin: 0.025,
     keyline: 1.2,
     rail: 0.4,
     corner: "tick",
@@ -33,7 +33,7 @@ export const FRAMES: Record<FrameId, FrameStyle> = {
   midnight: {
     id: "midnight",
     label: "Midnight",
-    margin: 0.05,
+    margin: 0.025,
     keyline: 0.8,
     rail: 0,
     corner: "none",
@@ -41,7 +41,7 @@ export const FRAMES: Record<FrameId, FrameStyle> = {
   aurora: {
     id: "aurora",
     label: "Aurora",
-    margin: 0.05,
+    margin: 0.025,
     keyline: 0,
     rail: 1.6,
     corner: "none",
