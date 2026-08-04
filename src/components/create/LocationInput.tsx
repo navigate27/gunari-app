@@ -177,24 +177,6 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <Input
-          type="number"
-          step="0.0001"
-          value={value.lat}
-          onChange={(e) => onChange({ lat: Number(e.target.value) })}
-          placeholder="Latitude"
-          aria-label="Latitude"
-        />
-        <Input
-          type="number"
-          step="0.0001"
-          value={value.lng}
-          onChange={(e) => onChange({ lng: Number(e.target.value) })}
-          placeholder="Longitude"
-          aria-label="Longitude"
-        />
-      </div>
       <Button
         type="button"
         variant="ghost"

@@ -104,7 +104,8 @@ export function computeSky(
   ctx: CelestialContext,
   catalog: StarRecord[]
 ): SkyState {
-  const lst = localSiderealTime(ctx.date, ctx.lng);
+  const lst =
+    ctx.lstOverride != null ? ctx.lstOverride : localSiderealTime(ctx.date, ctx.lng);
   const visible: VisibleStar[] = [];
 
   for (const s of catalog) {
@@ -121,7 +122,7 @@ export function computeSky(
 
   let moon: MoonState | undefined;
   try {
-    moon = computeMoon(ctx);
+    moon = computeMoon(ctx, lst);
   } catch {
     moon = undefined;
   }
@@ -129,14 +130,14 @@ export function computeSky(
   return { ctx, stars: visible, moon };
 }
 
-function computeMoon(ctx: CelestialContext): MoonState | undefined {
+function computeMoon(ctx: CelestialContext, lst: number): MoonState | undefined {
   const time = new Astronomy.AstroTime(ctx.date);
   const observer = new Astronomy.Observer(ctx.lat, ctx.lng, 0);
   const equ = Astronomy.Equator(Astronomy.Body.Moon, time, observer, true, true);
   const { alt, az } = equatorialToHorizontal(
     equ.ra / 15,
     equ.dec,
-    localSiderealTime(ctx.date, ctx.lng),
+    lst,
     ctx.lat
   );
   const p = Astronomy.Illumination(Astronomy.Body.Moon, time);

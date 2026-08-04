@@ -92,4 +92,10 @@ export interface CelestialContext {
   date: Date;
   /** Sidereal-like rotation applied to projection, in radians. */
   rotation: number;
+  /**
+   * Optional override for Local Sidereal Time (in hours, 0–24).
+   * When set, the engine uses this directly instead of computing from
+   * date + lng. Used by the live preview to animate the sky between states.
+   */
+  lstOverride?: number;
 }
