@@ -139,7 +139,10 @@ export const COMPASS_STYLES: Record<CompassStyleId, CompassStyle> = {
       ctx.arc(0, 0, degOuter, 0, Math.PI * 2);
       ctx.stroke();
 
-      const degR = (tickOuter + degOuter) / 2;
+      // Degree labels sit 70% of the way from tickOuter to degOuter — pushed
+      // outward from the tick ring for more breathing room (40% more gap than
+      // a centered placement).
+      const degR = tickOuter + (degOuter - tickOuter) * 0.7;
       const degFontSize = Math.max(8, Math.round(band * 0.14));
       ctx.fillStyle = p.compassLabel;
       ctx.textAlign = "center";
