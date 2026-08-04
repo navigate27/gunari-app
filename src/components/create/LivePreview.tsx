@@ -167,7 +167,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   ]);
 
   return (
-    <div className="relative mx-auto w-full max-w-[420px]">
+    <div className="relative mx-auto w-full max-w-[504px]">
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
