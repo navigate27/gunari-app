@@ -10,9 +10,11 @@
     "typecheck": "tsc --noEmit",
     "stars": "node scripts/build-starcatalog.mjs",
     "milkyway": "node scripts/build-milkyway.mjs",
-    "catalogs": "node scripts/build-starcatalog.mjs && node scripts/build-milkyway.mjs"
+    "catalogs": "node scripts/build-starcatalog.mjs && node scripts/build-milkyway.mjs",
+    "build:vercel": "npm run catalogs && next build"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "astronomy-engine": "^2.1.0",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",

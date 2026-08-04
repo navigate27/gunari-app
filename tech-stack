@@ -2,7 +2,7 @@ TECH STACK
 
 Version
 
-v1.0 (Locked)
+v1.1 (Locked)
 
 --------------------------------------------------
 FRAMEWORK
@@ -49,6 +49,12 @@ Used for:
 - Live preview transitions
 - Loading animations
 - UI micro interactions
+
+- canvas-confetti
+
+Used for:
+
+- Share celebration burst on artwork export
 
 --------------------------------------------------
 ASTRONOMY
@@ -118,6 +124,23 @@ HOSTING
 --------------------------------------------------
 
 - Vercel
+
+Source
+--------------------------------------------------
+
+- github.com/navigate27/gunari-app
+
+--------------------------------------------------
+ANALYTICS
+--------------------------------------------------
+
+- Vercel Analytics
+
+Used for:
+
+- Page views
+- Web vitals
+- Browser-side reporting (no backend)
 
 --------------------------------------------------
 ARCHITECTURE
