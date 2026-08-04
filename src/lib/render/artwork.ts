@@ -138,7 +138,7 @@ export function renderArtwork(
   drawMetadata(ctx, inner, palette, input);
 
   // 8. Wordmark — bottom center
-  drawWordmark(ctx, inner.x + inner.w / 2, inner.y + inner.h - 36, palette);
+  drawWordmark(ctx, inner.x + inner.w / 2, inner.y + inner.h - 100, palette);
 }
 
 function drawCanvasBackground(
