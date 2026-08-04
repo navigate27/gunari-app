@@ -182,7 +182,8 @@ function drawTitle(
   const titleSize = inner.w * 0.085;
   ctx.font = `500 ${Math.round(titleSize)}px "Cormorant Garamond", serif`;
   const lines = wrapLines(ctx, input.title.trim(), inner.w * 0.82);
-  let y = inner.y + inner.h * 0.12;
+  // When there's no message, shift the title down to sit closer to the chart.
+  let y = inner.y + inner.h * (input.message?.trim() ? 0.12 : 0.16);
   const lh = titleSize * 1.15;
   for (const line of lines) {
     ctx.fillText(line, inner.x + inner.w / 2, y);
@@ -242,8 +243,7 @@ function computeCircle(
 ): { cx: number; cy: number; rOuter: number; rInner: number } {
   const cx = inner.x + inner.w / 2;
   // Vertical center: pull up slightly when message present so layout breathes.
-  // When there's no message, bring the chart closer to the title.
-  const top = inner.y + inner.h * (hasMessage ? 0.30 : 0.20);
+  const top = inner.y + inner.h * (hasMessage ? 0.30 : 0.24);
   const bottom = inner.y + inner.h * 0.82;
   const available = bottom - top;
   const rOuter = Math.min(inner.w * 0.42, available * 0.48);
