@@ -37,6 +37,7 @@ function diagonalClipPath(p: number): string {
 
 export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
   const [rendering, setRendering] = React.useState(false);
 
   // Animated moon opacity (0..1). Target is 1 when input.moon is on, else 0.
@@ -48,11 +49,11 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   } | null>(null);
   const [moonTick, setMoonTick] = React.useState(0);
 
-  // Theme wipe: snapshot of the canvas before the theme change, plus
-  // an animated progress value 0..1 that drives the diagonal clip-path.
+  // Theme wipe: an animated progress value 0..1 drives the diagonal
+  // clip-path on the overlay canvas. The overlay canvas holds a snapshot
+  // of the previous frame so the new theme can sweep in underneath.
   const prevThemeRef = React.useRef(input.theme);
-  const [wipeImage, setWipeImage] = React.useState<string | null>(null);
-  const [wipeProgress, setWipeProgress] = React.useState(0);
+  const [wipeProgress, setWipeProgress] = React.useState<number | null>(null);
 
   // Moon visibility animation.
   React.useEffect(() => {
@@ -88,19 +89,26 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   }, [input.moon]);
 
   // Redraw whenever input / sky / animated moon opacity changes.
-  // When the theme changes, snapshot the canvas first so we can run a
-  // diagonal wipe overlay over the new render.
+  // When the theme changes, snapshot the canvas onto the overlay canvas
+  // first, then run a diagonal wipe to reveal the new render underneath.
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !sky) return;
 
+    const overlay = overlayRef.current;
     const themeChanged = prevThemeRef.current !== input.theme;
-    let snapshot: string | null = null;
-    if (themeChanged && canvas.width > 0) {
-      try {
-        snapshot = canvas.toDataURL("image/png");
-      } catch {
-        snapshot = null;
+    let snapshotReady = false;
+    if (themeChanged && overlay && canvas.width > 0) {
+      // Sync the overlay buffer to the main canvas size, then copy pixels.
+      if (overlay.width !== canvas.width) {
+        overlay.width = canvas.width;
+        overlay.height = canvas.height;
+      }
+      const octx = overlay.getContext("2d");
+      if (octx) {
+        octx.clearRect(0, 0, overlay.width, overlay.height);
+        octx.drawImage(canvas, 0, 0);
+        snapshotReady = true;
       }
     }
     prevThemeRef.current = input.theme;
@@ -119,8 +127,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     raf = requestAnimationFrame(run);
 
     let wipeRaf = 0;
-    if (snapshot) {
-      setWipeImage(snapshot);
+    if (snapshotReady) {
       setWipeProgress(0);
       const startT = performance.now();
       const wipeTick = (now: number) => {
@@ -129,7 +136,15 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         if (t < 1) {
           wipeRaf = requestAnimationFrame(wipeTick);
         } else {
-          setWipeImage(null);
+          // Clear the overlay buffer so it's empty for next time.
+          const octx2 = overlay?.getContext("2d");
+          octx2?.clearRect(
+            0,
+            0,
+            overlay?.width ?? 0,
+            overlay?.height ?? 0
+          );
+          setWipeProgress(null);
         }
       };
       wipeRaf = requestAnimationFrame(wipeTick);
@@ -171,15 +186,16 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         />
 
         {/* Diagonal wipe overlay showing the previous theme. */}
-        {wipeImage && (
-          <img
-            src={wipeImage}
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute inset-0 h-full w-full select-none"
-            style={{ clipPath: diagonalClipPath(wipeProgress) }}
-          />
-        )}
+        <canvas
+          ref={overlayRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full select-none"
+          style={{
+            clipPath:
+              wipeProgress != null ? diagonalClipPath(wipeProgress) : "none",
+            opacity: wipeProgress != null ? 1 : 0,
+          }}
+        />
 
         <AnimatePresence>
           {loading && (
