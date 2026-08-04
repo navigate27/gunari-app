@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "motion/react";
 import { renderToCanvas, ARTWORK_W, ARTWORK_H } from "@/lib/render/png";
 import type { GunariInput } from "@/lib/types";
 import type { SkyState } from "@/lib/astronomy/engine";
@@ -40,11 +40,41 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
   const [rendering, setRendering] = React.useState(false);
 
-  // 3D grab-rotate: horizontal drag drives rotateY (yaw) with perspective
-  // depth. Springs back to face-on when released.
+  // 3D grab-rotate: horizontal pointer drag drives rotateY (yaw) + a subtle
+  // rotateZ roll, with perspective depth. The card never translates — it
+  // stays put and only spins. Springs back to face-on on release.
   const dragX = useMotionValue(0);
   const rotateY = useTransform(dragX, [-200, 200], [-28, 28]);
   const rotateZ = useTransform(dragX, [-200, 200], [-4, 4]);
+
+  const dragRef = React.useRef<{
+    startX: number;
+    startDragX: number;
+    pointerId: number;
+  } | null>(null);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    dragRef.current = {
+      startX: e.clientX,
+      startDragX: dragX.get(),
+      pointerId: e.pointerId,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const st = dragRef.current;
+    if (!st || st.pointerId !== e.pointerId) return;
+    const dx = e.clientX - st.startX;
+    const next = Math.max(-200, Math.min(200, st.startDragX + dx));
+    dragX.set(next);
+  };
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const st = dragRef.current;
+    if (!st || st.pointerId !== e.pointerId) return;
+    dragRef.current = null;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    animate(dragX, 0, { type: "spring", stiffness: 180, damping: 18 });
+  };
 
   // Animated moon opacity (0..1).
   const moonOpacityRef = React.useRef(input.moon ? 1 : 0);
@@ -178,19 +208,18 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        drag="x"
-        dragConstraints={{ left: -200, right: 200 }}
-        dragElastic={0.18}
-        dragSnapToOrigin
-        whileDrag={{ scale: 1.02 }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        whileTap={{ scale: 1.02 }}
         style={{
-          x: dragX,
           rotateY,
           rotateZ,
           transformPerspective: 900,
           cursor: "grab",
         }}
-        className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-white/8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] active:cursor-grabbing"
+        className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-white/8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] active:cursor-grabbing touch-none select-none"
       >
         <canvas
           ref={canvasRef}
