@@ -3,7 +3,7 @@ import type { FrameId, ThemePalette } from "../types";
 export interface FrameStyle {
   id: FrameId;
   label: string;
-  /** Content padding (fraction of canvas short edge). Frame strokes are drawn at the canvas edge, independent of this padding. */
+  /** Outer margin (fraction of canvas short edge). Frame is drawn at the inner edge of this margin, hugging the content. */
   margin: number;
   /** Stroke width of inner keyline (px at 1080 wide). */
   keyline: number;
@@ -58,44 +58,41 @@ export function drawFrame(
   if (style.id === "blank") {
     return { inner: { x: 0, y: 0, w: W, h: H } };
   }
-  // Content padding — independent of frame position. Frame strokes are
-  // drawn at the canvas edge, offset inward by half their stroke width so
-  // the full stroke sits inside the canvas (no clipping).
+  // Frame is drawn at the inner edge of the margin — hugging the content.
+  // The margin is the space between the canvas edge and the frame.
   const m = style.margin * Math.min(W, H);
+  const ix = m;
+  const iy = m;
+  const iw = W - 2 * m;
+  const ih = H - 2 * m;
 
   ctx.save();
-  // Safety inset keeps the stroke's anti-aliased outer pixels fully inside
-  // the canvas so corners don't clip. 3.9px (2.6px × 1.5) per user request.
-  const SAFE = 3.9;
-  // Outer rail — at the canvas edge
+  // Outer hairline (rail) — at the content boundary
   if (style.rail > 0) {
     ctx.strokeStyle = palette.accent;
     ctx.globalAlpha = 0.85;
     ctx.lineWidth = style.rail;
-    const off = style.rail / 2 + SAFE;
-    ctx.strokeRect(off, off, W - 2 * off, H - 2 * off);
+    ctx.strokeRect(ix, iy, iw, ih);
   }
   // Inner keyline — just inside the rail
   if (style.keyline > 0) {
     ctx.strokeStyle = palette.compass;
     ctx.globalAlpha = 0.9;
     ctx.lineWidth = style.keyline;
-    const railW = style.rail > 0 ? style.rail : 0;
-    const off = railW + 4 + style.keyline / 2 + SAFE;
-    ctx.strokeRect(off, off, W - 2 * off, H - 2 * off);
+    const inset = 4;
+    ctx.strokeRect(ix + inset, iy + inset, iw - 2 * inset, ih - 2 * inset);
   }
-  // Corner ticks — at the canvas corners
+  // Corner ticks — at the content boundary corners
   if (style.corner === "tick") {
     ctx.strokeStyle = palette.accent;
     ctx.globalAlpha = 0.9;
     ctx.lineWidth = 1.2;
     const t = 16;
-    const off = 4 + SAFE;
     const corners: [number, number, number, number][] = [
-      [off, off, 1, 1],
-      [W - off, off, -1, 1],
-      [off, H - off, 1, -1],
-      [W - off, H - off, -1, -1],
+      [ix, iy, 1, 1],
+      [ix + iw, iy, -1, 1],
+      [ix, iy + ih, 1, -1],
+      [ix + iw, iy + ih, -1, -1],
     ];
     for (const [x, y, dx, dy] of corners) {
       ctx.beginPath();
@@ -108,5 +105,5 @@ export function drawFrame(
   }
   ctx.restore();
 
-  return { inner: { x: m, y: m, w: W - 2 * m, h: H - 2 * m } };
+  return { inner: { x: ix, y: iy, w: iw, h: ih } };
 }
