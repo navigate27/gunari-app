@@ -43,8 +43,8 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   // 3D grab-rotate: horizontal drag drives rotateY (yaw) with perspective
   // depth. Springs back to face-on when released.
   const dragX = useMotionValue(0);
-  const rotateY = useTransform(dragX, [-200, 200], [28, -28]);
-  const rotateZ = useTransform(dragX, [-200, 200], [4, -4]);
+  const rotateY = useTransform(dragX, [-200, 200], [-28, 28]);
+  const rotateZ = useTransform(dragX, [-200, 200], [-4, 4]);
 
   // Animated moon opacity (0..1).
   const moonOpacityRef = React.useRef(input.moon ? 1 : 0);
