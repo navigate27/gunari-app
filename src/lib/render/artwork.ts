@@ -19,6 +19,8 @@ export interface ArtworkRenderInput {
   input: GunariInput;
   stars: VisibleStar[];
   moon?: { x: number; y: number; phase: number };
+  /** 0..1 opacity for the moon. Used to fade it in/out when toggling visibility. */
+  moonOpacity?: number;
 }
 
 export function renderArtwork(
@@ -51,6 +53,14 @@ export function renderArtwork(
   // 5. Star chart circle (center)
   const circle = computeCircle(inner, messageY != null);
   drawChartSurfaceBorder(ctx, circle, palette);
+  // Always pass the moon through; visibility is controlled by moonOpacity
+  // (0 hides it). This lets the live preview animate the fade in/out.
+  const moonOpacity =
+    data.moonOpacity != null
+      ? data.moonOpacity
+      : input.moon === false
+      ? 0
+      : 1;
   chartStyle.render(
     ctx,
     circle.cx,
@@ -58,7 +68,8 @@ export function renderArtwork(
     circle.rInner,
     stars,
     palette,
-    input.moon === false ? undefined : moon
+    moon,
+    moonOpacity
   );
   // 6. Compass ring (surrounds chart)
   if (input.compass !== "blank") {

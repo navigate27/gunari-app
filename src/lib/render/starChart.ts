@@ -10,7 +10,8 @@ export interface StarChartStyle {
     r: number,
     stars: VisibleStar[],
     palette: ThemePalette,
-    moon?: { x: number; y: number; phase: number }
+    moon?: { x: number; y: number; phase: number },
+    moonOpacity?: number
   ) => void;
 }
 
@@ -88,7 +89,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
   astronomical: {
     id: "astronomical",
     label: "Astronomical",
-    render: (ctx, cx, cy, r, stars, palette, moon) => {
+    render: (ctx, cx, cy, r, stars, palette, moon, moonOpacity) => {
       ctx.save();
       clipCircle(ctx, cx, cy, r);
 
@@ -127,7 +128,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       if (moon) {
         const mx = cx + (moon.x - 0.5) * 2 * r;
         const my = cy + (moon.y - 0.5) * 2 * r;
-        drawMoon(ctx, mx, my, r * 0.036, moon.phase, palette);
+        drawMoon(ctx, mx, my, r * 0.036, moon.phase, palette, false, moonOpacity);
       }
       ctx.restore();
     },
@@ -135,7 +136,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
   dreamscape: {
     id: "dreamscape",
     label: "Dreamscape",
-    render: (ctx, cx, cy, r, stars, palette, moon) => {
+    render: (ctx, cx, cy, r, stars, palette, moon, moonOpacity) => {
       ctx.save();
       clipCircle(ctx, cx, cy, r);
 
@@ -179,7 +180,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       if (moon) {
         const mx = cx + (moon.x - 0.5) * 2 * r;
         const my = cy + (moon.y - 0.5) * 2 * r;
-        drawMoon(ctx, mx, my, r * 0.042, moon.phase, palette, true);
+        drawMoon(ctx, mx, my, r * 0.042, moon.phase, palette, true, moonOpacity);
       }
       ctx.restore();
     },
@@ -193,9 +194,12 @@ function drawMoon(
   r: number,
   phase: number,
   palette: ThemePalette,
-  soft = false
+  soft = false,
+  opacity: number = 1
 ) {
+  if (opacity <= 0) return;
   ctx.save();
+  ctx.globalAlpha = opacity;
   // Glow
   const glow = ctx.createRadialGradient(x, y, 0, x, y, r * (soft ? 6 : 4));
   glow.addColorStop(0, hexWithAlpha(palette.star, 0.4));
@@ -207,7 +211,7 @@ function drawMoon(
 
   // Body
   ctx.fillStyle = palette.star;
-  ctx.globalAlpha = 0.95;
+  ctx.globalAlpha = 0.95 * opacity;
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fill();

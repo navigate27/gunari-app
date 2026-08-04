@@ -12,12 +12,60 @@ interface LivePreviewProps {
   loading?: boolean;
 }
 
+const MOON_ANIM_MS = 600;
+
+function easeInOutCubic(t: number): number {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const [rendering, setRendering] = React.useState(false);
 
-  // Redraw whenever the input or sky changes. Debounced with rAF so rapid
-  // edits (e.g. typing in the title) don't queue renders.
+  // Animated moon opacity (0..1). Target is 1 when input.moon is on, else 0.
+  const moonOpacityRef = React.useRef(input.moon ? 1 : 0);
+  const moonAnimRef = React.useRef<{
+    startTime: number;
+    from: number;
+    to: number;
+  } | null>(null);
+  const [moonTick, setMoonTick] = React.useState(0);
+
+  // Moon visibility animation. Runs a rAF loop that tweens opacity from
+  // current → target whenever input.moon flips.
+  React.useEffect(() => {
+    const target = input.moon ? 1 : 0;
+    const current = moonOpacityRef.current;
+    if (current === target) return;
+
+    moonAnimRef.current = {
+      startTime: performance.now(),
+      from: current,
+      to: target,
+    };
+
+    let raf = 0;
+    const tick = (now: number) => {
+      const a = moonAnimRef.current;
+      if (!a) return;
+      const t = Math.min(1, (now - a.startTime) / MOON_ANIM_MS);
+      const e = easeInOutCubic(t);
+      moonOpacityRef.current = a.from + (a.to - a.from) * e;
+      setMoonTick((n) => n + 1);
+      if (t < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        moonAnimRef.current = null;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      moonAnimRef.current = null;
+    };
+  }, [input.moon]);
+
+  // Redraw whenever input / sky / animated moon opacity changes.
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !sky) return;
@@ -30,6 +78,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         input,
         stars: sky.stars,
         moon: sky.moon,
+        moonOpacity: moonOpacityRef.current,
       }).finally(() => setRendering(false));
     };
     raf = requestAnimationFrame(run);
@@ -39,6 +88,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   }, [
     input,
     sky,
+    moonTick,
     input.theme,
     input.frame,
     input.compass,
