@@ -116,7 +116,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       ctx.globalAlpha = 1;
 
       // Stars
-      const baseR = palette.light ? 1.1 : 1.5;
+      const baseR = palette.light ? 1.3 : 1.8;
       for (const s of stars) {
         const x = cx + (s.x - 0.5) * 2 * r;
         const y = cy + (s.y - 0.5) * 2 * r;
@@ -169,7 +169,7 @@ export const STAR_CHART_STYLES: Record<StarChartStyleId, StarChartStyle> = {
       ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
 
       // Stars — larger halos, no diffraction spikes
-      const baseR = palette.light ? 1.4 : 1.9;
+      const baseR = palette.light ? 1.6 : 2.1;
       for (const s of stars) {
         const x = cx + (s.x - 0.5) * 2 * r;
         const y = cy + (s.y - 0.5) * 2 * r;

@@ -91,6 +91,9 @@ const MIRRORS = [
   "https://raw.githubusercontent.com/ut-astropa/astronomy-data/main/hipparcos-mag5.json",
 ];
 
+// Magnitude cap — fainter stars (higher mag number) are included.
+const MAG_LIMIT = 6.5;
+
 function detPrng(seed) {
   let s = seed >>> 0;
   return () => {
@@ -105,14 +108,16 @@ function proceduralFallback() {
   for (const [name, ra, dec, mag, hip] of NAMED_ANCHORS) {
     stars.push({ ra, dec, mag, hip, name });
   }
-  // Generate ~400 more with realistic mag distribution (mostly faint).
+  // Generate a richer field with a realistic magnitude distribution
+  // (mostly faint). Goes up to MAG_LIMIT so the sky looks dense.
   const rand = detPrng(0x5eed);
-  for (let i = 0; i < 400; i++) {
+  const COUNT = 1500;
+  for (let i = 0; i < COUNT; i++) {
     const ra = rand() * 24;
     const dec = Math.asin(rand() * 2 - 1) * (180 / Math.PI);
-    // Bias toward fainter stars: mag in [1.5, 5.4].
+    // Bias toward fainter stars: mag in [1.5, MAG_LIMIT].
     const u = rand();
-    const mag = 1.5 + Math.pow(u, 0.55) * 3.9;
+    const mag = 1.5 + Math.pow(u, 0.45) * (MAG_LIMIT - 1.5);
     stars.push({ ra, dec, mag, hip: 700000 + i });
   }
   return stars;
@@ -149,7 +154,7 @@ async function tryFetch() {
       const out = [];
       for (const r of list) {
         const n = normalizeRecord(r);
-        if (n && n.mag < 5.5) out.push(n);
+        if (n && n.mag < MAG_LIMIT) out.push(n);
       }
       if (out.length > 100) return out;
     } catch {

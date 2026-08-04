@@ -89,11 +89,12 @@ function clamp1(v: number): number {
  * Compute apparent magnitude → brightness 0..1 with subtle nonlinear curve.
  */
 export function magnitudeToBrightness(mag: number): number {
-  // Sirius ≈ -1.46, faintest visible ≈ 5.5. Map [−2, 5.5] → [1, 0].
-  const t = (mag - -2) / (5.5 - -2);
+  // Sirius ≈ -1.46, faintest visible ≈ 6.5. Map [−2, 6.5] → [1, 0].
+  const t = (mag - -2) / (6.5 - -2);
   const clamped = Math.min(1, Math.max(0, t));
-  // Perceptual gamma so bright stars pop while faint stars stay subtle.
-  return Math.pow(1 - clamped, 1.6);
+  // Bright stars pop, faint stars stay visible — gentler gamma plus a small
+  // floor so the new fainter end of the catalog actually renders as a dot.
+  return Math.pow(1 - clamped, 1.25) * 0.95 + 0.05;
 }
 
 /**
