@@ -64,12 +64,13 @@ export function drawFrame(
   const m = style.margin * Math.min(W, H);
 
   ctx.save();
-  // Outer rail — at the canvas edge
+  // Outer rail — at the canvas edge (2px safety inset so the stroke's
+  // anti-aliased outer pixels stay fully inside the canvas)
   if (style.rail > 0) {
     ctx.strokeStyle = palette.accent;
     ctx.globalAlpha = 0.85;
     ctx.lineWidth = style.rail;
-    const off = style.rail / 2;
+    const off = style.rail / 2 + 2;
     ctx.strokeRect(off, off, W - 2 * off, H - 2 * off);
   }
   // Inner keyline — just inside the rail
@@ -78,7 +79,7 @@ export function drawFrame(
     ctx.globalAlpha = 0.9;
     ctx.lineWidth = style.keyline;
     const railW = style.rail > 0 ? style.rail : 0;
-    const off = railW + 4 + style.keyline / 2;
+    const off = railW + 4 + style.keyline / 2 + 2;
     ctx.strokeRect(off, off, W - 2 * off, H - 2 * off);
   }
   // Corner ticks — at the canvas corners
@@ -87,7 +88,7 @@ export function drawFrame(
     ctx.globalAlpha = 0.9;
     ctx.lineWidth = 1.2;
     const t = 16;
-    const off = 4;
+    const off = 6;
     const corners: [number, number, number, number][] = [
       [off, off, 1, 1],
       [W - off, off, -1, 1],
