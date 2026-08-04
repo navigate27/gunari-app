@@ -202,7 +202,7 @@ function computeCircle(
   const rOuter = Math.min(inner.w * 0.42, available * 0.48);
   // The instrument compass is a triple-ring scientific layout that needs
   // more radial room than the minimal hairline ring.
-  const rInner = rOuter * (compassId === "instrument" ? 0.80 : 0.92);
+  const rInner = rOuter * (compassId === "instrument" ? 0.87 : 0.92);
   const cy = (top + bottom) / 2;
   return { cx, cy, rOuter, rInner };
 }
