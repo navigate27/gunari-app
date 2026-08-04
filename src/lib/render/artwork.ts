@@ -13,8 +13,8 @@ import { STAR_CHART_STYLES } from "./starChart";
 import { drawWordmark } from "./wordmark";
 import { formatDateLong, formatTimeLong, formatCoordinate } from "../utils";
 
-export const ARTWORK_W = 1080;
-export const ARTWORK_H = 1920;
+export const ARTWORK_W = 1296;
+export const ARTWORK_H = 2304;
 
 export interface ArtworkRenderInput {
   input: GunariInput;

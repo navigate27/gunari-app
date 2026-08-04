@@ -5,9 +5,9 @@ export interface FrameStyle {
   label: string;
   /** Outer margin (fraction of canvas short edge). */
   margin: number;
-  /** Stroke width of inner keyline (px at 1080 wide). */
+  /** Stroke width of inner keyline (px at 1296 wide). */
   keyline: number;
-  /** Stroke width of outer rail (px at 1080 wide). 0 = none. */
+  /** Stroke width of outer rail (px at 1296 wide). 0 = none. */
   rail: number;
   /** Corner ornament style. */
   corner: "none" | "tick" | "notch";
