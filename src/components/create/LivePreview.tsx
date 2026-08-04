@@ -45,9 +45,9 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   // translates — it stays put and only spins. Springs back on release.
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
-  const rotateY = useTransform(dragX, [-200, 200], [-28, 28]);
-  const rotateZ = useTransform(dragX, [-200, 200], [-4, 4]);
-  const rotateX = useTransform(dragY, [-200, 200], [-28, 28]);
+  const rotateY = useTransform(dragX, [-100, 100], [-28, 28]);
+  const rotateZ = useTransform(dragX, [-100, 100], [-4, 4]);
+  const rotateX = useTransform(dragY, [-100, 100], [28, -28]);
 
   const dragRef = React.useRef<{
     startX: number;
@@ -72,8 +72,8 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     if (!st || st.pointerId !== e.pointerId) return;
     const dx = e.clientX - st.startX;
     const dy = e.clientY - st.startY;
-    const nextX = Math.max(-200, Math.min(200, st.startDragX + dx));
-    const nextY = Math.max(-200, Math.min(200, st.startDragY + dy));
+    const nextX = Math.max(-100, Math.min(100, st.startDragX + dx));
+    const nextY = Math.max(-100, Math.min(100, st.startDragY + dy));
     dragX.set(nextX);
     dragY.set(nextY);
   };
