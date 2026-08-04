@@ -172,7 +172,13 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-white/8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]"
+        drag="y"
+        dragConstraints={{ top: -140, bottom: 140 }}
+        dragElastic={0.18}
+        dragSnapToOrigin
+        whileDrag={{ scale: 1.015 }}
+        style={{ cursor: "grab" }}
+        className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-white/8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] active:cursor-grabbing"
       >
         <canvas
           ref={canvasRef}
