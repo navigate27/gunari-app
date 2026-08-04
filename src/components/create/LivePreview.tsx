@@ -13,9 +13,26 @@ interface LivePreviewProps {
 }
 
 const MOON_ANIM_MS = 600;
+const THEME_WIPE_MS = 800;
 
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+/**
+ * Diagonal wipe clip-path. The overlay (showing the previous theme) starts
+ * covering everything and retreats toward the bottom-right corner along the
+ * main diagonal as `p` goes 0 → 1, revealing the new theme underneath.
+ */
+function diagonalClipPath(p: number): string {
+  if (p <= 0) return "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+  if (p >= 1) return "polygon(100% 100%, 100% 100%, 100% 100%)";
+  if (p < 0.5) {
+    const a = 200 * p; // 0 → 100
+    return `polygon(${a}% 0%, 100% 0%, 100% 100%, 0% 100%, 0% ${a}%)`;
+  }
+  const a = 200 * p - 100; // 0 → 100
+  return `polygon(100% ${a}%, 100% 100%, ${a}% 100%)`;
 }
 
 export function LivePreview({ input, sky, loading }: LivePreviewProps) {
@@ -31,8 +48,13 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   } | null>(null);
   const [moonTick, setMoonTick] = React.useState(0);
 
-  // Moon visibility animation. Runs a rAF loop that tweens opacity from
-  // current → target whenever input.moon flips.
+  // Theme wipe: snapshot of the canvas before the theme change, plus
+  // an animated progress value 0..1 that drives the diagonal clip-path.
+  const prevThemeRef = React.useRef(input.theme);
+  const [wipeImage, setWipeImage] = React.useState<string | null>(null);
+  const [wipeProgress, setWipeProgress] = React.useState(0);
+
+  // Moon visibility animation.
   React.useEffect(() => {
     const target = input.moon ? 1 : 0;
     const current = moonOpacityRef.current;
@@ -66,9 +88,22 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   }, [input.moon]);
 
   // Redraw whenever input / sky / animated moon opacity changes.
+  // When the theme changes, snapshot the canvas first so we can run a
+  // diagonal wipe overlay over the new render.
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !sky) return;
+
+    const themeChanged = prevThemeRef.current !== input.theme;
+    let snapshot: string | null = null;
+    if (themeChanged && canvas.width > 0) {
+      try {
+        snapshot = canvas.toDataURL("image/png");
+      } catch {
+        snapshot = null;
+      }
+    }
+    prevThemeRef.current = input.theme;
 
     let raf = 0;
     setRendering(true);
@@ -82,8 +117,27 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
       }).finally(() => setRendering(false));
     };
     raf = requestAnimationFrame(run);
+
+    let wipeRaf = 0;
+    if (snapshot) {
+      setWipeImage(snapshot);
+      setWipeProgress(0);
+      const startT = performance.now();
+      const wipeTick = (now: number) => {
+        const t = Math.min(1, (now - startT) / THEME_WIPE_MS);
+        setWipeProgress(easeInOutCubic(t));
+        if (t < 1) {
+          wipeRaf = requestAnimationFrame(wipeTick);
+        } else {
+          setWipeImage(null);
+        }
+      };
+      wipeRaf = requestAnimationFrame(wipeTick);
+    }
+
     return () => {
       if (raf) cancelAnimationFrame(raf);
+      if (wipeRaf) cancelAnimationFrame(wipeRaf);
     };
   }, [
     input,
@@ -115,6 +169,18 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
           className="block h-full w-full"
           aria-label="Gunari artwork preview"
         />
+
+        {/* Diagonal wipe overlay showing the previous theme. */}
+        {wipeImage && (
+          <img
+            src={wipeImage}
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full select-none"
+            style={{ clipPath: diagonalClipPath(wipeProgress) }}
+          />
+        )}
+
         <AnimatePresence>
           {loading && (
             <motion.div
