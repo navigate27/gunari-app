@@ -55,3 +55,29 @@ function buildLabel(p: PhotonFeature["properties"]): string {
     .join(", ");
   return [head, tail].filter(Boolean).join(", ");
 }
+
+const PHOTON_REVERSE = "https://photon.komoot.io/reverse";
+
+/**
+ * Reverse-geocode coordinates to a human-readable label.
+ * Returns null if no result. Used by the "use my location" button so the
+ * location field shows the place name, not raw coordinates.
+ */
+export async function reverseGeocode(
+  lat: number,
+  lng: number,
+  signal?: AbortSignal
+): Promise<string | null> {
+  const url = `${PHOTON_REVERSE}?lon=${encodeURIComponent(lng)}&lat=${encodeURIComponent(lat)}`;
+  try {
+    const res = await fetch(url, { signal, headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { features?: PhotonFeature[] };
+    const f = data.features?.[0];
+    if (!f) return null;
+    const label = buildLabel(f.properties);
+    return label || null;
+  } catch {
+    return null;
+  }
+}

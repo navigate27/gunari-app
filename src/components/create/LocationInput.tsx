@@ -4,7 +4,7 @@ import * as React from "react";
 import { MapPin, Crosshair, Search, Loader2, X } from "lucide-react";
 import { Input, Label } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { searchPlaces, type PlaceResult } from "@/lib/location/photon";
+import { searchPlaces, reverseGeocode, type PlaceResult } from "@/lib/location/photon";
 import type { GunariLocation } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -65,16 +65,21 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
     if (!navigator.geolocation) return;
     setBusy(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const { latitude, longitude } = pos.coords;
-        onChange({
-          lat: +latitude.toFixed(4),
-          lng: +longitude.toFixed(4),
-          label:
-            value.label && !value.label.startsWith("Lat ")
-              ? value.label
-              : `Lat ${latitude.toFixed(2)}, Lng ${longitude.toFixed(2)}`,
-        });
+        const lat = +latitude.toFixed(4);
+        const lng = +longitude.toFixed(4);
+        // Try to resolve a human-readable label via Photon reverse geocode.
+        // Falls back to a coordinate string if the network call fails.
+        let label = `Lat ${latitude.toFixed(2)}, Lng ${longitude.toFixed(2)}`;
+        try {
+          const ctrl = new AbortController();
+          const place = await reverseGeocode(lat, lng, ctrl.signal);
+          if (place) label = place;
+        } catch {
+          // keep coordinate fallback
+        }
+        onChange({ lat, lng, label });
         setBusy(false);
       },
       () => setBusy(false),
