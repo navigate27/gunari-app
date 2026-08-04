@@ -242,7 +242,8 @@ function computeCircle(
 ): { cx: number; cy: number; rOuter: number; rInner: number } {
   const cx = inner.x + inner.w / 2;
   // Vertical center: pull up slightly when message present so layout breathes.
-  const top = inner.y + inner.h * (hasMessage ? 0.30 : 0.24);
+  // When there's no message, bring the chart closer to the title.
+  const top = inner.y + inner.h * (hasMessage ? 0.30 : 0.20);
   const bottom = inner.y + inner.h * 0.82;
   const available = bottom - top;
   const rOuter = Math.min(inner.w * 0.42, available * 0.48);
