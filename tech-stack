@@ -143,6 +143,22 @@ Used for:
 - Browser-side reporting (no backend)
 
 --------------------------------------------------
+SEO
+--------------------------------------------------
+
+- Next.js Metadata API (App Router)
+- sitemap.ts
+- robots.ts
+- Open Graph + Twitter Card via /public/logo.png
+- JSON-LD WebApplication schema
+
+Site URL
+--------------------------------------------------
+
+- Configurable via NEXT_PUBLIC_SITE_URL env var
+- Defaults to https://gunari-app.vercel.app
+
+--------------------------------------------------
 ARCHITECTURE
 --------------------------------------------------
 
