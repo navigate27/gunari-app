@@ -14,6 +14,7 @@ interface LivePreviewProps {
 
 const MOON_ANIM_MS = 600;
 const THEME_WIPE_MS = 800;
+const COMPASS_SPIN_MS = 700;
 
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -97,6 +98,37 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
 
   const prevThemeRef = React.useRef(input.theme);
 
+  // Compass spin-in animation (0 = just changed, 1 = settled).
+  const compassSpinRef = React.useRef(1);
+  const compassAnimRef = React.useRef<{ startTime: number } | null>(null);
+  const [compassTick, setCompassTick] = React.useState(0);
+  const prevCompassRef = React.useRef(input.compass);
+
+  React.useEffect(() => {
+    if (prevCompassRef.current === input.compass) return;
+    prevCompassRef.current = input.compass;
+    compassSpinRef.current = 0;
+    compassAnimRef.current = { startTime: performance.now() };
+    let raf = 0;
+    const tick = (now: number) => {
+      const a = compassAnimRef.current;
+      if (!a) return;
+      const t = Math.min(1, (now - a.startTime) / COMPASS_SPIN_MS);
+      compassSpinRef.current = easeInOutCubic(t);
+      setCompassTick((n) => n + 1);
+      if (t < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        compassAnimRef.current = null;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      compassAnimRef.current = null;
+    };
+  }, [input.compass]);
+
   // Moon visibility animation.
   React.useEffect(() => {
     const target = input.moon ? 1 : 0;
@@ -170,6 +202,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
         stars: sky.stars,
         moon: sky.moon,
         moonOpacity: moonOpacityRef.current,
+        compassSpin: compassSpinRef.current,
       }).finally(() => setRendering(false));
     };
     raf = requestAnimationFrame(run);
@@ -199,6 +232,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
     input,
     sky,
     moonTick,
+    compassTick,
     input.theme,
     input.frame,
     input.compass,

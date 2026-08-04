@@ -22,6 +22,8 @@ export interface ArtworkRenderInput {
   moon?: { x: number; y: number; phase: number };
   /** 0..1 opacity for the moon. Used to fade it in/out when toggling visibility. */
   moonOpacity?: number;
+  /** 0..1 spin-in progress for the compass (0 = just changed, 1 = settled). */
+  compassSpin?: number;
 }
 
 export function renderArtwork(
@@ -78,14 +80,36 @@ export function renderArtwork(
   );
   // 6. Compass ring (surrounds chart)
   if (input.compass !== "blank") {
-    compass.draw(
-      ctx,
-      circle.cx,
-      circle.cy,
-      circle.rOuter,
-      circle.rInner,
-      palette
-    );
+    const spin = data.compassSpin != null ? data.compassSpin : 1;
+    if (spin >= 1) {
+      compass.draw(
+        ctx,
+        circle.cx,
+        circle.cy,
+        circle.rOuter,
+        circle.rInner,
+        palette
+      );
+    } else {
+      // Spin-in: rotate from 180° back to 0°, fade 0.25 → 1, scale 0.94 → 1.
+      ctx.save();
+      ctx.globalAlpha = 0.25 + 0.75 * spin;
+      const angle = (1 - spin) * Math.PI;
+      const s = 0.94 + 0.06 * spin;
+      ctx.translate(circle.cx, circle.cy);
+      ctx.rotate(angle);
+      ctx.scale(s, s);
+      ctx.translate(-circle.cx, -circle.cy);
+      compass.draw(
+        ctx,
+        circle.cx,
+        circle.cy,
+        circle.rOuter,
+        circle.rInner,
+        palette
+      );
+      ctx.restore();
+    }
   } else {
     // Even with compass blank, draw a hairline ring around the chart for definition.
     ctx.save();
