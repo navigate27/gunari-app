@@ -188,7 +188,7 @@ function drawTitle(
     ctx.fillText(line, inner.x + inner.w / 2, y);
     y += lh;
   }
-  // Underline accent
+  // Underline accent — only when there's a message below to separate from
   ctx.strokeStyle = palette.accent;
   ctx.globalAlpha = 0.7;
   ctx.lineWidth = 1;
@@ -196,7 +196,9 @@ function drawTitle(
   const underW = Math.min(inner.w * 0.18, 220);
   ctx.moveTo(inner.x + inner.w / 2 - underW / 2, y + 4);
   ctx.lineTo(inner.x + inner.w / 2 + underW / 2, y + 4);
-  ctx.stroke();
+  if (input.message?.trim()) {
+    ctx.stroke();
+  }
   ctx.restore();
   return y + 24;
 }
