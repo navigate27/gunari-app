@@ -70,24 +70,27 @@ describe("webMercator", () => {
 });
 
 describe("normalizeToViewport", () => {
+  const bbox = [120.95, 14.58, 121.02, 14.63] as [number, number, number, number];
   it("maps the bbox min corner to [0, 0]", () => {
-    const [x, y] = normalizeToViewport(0, 0, [-1, -1, 1, 1]);
-    expect(x).toBeCloseTo(0, 6);
-    expect(y).toBeCloseTo(0, 6);
+    const { x, y } = webMercator(14.58, 120.95);
+    const [nx, ny] = normalizeToViewport(x, y, bbox);
+    expect(nx).toBeCloseTo(0, 6);
+    expect(ny).toBeCloseTo(0, 6);
   });
   it("maps the bbox max corner to [1, 1]", () => {
-    const [x, y] = normalizeToViewport(1, 1, [-1, -1, 1, 1]);
-    // Note: y is flipped because canvas y goes down.
-    expect(x).toBeCloseTo(1, 6);
-    expect(y).toBeCloseTo(1, 6);
+    const { x, y } = webMercator(14.63, 121.02);
+    const [nx, ny] = normalizeToViewport(x, y, bbox);
+    expect(nx).toBeCloseTo(1, 6);
+    expect(ny).toBeCloseTo(1, 6);
   });
-  it("maps the bbox center to [0.5, 0.5]", () => {
-    normalizeToViewport(0, 0, [-1, -1, 1, 1]);
-    // (0,0) is the center, but the min-corner test above already covers this.
-    // Test the center of an off-center bbox.
-    const [cx, cy] = normalizeToViewport(5, 5, [0, 0, 10, 10]);
-    expect(cx).toBeCloseTo(0.5, 6);
-    expect(cy).toBeCloseTo(0.5, 6);
+  it("maps the bbox center to ~[0.5, 0.5]", () => {
+    // x is linear in lng so center lng maps to exactly 0.5. y is nonlinear
+    // (Mercator) so center lat does NOT map to exactly 0.5; use 4 decimal
+    // places tolerance for the small-bbox near-linearity.
+    const { x, y } = webMercator(14.605, 120.985);
+    const [nx, ny] = normalizeToViewport(x, y, bbox);
+    expect(nx).toBeCloseTo(0.5, 6);
+    expect(ny).toBeCloseTo(0.5, 4);
   });
 });
 
