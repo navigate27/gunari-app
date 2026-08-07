@@ -86,7 +86,7 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
       if (tags.name) labels.push({ text: tags.name, x: 0, y: 0, class: "road" });
       continue;
     }
-    if (tags.natural === "water" || tags.water === "lake") {
+    if (tags.natural === "water") {
       water.push({ points: pts, name: tags.name });
       continue;
     }

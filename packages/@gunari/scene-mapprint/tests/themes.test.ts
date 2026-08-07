@@ -28,6 +28,7 @@ describe("MAP_THEMES", () => {
       expect(typeof p.marker).toBe("string");
       expect(typeof p.markerSymbol).toBe("string");
       expect(typeof p.label).toBe("string");
+      expect(typeof p.labelColor).toBe("string");
       expect(p.background).toHaveProperty("top");
       expect(p.background).toHaveProperty("bottom");
       expect(typeof p.light).toBe("boolean");

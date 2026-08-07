@@ -1,6 +1,6 @@
 import type { MapGeometry } from "../interpret/types";
 import type { SceneViewport } from "@gunari/core";
-import { webMercator, normalizeToViewport, simplifyLine, rotatePoints, bboxClip } from "@gunari/core";
+import { webMercator, normalizeToViewport, simplifyLine, rotatePoints } from "@gunari/core";
 import type { ProjectedMapGeometry, ProjectedRoad, ProjectedPolygon, ProjectedLabel } from "./types";
 
 /**
@@ -92,7 +92,6 @@ export function projectGeometry(
   function inOverscan(p: [number, number]): boolean {
     return p[0] >= -0.1 && p[0] <= 1.1 && p[1] >= -0.1 && p[1] <= 1.1;
   }
-  void bboxClip; // bbox-clip is used at the data-loading stage, not here.
 
   for (const r of roads) r.points = r.points.filter(inOverscan);
   for (let i = 0; i < waterways.length; i++) {

@@ -41,13 +41,7 @@ export function renderScaffold(ctx: CanvasRenderingContext2D, input: ScaffoldInp
   drawBackground(ctx, W, H, p);
   drawFrame(ctx, inner, p);
 
-  const slot = computeSceneSlot(inner, input.layout);
   input.scene.render(ctx, input.sceneGeometry, input.scenePalette);
-
-  // Wrap scene render with the slot's clip + transform via save/restore.
-  // NOTE: scene.render is called inside this save/restore so the scene can
-  // rely on the slot being already-clipped. We save/restore around it.
-  void slot;
 
   drawTitle(ctx, inner, p, input);
   if (input.message?.trim()) drawMessage(ctx, inner, p, input);
@@ -70,19 +64,6 @@ function drawFrame(ctx: CanvasRenderingContext2D, inner: { x: number; y: number;
   ctx.lineWidth = 1;
   ctx.strokeRect(inner.x, inner.y, inner.w, inner.h);
   ctx.restore();
-}
-
-function computeSceneSlot(inner: { x: number; y: number; w: number; h: number }, layout: LayoutId): { cx: number; cy: number; r: number } {
-  const cx = inner.x + inner.w / 2;
-  if (layout === "poster") {
-    const cy = inner.y + inner.h * 0.38;
-    const r = Math.min(inner.w * 0.42, inner.h * 0.32);
-    return { cx, cy, r };
-  }
-  // classic
-  const cy = inner.y + inner.h * 0.5;
-  const r = Math.min(inner.w * 0.42, inner.h * 0.3);
-  return { cx, cy, r };
 }
 
 function drawTitle(ctx: CanvasRenderingContext2D, inner: { x: number; y: number; w: number; h: number }, p: ThemePalette, input: ScaffoldInput): void {
@@ -145,8 +126,6 @@ function formatMetaDate(date: string, time: string): string {
   const [y, m, d] = date.split("-").map(Number);
   if (!y || !m || !d) return date.toUpperCase();
   const [hh, mm] = (time || "21:00").split(":").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d, hh || 21, mm || 0));
-  void dt;
   const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-  return `${d} ${months[m - 1]} ${y} · ${String(hh || 21).padStart(2, "0")}:${String(mm || 0).padStart(2, "0")}`;
+  return `${d} ${months[m - 1]} ${y} · ${String(hh ?? 21).padStart(2, "0")}:${String(mm ?? 0).padStart(2, "0")}`;
 }
