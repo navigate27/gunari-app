@@ -10,3 +10,4 @@ export * from "./shapes/shapes";
 export * from "./markers/markers";
 export * from "./styles/themes";
 export * from "./render/render";
+export * from "./scene";
