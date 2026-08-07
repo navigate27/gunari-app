@@ -2,12 +2,17 @@
   "name": "gunari",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "packages/@gunari/*"
+  ],
   "scripts": {
     "dev": "next dev -p 7842",
     "build": "next build",
     "start": "next start -p 7842",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "stars": "node scripts/build-starcatalog.mjs",
     "milkyway": "node scripts/build-milkyway.mjs",
     "catalogs": "node scripts/build-starcatalog.mjs && node scripts/build-milkyway.mjs",
@@ -35,6 +40,7 @@
     "playwright": "^1.62.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.8"
   }
 }
