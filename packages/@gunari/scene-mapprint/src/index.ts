@@ -8,3 +8,4 @@ export * from "./projection/types";
 export * from "./projection/project";
 export * from "./shapes/shapes";
 export * from "./markers/markers";
+export * from "./styles/themes";
