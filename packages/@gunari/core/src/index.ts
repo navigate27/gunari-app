@@ -7,3 +7,4 @@ export * from "./geometry/simplify";
 export * from "./geometry/rotate";
 export * from "./geometry/project";
 export * from "./geometry/mask";
+export * from "./export/png";
