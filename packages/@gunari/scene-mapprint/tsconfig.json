@@ -3,5 +3,10 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "include": ["src/**/*", "tests/**/*", "__fixtures__/**/*"]
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "__fixtures__/**/*",
+    "../core/src/geometry/simplify-geometry.d.ts"
+  ]
 }
