@@ -1,0 +1,18 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API",
+  "elements": [
+    { "type": "way", "id": 1, "tags": { "highway": "motorway", "name": "Skyway" },
+      "geometry": [{"lat": 14.60, "lon": 120.98}, {"lat": 14.61, "lon": 120.99}] },
+    { "type": "way", "id": 2, "tags": { "highway": "residential", "name": "Mabini St" },
+      "geometry": [{"lat": 14.605, "lon": 120.985}, {"lat": 14.606, "lon": 120.986}] },
+    { "type": "way", "id": 3, "tags": { "natural": "water", "name": "Laguna de Bay" },
+      "geometry": [{"lat": 14.60, "lon": 120.98}, {"lat": 14.61, "lon": 120.98}, {"lat": 14.61, "lon": 120.99}, {"lat": 14.60, "lon": 120.99}] },
+    { "type": "way", "id": 4, "tags": { "waterway": "river", "name": "Pasig River" },
+      "geometry": [{"lat": 14.60, "lon": 120.98}, {"lat": 14.61, "lon": 120.99}] },
+    { "type": "way", "id": 5, "tags": { "leisure": "park", "name": "Rizal Park" },
+      "geometry": [{"lat": 14.60, "lon": 120.98}, {"lat": 14.61, "lon": 120.98}, {"lat": 14.61, "lon": 120.99}, {"lat": 14.60, "lon": 120.99}] },
+    { "type": "node", "id": 100, "tags": { "place": "city", "name": "Manila" },
+      "lat": 14.5995, "lon": 120.9842 }
+  ]
+}
