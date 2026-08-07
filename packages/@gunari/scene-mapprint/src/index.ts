@@ -6,3 +6,4 @@ export * from "./data/cache";
 export * from "./projection/viewport";
 export * from "./projection/types";
 export * from "./projection/project";
+export * from "./shapes/shapes";
