@@ -2,3 +2,8 @@ export * from "./scene/types";
 export * from "./scene/scene";
 export { getScene } from "./scene/registry";
 export * from "./theme/theme";
+export * from "./geometry/bbox-clip";
+export * from "./geometry/simplify";
+export * from "./geometry/rotate";
+export * from "./geometry/project";
+export * from "./geometry/mask";
