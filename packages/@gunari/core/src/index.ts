@@ -8,3 +8,4 @@ export * from "./geometry/rotate";
 export * from "./geometry/project";
 export * from "./geometry/mask";
 export * from "./export/png";
+export * from "./artwork/scaffold";
