@@ -1,0 +1,7680 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.7 375dc00a",
+  "osm3s": {
+    "timestamp_osm_base": "2026-08-07T04:08:41Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+    {
+      "type": "node",
+      "id": 1080105342,
+      "lat": 14.5982613,
+      "lon": 120.9836081,
+      "tags": {
+        "alt_name:zh-Hant": "溪亞婆區;奎阿波區",
+        "name": "Quiapo",
+        "name:nan": "溪仔婆",
+        "name:zh": "溪仔婆區",
+        "name:zh-Hant": "溪仔婆區",
+        "place": "suburb",
+        "postal_code": "1002",
+        "ref": "133903000",
+        "wikidata": "Q1075125",
+        "wikimedia_commons": "Category:Quiapo, Manila",
+        "wikipedia": "en:Quiapo, Manila"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4177432022,
+      "lat": 14.5973189,
+      "lon": 120.9844565,
+      "tags": {
+        "admin_level": "10",
+        "admin_type:PH": "barangay",
+        "is_in:city": "Manila",
+        "is_in:suburb": "Quiapo",
+        "name": "Barangay 383",
+        "note": "Zone 39 District III",
+        "old_ref": "133903003",
+        "place": "neighbourhood",
+        "population": "2267",
+        "population:date": "2020-05-01",
+        "ref": "1380603003"
+      }
+    },
+    {
+      "type": "way",
+      "id": 4486405,
+      "bounds": {
+        "minlat": 14.5988582,
+        "minlon": 120.9842277,
+        "maxlat": 14.6004908,
+        "maxlon": 120.9845487
+      },
+      "nodes": [
+        163700040,
+        4177513050,
+        1974694505,
+        7900794488
+      ],
+      "geometry": [
+        {
+          "lat": 14.5988582,
+          "lon": 120.9842277
+        },
+        {
+          "lat": 14.5997342,
+          "lon": 120.9844004
+        },
+        {
+          "lat": 14.6002923,
+          "lon": 120.9845107
+        },
+        {
+          "lat": 14.6004908,
+          "lon": 120.9845487
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:right:protection:left": "solid_line",
+        "foot": "use_sidepath",
+        "highway": "primary",
+        "lanes": "4",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 9136006,
+      "bounds": {
+        "minlat": 14.6009342,
+        "minlon": 120.9816851,
+        "maxlat": 14.6026804,
+        "maxlon": 120.9819294
+      },
+      "nodes": [
+        67751572,
+        5060514538,
+        67751574,
+        7539427500
+      ],
+      "geometry": [
+        {
+          "lat": 14.6009342,
+          "lon": 120.9816851
+        },
+        {
+          "lat": 14.6023068,
+          "lon": 120.9818986
+        },
+        {
+          "lat": 14.6023527,
+          "lon": 120.9819047
+        },
+        {
+          "lat": 14.6026804,
+          "lon": 120.9819294
+        }
+      ],
+      "tags": {
+        "flood_prone": "yes",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Rizal Avenue",
+        "name:en": "Rizal Avenue",
+        "name:es": "Avenida Rizal",
+        "name:etymology": "José Rizal",
+        "name:etymology:wikidata": "Q1500",
+        "name:etymology:wikipedia": "es:José Rizal",
+        "name:fil": "Abenida Rizal",
+        "name:tl": "Abenida Rizal",
+        "oneway": "yes",
+        "ref": "150",
+        "source:maxspeed": "sign",
+        "surface": "concrete",
+        "wikidata": "Q7339067"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16081644,
+      "bounds": {
+        "minlat": 14.5980979,
+        "minlon": 120.980716,
+        "maxlat": 14.598428,
+        "maxlon": 120.9820673
+      },
+      "nodes": [
+        6887715891,
+        1423836743,
+        410545628,
+        1895729893,
+        410553129,
+        1423836741,
+        1974756756,
+        1974756755,
+        68085309
+      ],
+      "geometry": [
+        {
+          "lat": 14.5984056,
+          "lon": 120.980716
+        },
+        {
+          "lat": 14.598428,
+          "lon": 120.9808394
+        },
+        {
+          "lat": 14.5983861,
+          "lon": 120.9812041
+        },
+        {
+          "lat": 14.5983499,
+          "lon": 120.9814486
+        },
+        {
+          "lat": 14.598327,
+          "lon": 120.9816016
+        },
+        {
+          "lat": 14.5982538,
+          "lon": 120.9818727
+        },
+        {
+          "lat": 14.5982135,
+          "lon": 120.9819715
+        },
+        {
+          "lat": 14.5981603,
+          "lon": 120.982026
+        },
+        {
+          "lat": 14.5980979,
+          "lon": 120.9820673
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Carlos Palanca Street",
+        "old_name": "Echague Street",
+        "old_name:en": "Echague Street",
+        "old_name:es": "Calle Echague",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16081678,
+      "bounds": {
+        "minlat": 14.5996485,
+        "minlon": 120.9822832,
+        "maxlat": 14.5998589,
+        "maxlon": 120.983448
+      },
+      "nodes": [
+        168181142,
+        1278908823,
+        161728860,
+        168177167,
+        161728862
+      ],
+      "geometry": [
+        {
+          "lat": 14.5996485,
+          "lon": 120.983448
+        },
+        {
+          "lat": 14.5996649,
+          "lon": 120.9832129
+        },
+        {
+          "lat": 14.5997167,
+          "lon": 120.9828429
+        },
+        {
+          "lat": 14.5997891,
+          "lon": 120.9825122
+        },
+        {
+          "lat": 14.5998589,
+          "lon": 120.9822832
+        }
+      ],
+      "tags": {
+        "alt_name": "Pedro Paterno Street",
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "P. Paterno Street",
+        "name:en": "P. Paterno Street",
+        "name:es": "Calle P. Paterno",
+        "name:etymology": "Pedro Paterno",
+        "name:etymology:wikidata": "Q946237",
+        "name:tl": "Kalye P. Paterno",
+        "oneway": "yes",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16174062,
+      "bounds": {
+        "minlat": 14.5979593,
+        "minlon": 120.9851768,
+        "maxlat": 14.5994897,
+        "maxlon": 120.9888002
+      },
+      "nodes": [
+        163696786,
+        1900712565,
+        7900794491,
+        13951938418,
+        13126407774,
+        4177404084,
+        13126407782,
+        7900794490,
+        6660236293,
+        13327950691,
+        320819818,
+        223766777,
+        4177404049,
+        13127044590,
+        11579725638,
+        9958779582,
+        1869644917
+      ],
+      "geometry": [
+        {
+          "lat": 14.5994897,
+          "lon": 120.9888002
+        },
+        {
+          "lat": 14.599373,
+          "lon": 120.9886968
+        },
+        {
+          "lat": 14.5993028,
+          "lon": 120.9885293
+        },
+        {
+          "lat": 14.5990564,
+          "lon": 120.987906
+        },
+        {
+          "lat": 14.5989822,
+          "lon": 120.9877183
+        },
+        {
+          "lat": 14.5988656,
+          "lon": 120.9874242
+        },
+        {
+          "lat": 14.5987007,
+          "lon": 120.987008
+        },
+        {
+          "lat": 14.598622,
+          "lon": 120.9868095
+        },
+        {
+          "lat": 14.5985763,
+          "lon": 120.9866941
+        },
+        {
+          "lat": 14.5985464,
+          "lon": 120.9866186
+        },
+        {
+          "lat": 14.5984862,
+          "lon": 120.9864668
+        },
+        {
+          "lat": 14.5982429,
+          "lon": 120.9858825
+        },
+        {
+          "lat": 14.5981593,
+          "lon": 120.9856724
+        },
+        {
+          "lat": 14.5980605,
+          "lon": 120.985425
+        },
+        {
+          "lat": 14.5980259,
+          "lon": 120.9853383
+        },
+        {
+          "lat": 14.5979945,
+          "lon": 120.9852597
+        },
+        {
+          "lat": 14.5979593,
+          "lon": 120.9851768
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lane_markings": "no",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "F. R. Hidalgo Street",
+        "name:etymology:wikidata": "Q2391230",
+        "old_name": "Calle San Sebastian",
+        "postal_code": "1001",
+        "short_name": "R. Hidalgo Street;Hidalgo Street",
+        "sidewalk": "both",
+        "surface": "concrete",
+        "wikidata": "Q20988233",
+        "wikipedia": "en:Hidalgo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16174067,
+      "bounds": {
+        "minlat": 14.5972964,
+        "minlon": 120.9840168,
+        "maxlat": 14.5973682,
+        "maxlon": 120.9843945
+      },
+      "nodes": [
+        163700108,
+        400699534
+      ],
+      "geometry": [
+        {
+          "lat": 14.5973682,
+          "lon": 120.9840168
+        },
+        {
+          "lat": 14.5972964,
+          "lon": 120.9843945
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Arlegui Street",
+        "name:en": "Arlegui Street",
+        "name:es": "Calle Arlegui",
+        "name:tl": "Kalye Arlegui",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "concrete",
+        "width": "9"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16353995,
+      "bounds": {
+        "minlat": 14.598703,
+        "minlon": 120.9813397,
+        "maxlat": 14.5990172,
+        "maxlon": 120.9834031
+      },
+      "nodes": [
+        1977523962,
+        168176666,
+        1278908805,
+        168176766,
+        168177165,
+        168177531,
+        168177199,
+        402590623
+      ],
+      "geometry": [
+        {
+          "lat": 14.598703,
+          "lon": 120.9834031
+        },
+        {
+          "lat": 14.5987287,
+          "lon": 120.9833639
+        },
+        {
+          "lat": 14.5987673,
+          "lon": 120.9830879
+        },
+        {
+          "lat": 14.5988218,
+          "lon": 120.9826233
+        },
+        {
+          "lat": 14.5988853,
+          "lon": 120.9822065
+        },
+        {
+          "lat": 14.5989187,
+          "lon": 120.9819869
+        },
+        {
+          "lat": 14.5989608,
+          "lon": 120.9817106
+        },
+        {
+          "lat": 14.5990172,
+          "lon": 120.9813397
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Carriedo Street",
+        "name:en": "Carriedo Street",
+        "name:es": "Calle Carriedo",
+        "name:etymology": "Francisco Carriedo y Peredo",
+        "name:etymology:wikidata": "Q67710528",
+        "name:tl": "Kalye Carriedo",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16354016,
+      "bounds": {
+        "minlat": 14.5988853,
+        "minlon": 120.9822065,
+        "maxlat": 14.6007654,
+        "maxlon": 120.9829093
+      },
+      "nodes": [
+        700145058,
+        700145064,
+        168177167,
+        168177166,
+        168177165
+      ],
+      "geometry": [
+        {
+          "lat": 14.6007654,
+          "lon": 120.9829093
+        },
+        {
+          "lat": 14.6003163,
+          "lon": 120.9827274
+        },
+        {
+          "lat": 14.5997891,
+          "lon": 120.9825122
+        },
+        {
+          "lat": 14.5993695,
+          "lon": 120.9823481
+        },
+        {
+          "lat": 14.5988853,
+          "lon": 120.9822065
+        }
+      ],
+      "tags": {
+        "admin_level": "10",
+        "alt_name": "P. Gomez Street",
+        "highway": "unclassified",
+        "lit": "yes",
+        "name": "Padre Gomez Street",
+        "name:es": "Calle Padre Gómez",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "short_name": "P. Gomez St.",
+        "sidewalk": "both",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16354038,
+      "bounds": {
+        "minlat": 14.5989187,
+        "minlon": 120.9819869,
+        "maxlat": 14.5998589,
+        "maxlon": 120.9822832
+      },
+      "nodes": [
+        168177531,
+        1977462563,
+        161728862
+      ],
+      "geometry": [
+        {
+          "lat": 14.5989187,
+          "lon": 120.9819869
+        },
+        {
+          "lat": 14.5993849,
+          "lon": 120.9821207
+        },
+        {
+          "lat": 14.5998589,
+          "lon": 120.9822832
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lit": "yes",
+        "motorcar": "no",
+        "name": "Sales Street",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16354053,
+      "bounds": {
+        "minlat": 14.5968903,
+        "minlon": 120.9828895,
+        "maxlat": 14.5980484,
+        "maxlon": 120.983542
+      },
+      "nodes": [
+        1977523957,
+        168177724
+      ],
+      "geometry": [
+        {
+          "lat": 14.5968903,
+          "lon": 120.9828895
+        },
+        {
+          "lat": 14.5980484,
+          "lon": 120.983542
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "name": "Villalobos Street",
+        "name:en": "Villalobos Street",
+        "name:es": "Calle Villalobos",
+        "postal_code": "1001",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16354221,
+      "bounds": {
+        "minlat": 14.5987287,
+        "minlon": 120.9833639,
+        "maxlat": 14.5996485,
+        "maxlon": 120.983448
+      },
+      "nodes": [
+        168176666,
+        316547840,
+        1974746575,
+        1974808826,
+        168181142
+      ],
+      "geometry": [
+        {
+          "lat": 14.5987287,
+          "lon": 120.9833639
+        },
+        {
+          "lat": 14.598879,
+          "lon": 120.9833903
+        },
+        {
+          "lat": 14.5992473,
+          "lon": 120.9834195
+        },
+        {
+          "lat": 14.5992778,
+          "lon": 120.9834242
+        },
+        {
+          "lat": 14.5996485,
+          "lon": 120.983448
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Evangelista Street",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16354264,
+      "bounds": {
+        "minlat": 14.5997174,
+        "minlon": 120.9850373,
+        "maxlat": 14.6006528,
+        "maxlon": 120.9853545
+      },
+      "nodes": [
+        168181814,
+        1974694506,
+        1858450332
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006528,
+          "lon": 120.9850373
+        },
+        {
+          "lat": 14.6003622,
+          "lon": 120.9851305
+        },
+        {
+          "lat": 14.5997174,
+          "lon": 120.9853545
+        }
+      ],
+      "tags": {
+        "evacuation": "yes",
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Z. P. de Guzman Street",
+        "path": "road",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 16354304,
+      "bounds": {
+        "minlat": 14.6000637,
+        "minlon": 120.980336,
+        "maxlat": 14.6005384,
+        "maxlon": 120.9815645
+      },
+      "nodes": [
+        29487748,
+        9914999490,
+        444375716,
+        4270937271,
+        161726523,
+        9894846366,
+        29487747
+      ],
+      "geometry": [
+        {
+          "lat": 14.6005384,
+          "lon": 120.9815645
+        },
+        {
+          "lat": 14.6005294,
+          "lon": 120.9814869
+        },
+        {
+          "lat": 14.6004539,
+          "lon": 120.9811495
+        },
+        {
+          "lat": 14.6003735,
+          "lon": 120.9809144
+        },
+        {
+          "lat": 14.6002913,
+          "lon": 120.9806859
+        },
+        {
+          "lat": 14.6001269,
+          "lon": 120.9804201
+        },
+        {
+          "lat": 14.6000637,
+          "lon": 120.980336
+        }
+      ],
+      "tags": {
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Ronquillo Street",
+        "name:en": "Ronquillo Street",
+        "name:es": "Calle Ronquillo",
+        "oneway": "yes",
+        "ref": "150",
+        "sidewalk": "both",
+        "surface": "concrete",
+        "width": "8"
+      }
+    },
+    {
+      "type": "way",
+      "id": 18578428,
+      "bounds": {
+        "minlat": 14.5958975,
+        "minlon": 120.9824968,
+        "maxlat": 14.5968154,
+        "maxlon": 120.9837159
+      },
+      "nodes": [
+        400699389,
+        1974721482,
+        1974721480,
+        400699392,
+        223754597,
+        11050330551
+      ],
+      "geometry": [
+        {
+          "lat": 14.5968154,
+          "lon": 120.9837159
+        },
+        {
+          "lat": 14.5967454,
+          "lon": 120.9836876
+        },
+        {
+          "lat": 14.5966869,
+          "lon": 120.9836556
+        },
+        {
+          "lat": 14.5966335,
+          "lon": 120.983593
+        },
+        {
+          "lat": 14.5961832,
+          "lon": 120.9829292
+        },
+        {
+          "lat": 14.5958975,
+          "lon": 120.9824968
+        }
+      ],
+      "tags": {
+        "alt_name": "Quezon Boulevard Extension",
+        "bridge": "yes",
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "advisory",
+        "cycleway:separation:left": "solid_line",
+        "highway": "primary",
+        "lanes": "2",
+        "layer": "1",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "maxspeed:type": "sign",
+        "maxweight": "15",
+        "name": "Quezon Boulevard",
+        "name:en": "Quezon Boulevard",
+        "name:es": "Bulevar Quezón",
+        "oneway": "yes",
+        "ref": "170",
+        "surface": "asphalt",
+        "wikidata": "Q25247436",
+        "wikipedia": "en:Quezon Bridge"
+      }
+    },
+    {
+      "type": "way",
+      "id": 20828108,
+      "bounds": {
+        "minlat": 14.5958271,
+        "minlon": 120.9825535,
+        "maxlat": 14.5967943,
+        "maxlon": 120.9838133
+      },
+      "nodes": [
+        13351315485,
+        400699347,
+        1974721478,
+        1974721481,
+        400699365
+      ],
+      "geometry": [
+        {
+          "lat": 14.5958271,
+          "lon": 120.9825535
+        },
+        {
+          "lat": 14.5965498,
+          "lon": 120.9836534
+        },
+        {
+          "lat": 14.5966302,
+          "lon": 120.9837263
+        },
+        {
+          "lat": 14.5967035,
+          "lon": 120.9837683
+        },
+        {
+          "lat": 14.5967943,
+          "lon": 120.9838133
+        }
+      ],
+      "tags": {
+        "alt_name": "Quezon Boulevard Extension",
+        "bridge": "yes",
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "advisory",
+        "cycleway:separation:left": "solid_line",
+        "highway": "primary",
+        "lanes": "2",
+        "layer": "1",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "maxspeed:type": "sign",
+        "maxweight": "15",
+        "name": "Quezon Boulevard",
+        "name:en": "Quezon Boulevard",
+        "name:es": "Bulevar Quezón",
+        "oneway": "yes",
+        "ref": "170",
+        "surface": "asphalt",
+        "wikipedia": "en:Quezon Bridge"
+      }
+    },
+    {
+      "type": "way",
+      "id": 27275946,
+      "bounds": {
+        "minlat": 14.595329,
+        "minlon": 120.9855045,
+        "maxlat": 14.5973121,
+        "maxlon": 120.9858066
+      },
+      "nodes": [
+        299403202,
+        299402083,
+        412348751,
+        314524991
+      ],
+      "geometry": [
+        {
+          "lat": 14.5973121,
+          "lon": 120.9855045
+        },
+        {
+          "lat": 14.5958025,
+          "lon": 120.9857777
+        },
+        {
+          "lat": 14.5955382,
+          "lon": 120.9857895
+        },
+        {
+          "lat": 14.595329,
+          "lon": 120.9858066
+        }
+      ],
+      "tags": {
+        "boat": "no",
+        "name": "Estero de Quiapo",
+        "waterway": "river"
+      }
+    },
+    {
+      "type": "way",
+      "id": 27276237,
+      "bounds": {
+        "minlat": 14.5996958,
+        "minlon": 120.9850262,
+        "maxlat": 14.6012487,
+        "maxlon": 120.9856541
+      },
+      "nodes": [
+        609041774,
+        609041347,
+        609041346,
+        609041345,
+        609041344,
+        609041343,
+        609041342,
+        609041341,
+        320819434
+      ],
+      "geometry": [
+        {
+          "lat": 14.6012487,
+          "lon": 120.9850262
+        },
+        {
+          "lat": 14.6009881,
+          "lon": 120.985169
+        },
+        {
+          "lat": 14.6007585,
+          "lon": 120.9852947
+        },
+        {
+          "lat": 14.6005291,
+          "lon": 120.9854142
+        },
+        {
+          "lat": 14.6004353,
+          "lon": 120.9854921
+        },
+        {
+          "lat": 14.6002706,
+          "lon": 120.9855836
+        },
+        {
+          "lat": 14.6000839,
+          "lon": 120.9856395
+        },
+        {
+          "lat": 14.599908,
+          "lon": 120.9856541
+        },
+        {
+          "lat": 14.5996958,
+          "lon": 120.9856366
+        }
+      ],
+      "tags": {
+        "boat": "no",
+        "name": "Estero de Quiapo",
+        "waterway": "canal"
+      }
+    },
+    {
+      "type": "way",
+      "id": 28462755,
+      "bounds": {
+        "minlat": 14.5965041,
+        "minlon": 120.9831522,
+        "maxlat": 14.5982685,
+        "maxlon": 120.9840062
+      },
+      "nodes": [
+        312701885,
+        168191716,
+        1974823952,
+        1974721495,
+        1912457295,
+        1974721486,
+        1974721483,
+        312701888,
+        11970891883,
+        14020471116
+      ],
+      "geometry": [
+        {
+          "lat": 14.5982685,
+          "lon": 120.9840062
+        },
+        {
+          "lat": 14.5979683,
+          "lon": 120.9838888
+        },
+        {
+          "lat": 14.5978294,
+          "lon": 120.983855
+        },
+        {
+          "lat": 14.5969833,
+          "lon": 120.9836466
+        },
+        {
+          "lat": 14.5969039,
+          "lon": 120.9836217
+        },
+        {
+          "lat": 14.5968274,
+          "lon": 120.9835802
+        },
+        {
+          "lat": 14.5967709,
+          "lon": 120.9835316
+        },
+        {
+          "lat": 14.596703,
+          "lon": 120.9834392
+        },
+        {
+          "lat": 14.5966399,
+          "lon": 120.9833508
+        },
+        {
+          "lat": 14.5965041,
+          "lon": 120.9831522
+        }
+      ],
+      "tags": {
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 28462766,
+      "bounds": {
+        "minlat": 14.5964326,
+        "minlon": 120.9837347,
+        "maxlat": 14.5973682,
+        "maxlon": 120.9840168
+      },
+      "nodes": [
+        5716770054,
+        1974721476,
+        4177454211,
+        400699344,
+        163700108
+      ],
+      "geometry": [
+        {
+          "lat": 14.5964326,
+          "lon": 120.9837347
+        },
+        {
+          "lat": 14.596483,
+          "lon": 120.9837711
+        },
+        {
+          "lat": 14.5966023,
+          "lon": 120.9838336
+        },
+        {
+          "lat": 14.5967637,
+          "lon": 120.9838908
+        },
+        {
+          "lat": 14.5973682,
+          "lon": 120.9840168
+        }
+      ],
+      "tags": {
+        "destination:ref": "170",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Quezon Boulevard",
+        "name:es": "Bulevar Quezón",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 29170670,
+      "bounds": {
+        "minlat": 14.5961611,
+        "minlon": 120.986216,
+        "maxlat": 14.5969931,
+        "maxlon": 120.9862743
+      },
+      "nodes": [
+        320818996,
+        11972471495,
+        320819226,
+        9805354778,
+        9805354779
+      ],
+      "geometry": [
+        {
+          "lat": 14.5961611,
+          "lon": 120.9862183
+        },
+        {
+          "lat": 14.5961749,
+          "lon": 120.986216
+        },
+        {
+          "lat": 14.5965822,
+          "lon": 120.9862409
+        },
+        {
+          "lat": 14.5969083,
+          "lon": 120.9862674
+        },
+        {
+          "lat": 14.5969931,
+          "lon": 120.9862743
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Duque de Alba Street",
+        "name:en": "Duque de Alba Street",
+        "name:es": "Calle Duque de Alba",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 29170675,
+      "bounds": {
+        "minlat": 14.5973341,
+        "minlon": 120.9867493,
+        "maxlat": 14.5977558,
+        "maxlon": 120.9895115
+      },
+      "nodes": [
+        320819348,
+        13127500971,
+        8314509255,
+        1899679202,
+        9870434484,
+        9805354766,
+        1346513341
+      ],
+      "geometry": [
+        {
+          "lat": 14.5973341,
+          "lon": 120.9895115
+        },
+        {
+          "lat": 14.5974402,
+          "lon": 120.9886756
+        },
+        {
+          "lat": 14.5974574,
+          "lon": 120.9885401
+        },
+        {
+          "lat": 14.5975393,
+          "lon": 120.9878956
+        },
+        {
+          "lat": 14.5976989,
+          "lon": 120.9868513
+        },
+        {
+          "lat": 14.5977226,
+          "lon": 120.9867943
+        },
+        {
+          "lat": 14.5977558,
+          "lon": 120.9867493
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lane_markings": "no",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Concepcion Aguila Street",
+        "name:etymology": "Concepcion M. Aguila",
+        "postal_code": "1001",
+        "short_name": "C. M. Aguila Street",
+        "sidewalk": "both",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 29337353,
+      "bounds": {
+        "minlat": 14.5984237,
+        "minlon": 120.9838763,
+        "maxlat": 14.5991488,
+        "maxlon": 120.9840542
+      },
+      "nodes": [
+        4177513041,
+        1974746530,
+        1974722750
+      ],
+      "geometry": [
+        {
+          "lat": 14.5991488,
+          "lon": 120.9840542
+        },
+        {
+          "lat": 14.5990346,
+          "lon": 120.9840245
+        },
+        {
+          "lat": 14.5984237,
+          "lon": 120.9838763
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 29337367,
+      "bounds": {
+        "minlat": 14.5965041,
+        "minlon": 120.9828895,
+        "maxlat": 14.5968903,
+        "maxlon": 120.9831522
+      },
+      "nodes": [
+        1977523957,
+        8602443042,
+        14020471116
+      ],
+      "geometry": [
+        {
+          "lat": 14.5968903,
+          "lon": 120.9828895
+        },
+        {
+          "lat": 14.5965282,
+          "lon": 120.9831357
+        },
+        {
+          "lat": 14.5965041,
+          "lon": 120.9831522
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Carlos Palanca Street",
+        "old_name": "Echague Street",
+        "old_name:en": "Echague Street",
+        "old_name:es": "Calle Echague",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 29397305,
+      "bounds": {
+        "minlat": 14.5978794,
+        "minlon": 120.9864668,
+        "maxlat": 14.5984862,
+        "maxlon": 120.9867
+      },
+      "nodes": [
+        320819818,
+        400737500
+      ],
+      "geometry": [
+        {
+          "lat": 14.5984862,
+          "lon": 120.9864668
+        },
+        {
+          "lat": 14.5978794,
+          "lon": 120.9867
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Carcer Street",
+        "name:en": "Carcer Street",
+        "name:es": "Calle Carcer",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 30106280,
+      "bounds": {
+        "minlat": 14.6005941,
+        "minlon": 120.9843577,
+        "maxlat": 14.6006016,
+        "maxlon": 120.984706
+      },
+      "nodes": [
+        1501266931,
+        1501266937
+      ],
+      "geometry": [
+        {
+          "lat": 14.6005941,
+          "lon": 120.9843577
+        },
+        {
+          "lat": 14.6006016,
+          "lon": 120.984706
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "bridge": "viaduct",
+        "covered": "yes",
+        "fine:oneway": "5,000 PHP",
+        "highway": "footway",
+        "layer": "1",
+        "name": "Raon Footbridge",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "oneway:foot": "yes",
+        "smoothness": "intermediate",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 30547790,
+      "bounds": {
+        "minlat": 14.5979518,
+        "minlon": 120.9841688,
+        "maxlat": 14.5991262,
+        "maxlon": 120.9843759
+      },
+      "nodes": [
+        1895792600,
+        6618652056,
+        4177513039,
+        4177513040
+      ],
+      "geometry": [
+        {
+          "lat": 14.5979518,
+          "lon": 120.9841708
+        },
+        {
+          "lat": 14.5979705,
+          "lon": 120.9841688
+        },
+        {
+          "lat": 14.598836,
+          "lon": 120.9843294
+        },
+        {
+          "lat": 14.5991262,
+          "lon": 120.9843759
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34316954,
+      "bounds": {
+        "minlat": 14.5985616,
+        "minlon": 120.9834031,
+        "maxlat": 14.598703,
+        "maxlon": 120.983522
+      },
+      "nodes": [
+        1977523962,
+        1977523961,
+        393561346,
+        319439606
+      ],
+      "geometry": [
+        {
+          "lat": 14.598703,
+          "lon": 120.9834031
+        },
+        {
+          "lat": 14.5986907,
+          "lon": 120.9834417
+        },
+        {
+          "lat": 14.5986775,
+          "lon": 120.983522
+        },
+        {
+          "lat": 14.5985616,
+          "lon": 120.9835047
+        }
+      ],
+      "tags": {
+        "foot": "yes",
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34366345,
+      "bounds": {
+        "minlat": 14.6013555,
+        "minlon": 120.9848533,
+        "maxlat": 14.6015853,
+        "maxlon": 120.9854798
+      },
+      "nodes": [
+        281873482,
+        11337296705,
+        9958626622,
+        410553782,
+        9958626621,
+        1976425887,
+        394354272
+      ],
+      "geometry": [
+        {
+          "lat": 14.6015853,
+          "lon": 120.9848533
+        },
+        {
+          "lat": 14.6015775,
+          "lon": 120.9848806
+        },
+        {
+          "lat": 14.6015677,
+          "lon": 120.9849049
+        },
+        {
+          "lat": 14.601513,
+          "lon": 120.985042
+        },
+        {
+          "lat": 14.6013639,
+          "lon": 120.9854177
+        },
+        {
+          "lat": 14.6013555,
+          "lon": 120.9854492
+        },
+        {
+          "lat": 14.6013596,
+          "lon": 120.9854798
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Soler Extension",
+        "name:en": "Soler Extension",
+        "name:es": "Calle Soler",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34544784,
+      "bounds": {
+        "minlat": 14.5967943,
+        "minlon": 120.9838133,
+        "maxlat": 14.597382,
+        "maxlon": 120.9839346
+      },
+      "nodes": [
+        400699365,
+        9786869651,
+        400699349
+      ],
+      "geometry": [
+        {
+          "lat": 14.5967943,
+          "lon": 120.9838133
+        },
+        {
+          "lat": 14.5968909,
+          "lon": 120.9838409
+        },
+        {
+          "lat": 14.597382,
+          "lon": 120.9839346
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "maxspeed:type": "sign",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "ref": "170",
+        "wikipedia": "en:Quezon Boulevard"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34544790,
+      "bounds": {
+        "minlat": 14.5968154,
+        "minlon": 120.9837159,
+        "maxlat": 14.5973923,
+        "maxlon": 120.9838374
+      },
+      "nodes": [
+        400699372,
+        400699389
+      ],
+      "geometry": [
+        {
+          "lat": 14.5973923,
+          "lon": 120.9838374
+        },
+        {
+          "lat": 14.5968154,
+          "lon": 120.9837159
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "maxspeed:type": "sign",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "ref": "170",
+        "wikipedia": "en:Quezon Boulevard"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34544805,
+      "bounds": {
+        "minlat": 14.5978991,
+        "minlon": 120.9845043,
+        "maxlat": 14.5987725,
+        "maxlon": 120.9846688
+      },
+      "nodes": [
+        400699532,
+        12010073421,
+        11801142289,
+        7900794489,
+        400699533
+      ],
+      "geometry": [
+        {
+          "lat": 14.5987725,
+          "lon": 120.9846659
+        },
+        {
+          "lat": 14.5987502,
+          "lon": 120.9846688
+        },
+        {
+          "lat": 14.598718,
+          "lon": 120.9846632
+        },
+        {
+          "lat": 14.5981959,
+          "lon": 120.9845723
+        },
+        {
+          "lat": 14.5978991,
+          "lon": 120.9845043
+        }
+      ],
+      "tags": {
+        "alt_name": "Ariston Bautista",
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "A. Bautista Street",
+        "old_name": "Barbosa Street",
+        "postal_code": "1001",
+        "short_name": "A. Baustista"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34544811,
+      "bounds": {
+        "minlat": 14.5987725,
+        "minlon": 120.9842277,
+        "maxlat": 14.5988582,
+        "maxlon": 120.9846659
+      },
+      "nodes": [
+        400699532,
+        12010073420,
+        4177513039,
+        163700040
+      ],
+      "geometry": [
+        {
+          "lat": 14.5987725,
+          "lon": 120.9846659
+        },
+        {
+          "lat": 14.5987851,
+          "lon": 120.9846452
+        },
+        {
+          "lat": 14.598836,
+          "lon": 120.9843294
+        },
+        {
+          "lat": 14.5988582,
+          "lon": 120.9842277
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lit": "yes",
+        "name": "Escaldo Street",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34544814,
+      "bounds": {
+        "minlat": 14.5962492,
+        "minlon": 120.9850244,
+        "maxlat": 14.5971806,
+        "maxlon": 120.9850976
+      },
+      "nodes": [
+        400699598,
+        4177448603,
+        400699640,
+        400699649
+      ],
+      "geometry": [
+        {
+          "lat": 14.5962492,
+          "lon": 120.9850244
+        },
+        {
+          "lat": 14.5962767,
+          "lon": 120.9850269
+        },
+        {
+          "lat": 14.5965406,
+          "lon": 120.9850484
+        },
+        {
+          "lat": 14.5971806,
+          "lon": 120.9850976
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Gunao Street",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 34546416,
+      "bounds": {
+        "minlat": 14.5977895,
+        "minlon": 120.9867,
+        "maxlat": 14.5978794,
+        "maxlon": 120.9867341
+      },
+      "nodes": [
+        400737679,
+        400737500
+      ],
+      "geometry": [
+        {
+          "lat": 14.5977895,
+          "lon": 120.9867341
+        },
+        {
+          "lat": 14.5978794,
+          "lon": 120.9867
+        }
+      ],
+      "tags": {
+        "bridge": "yes",
+        "highway": "residential",
+        "lanes": "2",
+        "layer": "1",
+        "name": "Carcer Street",
+        "name:en": "Carcer Street",
+        "name:es": "Calle Carcer",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 35002702,
+      "bounds": {
+        "minlat": 14.6020022,
+        "minlon": 120.985015,
+        "maxlat": 14.6023407,
+        "maxlon": 120.9857763
+      },
+      "nodes": [
+        1305392782,
+        1858450471,
+        10881224419,
+        1305392787
+      ],
+      "geometry": [
+        {
+          "lat": 14.6020022,
+          "lon": 120.9857763
+        },
+        {
+          "lat": 14.6021877,
+          "lon": 120.985359
+        },
+        {
+          "lat": 14.6023255,
+          "lon": 120.9850489
+        },
+        {
+          "lat": 14.6023407,
+          "lon": 120.985015
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "1",
+        "name": "Buenviaje Street",
+        "narrow": "yes",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "smoothness": "bad",
+        "source": "Bing",
+        "surface": "asphalt",
+        "width": "4.5"
+      }
+    },
+    {
+      "type": "way",
+      "id": 35002847,
+      "bounds": {
+        "minlat": 14.6013596,
+        "minlon": 120.9854798,
+        "maxlat": 14.6026179,
+        "maxlon": 120.98607
+      },
+      "nodes": [
+        394354272,
+        13328291443,
+        11931382609,
+        11976351383,
+        11931382606,
+        1305392782,
+        11973488739,
+        11351190761,
+        11351190757,
+        3601505949,
+        10881150994,
+        410553412
+      ],
+      "geometry": [
+        {
+          "lat": 14.6013596,
+          "lon": 120.9854798
+        },
+        {
+          "lat": 14.6013799,
+          "lon": 120.9854919
+        },
+        {
+          "lat": 14.6014843,
+          "lon": 120.9855373
+        },
+        {
+          "lat": 14.6016995,
+          "lon": 120.9856366
+        },
+        {
+          "lat": 14.6018888,
+          "lon": 120.985724
+        },
+        {
+          "lat": 14.6020022,
+          "lon": 120.9857763
+        },
+        {
+          "lat": 14.6020256,
+          "lon": 120.9857884
+        },
+        {
+          "lat": 14.6021322,
+          "lon": 120.9858383
+        },
+        {
+          "lat": 14.6024017,
+          "lon": 120.9859668
+        },
+        {
+          "lat": 14.602551,
+          "lon": 120.986038
+        },
+        {
+          "lat": 14.6025763,
+          "lon": 120.9860497
+        },
+        {
+          "lat": 14.6026179,
+          "lon": 120.98607
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Severino Street",
+        "postal_code": "1001",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 35002850,
+      "bounds": {
+        "minlat": 14.601513,
+        "minlon": 120.985042,
+        "maxlat": 14.6028086,
+        "maxlon": 120.9856507
+      },
+      "nodes": [
+        410553782,
+        1974779859,
+        1858450471,
+        11351190760,
+        11351190759,
+        11337296715,
+        1975901901,
+        410553785
+      ],
+      "geometry": [
+        {
+          "lat": 14.601513,
+          "lon": 120.985042
+        },
+        {
+          "lat": 14.6017069,
+          "lon": 120.9851331
+        },
+        {
+          "lat": 14.6021877,
+          "lon": 120.985359
+        },
+        {
+          "lat": 14.6023238,
+          "lon": 120.9854229
+        },
+        {
+          "lat": 14.6026329,
+          "lon": 120.9855681
+        },
+        {
+          "lat": 14.6027403,
+          "lon": 120.9856186
+        },
+        {
+          "lat": 14.6027688,
+          "lon": 120.985632
+        },
+        {
+          "lat": 14.6028086,
+          "lon": 120.9856507
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "1",
+        "name": "Coromina Street",
+        "narrow": "yes",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "smoothness": "bad",
+        "surface": "asphalt",
+        "width": "4.5"
+      }
+    },
+    {
+      "type": "way",
+      "id": 35153703,
+      "bounds": {
+        "minlat": 14.5973646,
+        "minlon": 120.9813839,
+        "maxlat": 14.5980234,
+        "maxlon": 120.9823937
+      },
+      "nodes": [
+        1869703241,
+        412340598,
+        412340599,
+        412340600,
+        2321524278
+      ],
+      "geometry": [
+        {
+          "lat": 14.5973646,
+          "lon": 120.9823937
+        },
+        {
+          "lat": 14.5975611,
+          "lon": 120.9821605
+        },
+        {
+          "lat": 14.597696,
+          "lon": 120.9819797
+        },
+        {
+          "lat": 14.5978694,
+          "lon": 120.9817195
+        },
+        {
+          "lat": 14.5980234,
+          "lon": 120.9813839
+        }
+      ],
+      "tags": {
+        "access": "no",
+        "highway": "residential",
+        "lanes": "1",
+        "name": "Chica Street",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 37835089,
+      "bounds": {
+        "minlat": 14.6005038,
+        "minlon": 120.9819928,
+        "maxlat": 14.6022956,
+        "maxlon": 120.9822683
+      },
+      "nodes": [
+        443702355,
+        443702379,
+        443702403,
+        443702372
+      ],
+      "geometry": [
+        {
+          "lat": 14.6005038,
+          "lon": 120.9819928
+        },
+        {
+          "lat": 14.6009013,
+          "lon": 120.9820371
+        },
+        {
+          "lat": 14.6017373,
+          "lon": 120.9821644
+        },
+        {
+          "lat": 14.6022956,
+          "lon": 120.9822683
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Trinidad Street",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 47893245,
+      "bounds": {
+        "minlat": 14.5996958,
+        "minlon": 120.9856366,
+        "maxlat": 14.600545,
+        "maxlon": 120.9871343
+      },
+      "nodes": [
+        1869703244,
+        1869703242,
+        609041485,
+        609041418,
+        8176279082,
+        609041258,
+        609041262,
+        609041267,
+        609041270,
+        609041274,
+        1907951557,
+        320819434
+      ],
+      "geometry": [
+        {
+          "lat": 14.600545,
+          "lon": 120.9871343
+        },
+        {
+          "lat": 14.6004123,
+          "lon": 120.9870487
+        },
+        {
+          "lat": 14.600197,
+          "lon": 120.9868968
+        },
+        {
+          "lat": 14.6000281,
+          "lon": 120.9867433
+        },
+        {
+          "lat": 14.5999324,
+          "lon": 120.9866451
+        },
+        {
+          "lat": 14.5998805,
+          "lon": 120.9865918
+        },
+        {
+          "lat": 14.5998309,
+          "lon": 120.9863677
+        },
+        {
+          "lat": 14.5997893,
+          "lon": 120.9861746
+        },
+        {
+          "lat": 14.599779,
+          "lon": 120.9859493
+        },
+        {
+          "lat": 14.5997438,
+          "lon": 120.9857815
+        },
+        {
+          "lat": 14.5997117,
+          "lon": 120.9856846
+        },
+        {
+          "lat": 14.5996958,
+          "lon": 120.9856366
+        }
+      ],
+      "tags": {
+        "boat": "no",
+        "name": "Estero de Quiapo",
+        "waterway": "canal"
+      }
+    },
+    {
+      "type": "way",
+      "id": 50834020,
+      "bounds": {
+        "minlat": 14.5977357,
+        "minlon": 120.9813216,
+        "maxlat": 14.5983499,
+        "maxlon": 120.9814486
+      },
+      "nodes": [
+        412340593,
+        2321524278,
+        1895729893
+      ],
+      "geometry": [
+        {
+          "lat": 14.5977357,
+          "lon": 120.9813216
+        },
+        {
+          "lat": 14.5980234,
+          "lon": 120.9813839
+        },
+        {
+          "lat": 14.5983499,
+          "lon": 120.9814486
+        }
+      ],
+      "tags": {
+        "access": "no",
+        "highway": "footway",
+        "name": "Isla de Romero Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 59346512,
+      "bounds": {
+        "minlat": 14.5982685,
+        "minlon": 120.9840062,
+        "maxlat": 14.5995193,
+        "maxlon": 120.9842498
+      },
+      "nodes": [
+        33452917,
+        312701885
+      ],
+      "geometry": [
+        {
+          "lat": 14.5995193,
+          "lon": 120.9842498
+        },
+        {
+          "lat": 14.5982685,
+          "lon": 120.9840062
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:right:protection:left": "solid_line",
+        "foot": "use_sidepath",
+        "highway": "primary",
+        "lanes": "4",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 59346513,
+      "bounds": {
+        "minlat": 14.6018462,
+        "minlon": 120.984816,
+        "maxlat": 14.6029848,
+        "maxlon": 120.9850516
+      },
+      "nodes": [
+        5798974983,
+        4754993497,
+        7542016027
+      ],
+      "geometry": [
+        {
+          "lat": 14.6018462,
+          "lon": 120.984816
+        },
+        {
+          "lat": 14.6028822,
+          "lon": 120.9850287
+        },
+        {
+          "lat": 14.6029848,
+          "lon": 120.9850516
+        }
+      ],
+      "tags": {
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "placement": "left_of:2",
+        "ref": "170",
+        "source:maxspeed": "MMDA",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 59346515,
+      "bounds": {
+        "minlat": 14.6018799,
+        "minlon": 120.9847233,
+        "maxlat": 14.6030247,
+        "maxlon": 120.9849755
+      },
+      "nodes": [
+        7542016026,
+        3037058287,
+        736064980
+      ],
+      "geometry": [
+        {
+          "lat": 14.6030247,
+          "lon": 120.9849755
+        },
+        {
+          "lat": 14.6029032,
+          "lon": 120.9849487
+        },
+        {
+          "lat": 14.6018799,
+          "lon": 120.9847233
+        }
+      ],
+      "tags": {
+        "highway": "primary",
+        "lanes": "3",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "ref": "170",
+        "source:maxspeed": "MMDA",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 85396133,
+      "bounds": {
+        "minlat": 14.6015853,
+        "minlon": 120.9848533,
+        "maxlat": 14.6029779,
+        "maxlon": 120.9853025
+      },
+      "nodes": [
+        281873482,
+        1974779863,
+        1305392787,
+        1975901900,
+        12055507276,
+        12055507275,
+        9887745478,
+        12055507274,
+        1975919315,
+        9887745479,
+        12055507273,
+        12055507272,
+        990043651
+      ],
+      "geometry": [
+        {
+          "lat": 14.6015853,
+          "lon": 120.9848533
+        },
+        {
+          "lat": 14.6019234,
+          "lon": 120.9849253
+        },
+        {
+          "lat": 14.6023407,
+          "lon": 120.985015
+        },
+        {
+          "lat": 14.6028549,
+          "lon": 120.9851327
+        },
+        {
+          "lat": 14.6028732,
+          "lon": 120.9851394
+        },
+        {
+          "lat": 14.6028953,
+          "lon": 120.9851501
+        },
+        {
+          "lat": 14.6029119,
+          "lon": 120.9851614
+        },
+        {
+          "lat": 14.602931,
+          "lon": 120.9851783
+        },
+        {
+          "lat": 14.6029448,
+          "lon": 120.9851975
+        },
+        {
+          "lat": 14.6029563,
+          "lon": 120.9852192
+        },
+        {
+          "lat": 14.6029667,
+          "lon": 120.985246
+        },
+        {
+          "lat": 14.6029738,
+          "lon": 120.9852715
+        },
+        {
+          "lat": 14.6029779,
+          "lon": 120.9853025
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:separation:left": "solid_line",
+        "destination:ref": "145",
+        "highway": "primary_link",
+        "lanes": "1",
+        "lit": "yes",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 85396150,
+      "bounds": {
+        "minlat": 14.601507,
+        "minlon": 120.9846269,
+        "maxlat": 14.6031811,
+        "maxlon": 120.9848966
+      },
+      "nodes": [
+        223701822,
+        12055507280,
+        12055507279,
+        1975919316,
+        12055507278,
+        12055507277,
+        4177513059,
+        11351190766,
+        1975901893,
+        1869749992,
+        990043684
+      ],
+      "geometry": [
+        {
+          "lat": 14.6031811,
+          "lon": 120.9848713
+        },
+        {
+          "lat": 14.6031529,
+          "lon": 120.9848826
+        },
+        {
+          "lat": 14.6031315,
+          "lon": 120.9848893
+        },
+        {
+          "lat": 14.6031041,
+          "lon": 120.9848953
+        },
+        {
+          "lat": 14.6030828,
+          "lon": 120.9848966
+        },
+        {
+          "lat": 14.6030562,
+          "lon": 120.984896
+        },
+        {
+          "lat": 14.6030293,
+          "lon": 120.9848929
+        },
+        {
+          "lat": 14.6029238,
+          "lon": 120.9848702
+        },
+        {
+          "lat": 14.6022677,
+          "lon": 120.9847294
+        },
+        {
+          "lat": 14.6017315,
+          "lon": 120.9846269
+        },
+        {
+          "lat": 14.601507,
+          "lon": 120.9846479
+        }
+      ],
+      "tags": {
+        "cycleway:lane": "advisory",
+        "cycleway:right": "lane",
+        "destination:ref": "170",
+        "highway": "primary_link",
+        "lanes": "1",
+        "lit": "yes",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 112450951,
+      "bounds": {
+        "minlat": 14.6016766,
+        "minlon": 120.9821644,
+        "maxlat": 14.6017373,
+        "maxlon": 120.9824867
+      },
+      "nodes": [
+        1278060367,
+        443702403
+      ],
+      "geometry": [
+        {
+          "lat": 14.6016766,
+          "lon": 120.9824867
+        },
+        {
+          "lat": 14.6017373,
+          "lon": 120.9821644
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Germinal Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 112450952,
+      "bounds": {
+        "minlat": 14.6004608,
+        "minlon": 120.9815645,
+        "maxlat": 14.6005384,
+        "maxlon": 120.9822337
+      },
+      "nodes": [
+        699542890,
+        443702355,
+        29487748
+      ],
+      "geometry": [
+        {
+          "lat": 14.6004608,
+          "lon": 120.9822337
+        },
+        {
+          "lat": 14.6005038,
+          "lon": 120.9819928
+        },
+        {
+          "lat": 14.6005384,
+          "lon": 120.9815645
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Ronquillo Street",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 112450954,
+      "bounds": {
+        "minlat": 14.6021954,
+        "minlon": 120.982842,
+        "maxlat": 14.60354,
+        "maxlon": 120.9829024
+      },
+      "nodes": [
+        1278060380,
+        1278060377,
+        13127044433,
+        1278060385,
+        1278060362
+      ],
+      "geometry": [
+        {
+          "lat": 14.60354,
+          "lon": 120.9829024
+        },
+        {
+          "lat": 14.6029814,
+          "lon": 120.982848
+        },
+        {
+          "lat": 14.6028771,
+          "lon": 120.9828494
+        },
+        {
+          "lat": 14.6025302,
+          "lon": 120.9828541
+        },
+        {
+          "lat": 14.6021954,
+          "lon": 120.982842
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Calero Street",
+        "name:en": "Calero Street",
+        "name:es": "Calle Calero",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 112548022,
+      "bounds": {
+        "minlat": 14.598327,
+        "minlon": 120.9816016,
+        "maxlat": 14.6004608,
+        "maxlon": 120.9822337
+      },
+      "nodes": [
+        410553129,
+        168177199,
+        168177198,
+        223659098,
+        2321524279,
+        699542890
+      ],
+      "geometry": [
+        {
+          "lat": 14.598327,
+          "lon": 120.9816016
+        },
+        {
+          "lat": 14.5989608,
+          "lon": 120.9817106
+        },
+        {
+          "lat": 14.5996437,
+          "lon": 120.9818531
+        },
+        {
+          "lat": 14.5999562,
+          "lon": 120.9820013
+        },
+        {
+          "lat": 14.6000067,
+          "lon": 120.982023
+        },
+        {
+          "lat": 14.6004608,
+          "lon": 120.9822337
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lit": "yes",
+        "name": "Estero Cegado",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 115577593,
+      "bounds": {
+        "minlat": 14.6007374,
+        "minlon": 120.9863033,
+        "maxlat": 14.601767,
+        "maxlon": 120.9867604
+      },
+      "nodes": [
+        1305392784,
+        11973488741,
+        410550520,
+        9958872766,
+        1305473666,
+        410550522,
+        4178004405,
+        163694856
+      ],
+      "geometry": [
+        {
+          "lat": 14.601767,
+          "lon": 120.9863033
+        },
+        {
+          "lat": 14.6017273,
+          "lon": 120.9863128
+        },
+        {
+          "lat": 14.601074,
+          "lon": 120.9863177
+        },
+        {
+          "lat": 14.6010245,
+          "lon": 120.9863391
+        },
+        {
+          "lat": 14.600991,
+          "lon": 120.9863758
+        },
+        {
+          "lat": 14.6008338,
+          "lon": 120.986666
+        },
+        {
+          "lat": 14.6008062,
+          "lon": 120.9867037
+        },
+        {
+          "lat": 14.6007374,
+          "lon": 120.9867604
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Maria Carpena Street",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 119985351,
+      "bounds": {
+        "minlat": 14.5977558,
+        "minlon": 120.9867493,
+        "maxlat": 14.5985313,
+        "maxlon": 120.9894335
+      },
+      "nodes": [
+        1346513341,
+        1346513154,
+        13127500970,
+        1346513206,
+        1346513238,
+        1346513406
+      ],
+      "geometry": [
+        {
+          "lat": 14.5977558,
+          "lon": 120.9867493
+        },
+        {
+          "lat": 14.5978168,
+          "lon": 120.9868494
+        },
+        {
+          "lat": 14.5985057,
+          "lon": 120.9886672
+        },
+        {
+          "lat": 14.5985162,
+          "lon": 120.9886948
+        },
+        {
+          "lat": 14.5985313,
+          "lon": 120.988818
+        },
+        {
+          "lat": 14.5984633,
+          "lon": 120.9894335
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Pasaje del Carmen Street",
+        "narrow": "yes",
+        "postal_code": "1001",
+        "sidewalk": "no",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 119985358,
+      "bounds": {
+        "minlat": 14.6006971,
+        "minlon": 120.9869655,
+        "maxlat": 14.6013807,
+        "maxlon": 120.9870172
+      },
+      "nodes": [
+        11973488738,
+        1305473667,
+        1869703247,
+        1974710752,
+        1974710750,
+        11973488744,
+        11973488742,
+        11973488743,
+        1869703245
+      ],
+      "geometry": [
+        {
+          "lat": 14.6013807,
+          "lon": 120.9870172
+        },
+        {
+          "lat": 14.6011974,
+          "lon": 120.9870143
+        },
+        {
+          "lat": 14.6010701,
+          "lon": 120.986998
+        },
+        {
+          "lat": 14.6010005,
+          "lon": 120.9869777
+        },
+        {
+          "lat": 14.6009202,
+          "lon": 120.9869655
+        },
+        {
+          "lat": 14.6007573,
+          "lon": 120.9869812
+        },
+        {
+          "lat": 14.6007419,
+          "lon": 120.9869831
+        },
+        {
+          "lat": 14.6007264,
+          "lon": 120.9869807
+        },
+        {
+          "lat": 14.6006971,
+          "lon": 120.986972
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "1",
+        "motorcar": "no",
+        "name": "Matapang Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 136842228,
+      "bounds": {
+        "minlat": 14.6006059,
+        "minlon": 120.9842256,
+        "maxlat": 14.6006498,
+        "maxlon": 120.9842261
+      },
+      "nodes": [
+        1501266935,
+        1501266941
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006059,
+          "lon": 120.9842256
+        },
+        {
+          "lat": 14.6006498,
+          "lon": 120.9842261
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "foot": "yes",
+        "highway": "footway",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 136842231,
+      "bounds": {
+        "minlat": 14.5991262,
+        "minlon": 120.9843759,
+        "maxlat": 14.6003553,
+        "maxlon": 120.9846555
+      },
+      "nodes": [
+        4177513040,
+        1975901890,
+        454224649,
+        11337274847
+      ],
+      "geometry": [
+        {
+          "lat": 14.5991262,
+          "lon": 120.9843759
+        },
+        {
+          "lat": 14.5997192,
+          "lon": 120.9844923
+        },
+        {
+          "lat": 14.6003265,
+          "lon": 120.984629
+        },
+        {
+          "lat": 14.6003553,
+          "lon": 120.9846555
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 136842232,
+      "bounds": {
+        "minlat": 14.6015231,
+        "minlon": 120.9848593,
+        "maxlat": 14.6016387,
+        "maxlon": 120.9849046
+      },
+      "nodes": [
+        11337296704,
+        11337296705,
+        11337310168
+      ],
+      "geometry": [
+        {
+          "lat": 14.6015231,
+          "lon": 120.9848593
+        },
+        {
+          "lat": 14.6015775,
+          "lon": 120.9848806
+        },
+        {
+          "lat": 14.6016387,
+          "lon": 120.9849046
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "crossing": "unmarked",
+        "crossing:markings": "no",
+        "dog": "leashed",
+        "footway": "crossing",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "asphalt",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 136842237,
+      "bounds": {
+        "minlat": 14.6006016,
+        "minlon": 120.984706,
+        "maxlat": 14.6007025,
+        "maxlon": 120.984728
+      },
+      "nodes": [
+        1501266937,
+        4178004399,
+        4178004400
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006016,
+          "lon": 120.984706
+        },
+        {
+          "lat": 14.600619,
+          "lon": 120.9847098
+        },
+        {
+          "lat": 14.6007025,
+          "lon": 120.984728
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "bridge": "viaduct",
+        "covered": "yes",
+        "highway": "footway",
+        "layer": "1"
+      }
+    },
+    {
+      "type": "way",
+      "id": 161271148,
+      "bounds": {
+        "minlat": 14.6006946,
+        "minlon": 120.9799723,
+        "maxlat": 14.6010369,
+        "maxlon": 120.9815898
+      },
+      "nodes": [
+        161726204,
+        9905264869,
+        9905264867,
+        161725257,
+        161726109,
+        5491258321,
+        5456952705,
+        29487749
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006946,
+          "lon": 120.9799723
+        },
+        {
+          "lat": 14.600718,
+          "lon": 120.980029
+        },
+        {
+          "lat": 14.600788,
+          "lon": 120.9801877
+        },
+        {
+          "lat": 14.600885,
+          "lon": 120.9803916
+        },
+        {
+          "lat": 14.6010213,
+          "lon": 120.9807133
+        },
+        {
+          "lat": 14.6010369,
+          "lon": 120.9808029
+        },
+        {
+          "lat": 14.6010304,
+          "lon": 120.98089
+        },
+        {
+          "lat": 14.6009408,
+          "lon": 120.9815898
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "2",
+        "lit": "yes",
+        "mapillary": "768158587177084",
+        "name": "Gonzalo Puyat Street",
+        "name:en": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 161271150,
+      "bounds": {
+        "minlat": 14.6006674,
+        "minlon": 120.9854422,
+        "maxlat": 14.6007439,
+        "maxlon": 120.9867604
+      },
+      "nodes": [
+        163694856,
+        4178004403,
+        1901942753,
+        1869644922
+      ],
+      "geometry": [
+        {
+          "lat": 14.6007374,
+          "lon": 120.9867604
+        },
+        {
+          "lat": 14.6007439,
+          "lon": 120.9866279
+        },
+        {
+          "lat": 14.6006878,
+          "lon": 120.985759
+        },
+        {
+          "lat": 14.6006674,
+          "lon": 120.9854422
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "postal_code": "1001",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 175211607,
+      "bounds": {
+        "minlat": 14.5995796,
+        "minlon": 120.9853545,
+        "maxlat": 14.5997174,
+        "maxlon": 120.985399
+      },
+      "nodes": [
+        1858450332,
+        1858450326
+      ],
+      "geometry": [
+        {
+          "lat": 14.5997174,
+          "lon": 120.9853545
+        },
+        {
+          "lat": 14.5995796,
+          "lon": 120.985399
+        }
+      ],
+      "tags": {
+        "bridge": "yes",
+        "highway": "residential",
+        "lanes": "2",
+        "layer": "1",
+        "lit": "yes",
+        "name": "Z. P. de Guzman Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176435844,
+      "bounds": {
+        "minlat": 14.5965631,
+        "minlon": 120.9856826,
+        "maxlat": 14.597084,
+        "maxlon": 120.9892594
+      },
+      "nodes": [
+        1869644914,
+        8602113650,
+        320819246,
+        9805354779,
+        11579674129,
+        320818954,
+        320819002,
+        6237203345,
+        9836693121
+      ],
+      "geometry": [
+        {
+          "lat": 14.597084,
+          "lon": 120.9856826
+        },
+        {
+          "lat": 14.5970377,
+          "lon": 120.9859959
+        },
+        {
+          "lat": 14.5970076,
+          "lon": 120.9861772
+        },
+        {
+          "lat": 14.5969931,
+          "lon": 120.9862743
+        },
+        {
+          "lat": 14.5968031,
+          "lon": 120.9875487
+        },
+        {
+          "lat": 14.596767,
+          "lon": 120.9877906
+        },
+        {
+          "lat": 14.5967213,
+          "lon": 120.9881355
+        },
+        {
+          "lat": 14.5965687,
+          "lon": 120.9892199
+        },
+        {
+          "lat": 14.5965631,
+          "lon": 120.9892594
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Arlegui Street",
+        "name:en": "Arlegui Street",
+        "name:es": "Calle Arlegui",
+        "name:tl": "Kalye Arlegui",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "asphalt",
+        "width": "9"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176435845,
+      "bounds": {
+        "minlat": 14.6006528,
+        "minlon": 120.9850373,
+        "maxlat": 14.6006577,
+        "maxlon": 120.9852912
+      },
+      "nodes": [
+        1869644921,
+        168181814
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006577,
+          "lon": 120.9852912
+        },
+        {
+          "lat": 14.6006528,
+          "lon": 120.9850373
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176435846,
+      "bounds": {
+        "minlat": 14.5978991,
+        "minlon": 120.9841341,
+        "maxlat": 14.5979782,
+        "maxlon": 120.9845043
+      },
+      "nodes": [
+        400699533,
+        1993325191,
+        6618652056,
+        9789113345
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978991,
+          "lon": 120.9845043
+        },
+        {
+          "lat": 14.5979435,
+          "lon": 120.9842893
+        },
+        {
+          "lat": 14.5979705,
+          "lon": 120.9841688
+        },
+        {
+          "lat": 14.5979782,
+          "lon": 120.9841341
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "F. R. Hidalgo Street",
+        "name:etymology:wikidata": "Q2391230",
+        "old_name": "Calle San Sebastian",
+        "postal_code": "1001",
+        "short_name": "R. Hidalgo Street;Hidalgo Street",
+        "wikidata": "Q20988233",
+        "wikipedia": "en:Hidalgo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176435848,
+      "bounds": {
+        "minlat": 14.6006577,
+        "minlon": 120.9852912,
+        "maxlat": 14.6006674,
+        "maxlon": 120.9854422
+      },
+      "nodes": [
+        1869644922,
+        1869644921
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006674,
+          "lon": 120.9854422
+        },
+        {
+          "lat": 14.6006577,
+          "lon": 120.9852912
+        }
+      ],
+      "tags": {
+        "bridge": "yes",
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "layer": "1",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "Gonzalo Puyat Street",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176435849,
+      "bounds": {
+        "minlat": 14.5978786,
+        "minlon": 120.9849958,
+        "maxlat": 14.5979593,
+        "maxlon": 120.9851768
+      },
+      "nodes": [
+        1869644917,
+        1869644916
+      ],
+      "geometry": [
+        {
+          "lat": 14.5979593,
+          "lon": 120.9851768
+        },
+        {
+          "lat": 14.5978786,
+          "lon": 120.9849958
+        }
+      ],
+      "tags": {
+        "bridge": "yes",
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "layer": "1",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "F. R. Hidalgo Street",
+        "name:etymology:wikidata": "Q2391230",
+        "old_name": "Calle San Sebastian",
+        "postal_code": "1001",
+        "short_name": "R. Hidalgo Street;Hidalgo Street",
+        "wikidata": "Q20988233",
+        "wikipedia": "en:Hidalgo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176435850,
+      "bounds": {
+        "minlat": 14.597084,
+        "minlon": 120.985452,
+        "maxlat": 14.5971184,
+        "maxlon": 120.9856826
+      },
+      "nodes": [
+        1869644915,
+        1869644914
+      ],
+      "geometry": [
+        {
+          "lat": 14.5971184,
+          "lon": 120.985452
+        },
+        {
+          "lat": 14.597084,
+          "lon": 120.9856826
+        }
+      ],
+      "tags": {
+        "bridge": "cantilever",
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "layer": "1",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "maxweight": "15",
+        "name": "Arlegui Street",
+        "name:en": "Arlegui Street",
+        "name:es": "Calle Arlegui",
+        "name:tl": "Kalye Arlegui",
+        "note": "Bridge-specific tags are in the bridge polygon. Ref: osm.org/wiki/Key:bridge#Bridge_properties",
+        "overtaking": "no",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "source:nat_name": "DPWH-RBI",
+        "width": "9"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176438181,
+      "bounds": {
+        "minlat": 14.5963144,
+        "minlon": 120.9820549,
+        "maxlat": 14.5968903,
+        "maxlon": 120.9828895
+      },
+      "nodes": [
+        1869703203,
+        1869703210,
+        6618416847,
+        1977523957
+      ],
+      "geometry": [
+        {
+          "lat": 14.5963144,
+          "lon": 120.9820549
+        },
+        {
+          "lat": 14.5966431,
+          "lon": 120.9825521
+        },
+        {
+          "lat": 14.5968235,
+          "lon": 120.9828246
+        },
+        {
+          "lat": 14.5968903,
+          "lon": 120.9828895
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "name": "Ducos Street",
+        "name:en": "Ducos Street",
+        "name:es": "Calle Ducos",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176438186,
+      "bounds": {
+        "minlat": 14.5966431,
+        "minlon": 120.9821685,
+        "maxlat": 14.5970618,
+        "maxlon": 120.9825521
+      },
+      "nodes": [
+        1869703219,
+        5456909530,
+        1869703216,
+        1869703210
+      ],
+      "geometry": [
+        {
+          "lat": 14.5970618,
+          "lon": 120.9821685
+        },
+        {
+          "lat": 14.5969754,
+          "lon": 120.9823063
+        },
+        {
+          "lat": 14.5968983,
+          "lon": 120.9823815
+        },
+        {
+          "lat": 14.5966431,
+          "lon": 120.9825521
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "name": "Orozco Street",
+        "name:en": "Orozco Street",
+        "name:es": "Calle Orozco"
+      }
+    },
+    {
+      "type": "way",
+      "id": 176438187,
+      "bounds": {
+        "minlat": 14.5970076,
+        "minlon": 120.9861772,
+        "maxlat": 14.5977558,
+        "maxlon": 120.9867493
+      },
+      "nodes": [
+        320819246,
+        400699782,
+        1346513270,
+        9836833310,
+        13126407772,
+        13126407771,
+        1346513295,
+        1346513158,
+        9870434483,
+        1346513322,
+        1346513341
+      ],
+      "geometry": [
+        {
+          "lat": 14.5970076,
+          "lon": 120.9861772
+        },
+        {
+          "lat": 14.597267,
+          "lon": 120.9861972
+        },
+        {
+          "lat": 14.5973134,
+          "lon": 120.9862273
+        },
+        {
+          "lat": 14.5973375,
+          "lon": 120.9862834
+        },
+        {
+          "lat": 14.5973213,
+          "lon": 120.9865415
+        },
+        {
+          "lat": 14.5973394,
+          "lon": 120.9865817
+        },
+        {
+          "lat": 14.5973777,
+          "lon": 120.9866024
+        },
+        {
+          "lat": 14.5976454,
+          "lon": 120.9866233
+        },
+        {
+          "lat": 14.5976924,
+          "lon": 120.9866394
+        },
+        {
+          "lat": 14.5977235,
+          "lon": 120.9866736
+        },
+        {
+          "lat": 14.5977558,
+          "lon": 120.9867493
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Carcer Street",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 178615164,
+      "bounds": {
+        "minlat": 14.5979163,
+        "minlon": 120.9848363,
+        "maxlat": 14.5996958,
+        "maxlon": 120.9856366
+      },
+      "nodes": [
+        320819434,
+        320819433,
+        410550204,
+        410550203,
+        320819432,
+        410553409,
+        320819389,
+        320818610,
+        299405824,
+        1981654325
+      ],
+      "geometry": [
+        {
+          "lat": 14.5996958,
+          "lon": 120.9856366
+        },
+        {
+          "lat": 14.5996292,
+          "lon": 120.985328
+        },
+        {
+          "lat": 14.5995973,
+          "lon": 120.9850904
+        },
+        {
+          "lat": 14.5995257,
+          "lon": 120.9849263
+        },
+        {
+          "lat": 14.599318,
+          "lon": 120.9848748
+        },
+        {
+          "lat": 14.598938,
+          "lon": 120.9848363
+        },
+        {
+          "lat": 14.5986012,
+          "lon": 120.9848434
+        },
+        {
+          "lat": 14.5982815,
+          "lon": 120.9849179
+        },
+        {
+          "lat": 14.5979647,
+          "lon": 120.9850546
+        },
+        {
+          "lat": 14.5979163,
+          "lon": 120.9850796
+        }
+      ],
+      "tags": {
+        "boat": "no",
+        "evacuation": "no",
+        "name": "Estero de Quiapo",
+        "waterway": "canal"
+      }
+    },
+    {
+      "type": "way",
+      "id": 178615165,
+      "bounds": {
+        "minlat": 14.5972357,
+        "minlon": 120.9847834,
+        "maxlat": 14.5978277,
+        "maxlon": 120.984885
+      },
+      "nodes": [
+        163700607,
+        163700039
+      ],
+      "geometry": [
+        {
+          "lat": 14.5972357,
+          "lon": 120.9847834
+        },
+        {
+          "lat": 14.5978277,
+          "lon": 120.984885
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Elizondo Street",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 179240579,
+      "bounds": {
+        "minlat": 14.5973121,
+        "minlon": 120.9855045,
+        "maxlat": 14.5984175,
+        "maxlon": 120.9882254
+      },
+      "nodes": [
+        400739577,
+        400739574,
+        400739569,
+        311905803,
+        311905802,
+        301287772,
+        299405827,
+        299405826,
+        299405825,
+        299403202
+      ],
+      "geometry": [
+        {
+          "lat": 14.5984175,
+          "lon": 120.9882254
+        },
+        {
+          "lat": 14.5983573,
+          "lon": 120.9880772
+        },
+        {
+          "lat": 14.5982212,
+          "lon": 120.9877474
+        },
+        {
+          "lat": 14.5980984,
+          "lon": 120.9874068
+        },
+        {
+          "lat": 14.5978854,
+          "lon": 120.9868838
+        },
+        {
+          "lat": 14.5977548,
+          "lon": 120.9864175
+        },
+        {
+          "lat": 14.597591,
+          "lon": 120.9861838
+        },
+        {
+          "lat": 14.5975111,
+          "lon": 120.9860201
+        },
+        {
+          "lat": 14.5974264,
+          "lon": 120.9857593
+        },
+        {
+          "lat": 14.5973121,
+          "lon": 120.9855045
+        }
+      ],
+      "tags": {
+        "boat": "no",
+        "name": "Estero de San Sebastian",
+        "waterway": "stream"
+      }
+    },
+    {
+      "type": "way",
+      "id": 179735396,
+      "bounds": {
+        "minlat": 14.6006475,
+        "minlon": 120.9834865,
+        "maxlat": 14.6024283,
+        "maxlon": 120.9836151
+      },
+      "nodes": [
+        163694861,
+        7900777562,
+        1869749983,
+        1869749990,
+        1869749998,
+        244118189
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006475,
+          "lon": 120.9834865
+        },
+        {
+          "lat": 14.6009448,
+          "lon": 120.9835007
+        },
+        {
+          "lat": 14.6011289,
+          "lon": 120.9835149
+        },
+        {
+          "lat": 14.6015393,
+          "lon": 120.9835465
+        },
+        {
+          "lat": 14.6018501,
+          "lon": 120.9835705
+        },
+        {
+          "lat": 14.6024283,
+          "lon": 120.9836151
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Evangelista Street",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 179751732,
+      "bounds": {
+        "minlat": 14.5999116,
+        "minlon": 120.9868332,
+        "maxlat": 14.600484,
+        "maxlon": 120.9874448
+      },
+      "nodes": [
+        1913694598,
+        1912618454,
+        1912618458,
+        1912618460,
+        1912618464,
+        1901942755,
+        59739032
+      ],
+      "geometry": [
+        {
+          "lat": 14.5999116,
+          "lon": 120.9868332
+        },
+        {
+          "lat": 14.5999857,
+          "lon": 120.9869283
+        },
+        {
+          "lat": 14.6000381,
+          "lon": 120.9870172
+        },
+        {
+          "lat": 14.6000487,
+          "lon": 120.9870718
+        },
+        {
+          "lat": 14.6000795,
+          "lon": 120.9871661
+        },
+        {
+          "lat": 14.6001947,
+          "lon": 120.9872571
+        },
+        {
+          "lat": 14.600484,
+          "lon": 120.9874448
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "lanes": "1",
+        "name": "942 Bilibid Viejo Interior Street",
+        "surface": "paved"
+      }
+    },
+    {
+      "type": "way",
+      "id": 179751734,
+      "bounds": {
+        "minlat": 14.6001458,
+        "minlon": 120.985759,
+        "maxlat": 14.6006878,
+        "maxlon": 120.9857729
+      },
+      "nodes": [
+        1901942752,
+        1901942753
+      ],
+      "geometry": [
+        {
+          "lat": 14.6001458,
+          "lon": 120.9857729
+        },
+        {
+          "lat": 14.6006878,
+          "lon": 120.985759
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "1",
+        "name": "Gonzalo Puyat Interior Street",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 180777293,
+      "bounds": {
+        "minlat": 14.599297,
+        "minlon": 120.9855039,
+        "maxlat": 14.5994485,
+        "maxlon": 120.9860062
+      },
+      "nodes": [
+        1912447282,
+        1912447281
+      ],
+      "geometry": [
+        {
+          "lat": 14.5994485,
+          "lon": 120.9860062
+        },
+        {
+          "lat": 14.599297,
+          "lon": 120.9855039
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "1",
+        "motorcar": "no",
+        "name": "Ocampo Compound"
+      }
+    },
+    {
+      "type": "way",
+      "id": 180914730,
+      "bounds": {
+        "minlat": 14.5997955,
+        "minlon": 120.9869242,
+        "maxlat": 14.5999857,
+        "maxlon": 120.9869283
+      },
+      "nodes": [
+        1912618454,
+        1913694589
+      ],
+      "geometry": [
+        {
+          "lat": 14.5999857,
+          "lon": 120.9869283
+        },
+        {
+          "lat": 14.5997955,
+          "lon": 120.9869242
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 180917996,
+      "bounds": {
+        "minlat": 14.5990694,
+        "minlon": 120.9851232,
+        "maxlat": 14.5993746,
+        "maxlon": 120.9855532
+      },
+      "nodes": [
+        1913725467,
+        9958779585,
+        9958779588,
+        9958779587,
+        9958779586,
+        1977628761
+      ],
+      "geometry": [
+        {
+          "lat": 14.5993746,
+          "lon": 120.9851232
+        },
+        {
+          "lat": 14.5991028,
+          "lon": 120.9852178
+        },
+        {
+          "lat": 14.5990811,
+          "lon": 120.9852326
+        },
+        {
+          "lat": 14.5990694,
+          "lon": 120.9852748
+        },
+        {
+          "lat": 14.5990704,
+          "lon": 120.9852976
+        },
+        {
+          "lat": 14.5991622,
+          "lon": 120.9855532
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Morillo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 183935281,
+      "bounds": {
+        "minlat": 14.6008237,
+        "minlon": 120.9816851,
+        "maxlat": 14.6009342,
+        "maxlon": 120.9827227
+      },
+      "nodes": [
+        67751572,
+        443702379,
+        163694862
+      ],
+      "geometry": [
+        {
+          "lat": 14.6009342,
+          "lon": 120.9816851
+        },
+        {
+          "lat": 14.6009013,
+          "lon": 120.9820371
+        },
+        {
+          "lat": 14.6008237,
+          "lon": 120.9827227
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186714048,
+      "bounds": {
+        "minlat": 14.5963293,
+        "minlon": 120.9842161,
+        "maxlat": 14.5972964,
+        "maxlon": 120.9843945
+      },
+      "nodes": [
+        400699450,
+        400699326,
+        400699534
+      ],
+      "geometry": [
+        {
+          "lat": 14.5963293,
+          "lon": 120.9842161
+        },
+        {
+          "lat": 14.5966824,
+          "lon": 120.9842802
+        },
+        {
+          "lat": 14.5972964,
+          "lon": 120.9843945
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "A. Bautista Street",
+        "name:es": "Calle A. Bautista",
+        "old_name": "Barbosa Street",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "short_name": "A. Baustista",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186714363,
+      "bounds": {
+        "minlat": 14.5987725,
+        "minlon": 120.9846659,
+        "maxlat": 14.5987914,
+        "maxlon": 120.984767
+      },
+      "nodes": [
+        1974684739,
+        2145070404,
+        400699532
+      ],
+      "geometry": [
+        {
+          "lat": 14.5987881,
+          "lon": 120.984767
+        },
+        {
+          "lat": 14.5987914,
+          "lon": 120.984708
+        },
+        {
+          "lat": 14.5987725,
+          "lon": 120.9846659
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "name": "McGregor"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186714364,
+      "bounds": {
+        "minlat": 14.5987814,
+        "minlon": 120.984767,
+        "maxlat": 14.5987881,
+        "maxlon": 120.9848654
+      },
+      "nodes": [
+        2906658370,
+        1974684739
+      ],
+      "geometry": [
+        {
+          "lat": 14.5987814,
+          "lon": 120.9848654
+        },
+        {
+          "lat": 14.5987881,
+          "lon": 120.984767
+        }
+      ],
+      "tags": {
+        "bridge": "yes",
+        "highway": "footway",
+        "layer": "1",
+        "name": "McGregor"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186714365,
+      "bounds": {
+        "minlat": 14.5986258,
+        "minlon": 120.9848654,
+        "maxlat": 14.5988609,
+        "maxlon": 120.9856634
+      },
+      "nodes": [
+        1977628748,
+        1974684732,
+        2906658370
+      ],
+      "geometry": [
+        {
+          "lat": 14.5988609,
+          "lon": 120.9856634
+        },
+        {
+          "lat": 14.5986258,
+          "lon": 120.9849027
+        },
+        {
+          "lat": 14.5987814,
+          "lon": 120.9848654
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "name": "McGregor Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186718371,
+      "bounds": {
+        "minlat": 14.6003265,
+        "minlon": 120.984629,
+        "maxlat": 14.6003622,
+        "maxlon": 120.9851305
+      },
+      "nodes": [
+        454224649,
+        1974694504,
+        1974694506
+      ],
+      "geometry": [
+        {
+          "lat": 14.6003265,
+          "lon": 120.984629
+        },
+        {
+          "lat": 14.6003332,
+          "lon": 120.9849381
+        },
+        {
+          "lat": 14.6003622,
+          "lon": 120.9851305
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "name": "Sigay",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186720975,
+      "bounds": {
+        "minlat": 14.5995386,
+        "minlon": 120.9854142,
+        "maxlat": 14.599705,
+        "maxlon": 120.9859562
+      },
+      "nodes": [
+        1974698225,
+        1974698227
+      ],
+      "geometry": [
+        {
+          "lat": 14.5995386,
+          "lon": 120.9854142
+        },
+        {
+          "lat": 14.599705,
+          "lon": 120.9859562
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "lanes": "1",
+        "name": "Ilang-Ilang Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186723006,
+      "bounds": {
+        "minlat": 14.600484,
+        "minlon": 120.9867604,
+        "maxlat": 14.6007374,
+        "maxlon": 120.9874448
+      },
+      "nodes": [
+        163694856,
+        1869703245,
+        1974710741,
+        59739032
+      ],
+      "geometry": [
+        {
+          "lat": 14.6007374,
+          "lon": 120.9867604
+        },
+        {
+          "lat": 14.6006971,
+          "lon": 120.986972
+        },
+        {
+          "lat": 14.6006318,
+          "lon": 120.9871425
+        },
+        {
+          "lat": 14.600484,
+          "lon": 120.9874448
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "Bilibid Viejo Street",
+        "sidewalk": "both",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186723970,
+      "bounds": {
+        "minlat": 14.5979554,
+        "minlon": 120.9836153,
+        "maxlat": 14.598077,
+        "maxlon": 120.9841544
+      },
+      "nodes": [
+        316549089,
+        311905689,
+        12010091283
+      ],
+      "geometry": [
+        {
+          "lat": 14.598077,
+          "lon": 120.9836153
+        },
+        {
+          "lat": 14.5980235,
+          "lon": 120.9838482
+        },
+        {
+          "lat": 14.5979554,
+          "lon": 120.9841544
+        }
+      ],
+      "tags": {
+        "alt_name": "Lacson Underpass",
+        "foot": "yes",
+        "highway": "footway",
+        "layer": "-1",
+        "name": "Victory Lacson Underpass",
+        "note": "underground shops",
+        "tunnel": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186727701,
+      "bounds": {
+        "minlat": 14.5990346,
+        "minlon": 120.9836873,
+        "maxlat": 14.5991889,
+        "maxlon": 120.9840245
+      },
+      "nodes": [
+        10882573103,
+        1974746571,
+        1974746567,
+        1974746563,
+        1974746543,
+        1974746538,
+        1974746537,
+        1974746536,
+        1974746534,
+        1974746530
+      ],
+      "geometry": [
+        {
+          "lat": 14.5991889,
+          "lon": 120.9836873
+        },
+        {
+          "lat": 14.5991888,
+          "lon": 120.9837707
+        },
+        {
+          "lat": 14.5991811,
+          "lon": 120.9838898
+        },
+        {
+          "lat": 14.5991614,
+          "lon": 120.98391
+        },
+        {
+          "lat": 14.599148,
+          "lon": 120.9839232
+        },
+        {
+          "lat": 14.5991265,
+          "lon": 120.9839322
+        },
+        {
+          "lat": 14.5991032,
+          "lon": 120.9839322
+        },
+        {
+          "lat": 14.5990886,
+          "lon": 120.9839859
+        },
+        {
+          "lat": 14.5990441,
+          "lon": 120.9839786
+        },
+        {
+          "lat": 14.5990346,
+          "lon": 120.9840245
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "oneway": "yes",
+        "oneway:foot": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186736623,
+      "bounds": {
+        "minlat": 14.5992778,
+        "minlon": 120.9831671,
+        "maxlat": 14.5993041,
+        "maxlon": 120.9834242
+      },
+      "nodes": [
+        1974808828,
+        1974808826
+      ],
+      "geometry": [
+        {
+          "lat": 14.5993041,
+          "lon": 120.9831671
+        },
+        {
+          "lat": 14.5992778,
+          "lon": 120.9834242
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186738428,
+      "bounds": {
+        "minlat": 14.5978294,
+        "minlon": 120.9838078,
+        "maxlat": 14.5978399,
+        "maxlon": 120.983855
+      },
+      "nodes": [
+        454225961,
+        1974823952
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978399,
+          "lon": 120.9838078
+        },
+        {
+          "lat": 14.5978294,
+          "lon": 120.983855
+        }
+      ],
+      "tags": {
+        "foot": "yes",
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186738431,
+      "bounds": {
+        "minlat": 14.5979003,
+        "minlon": 120.9838217,
+        "maxlat": 14.5983313,
+        "maxlon": 120.9839084
+      },
+      "nodes": [
+        1974823955,
+        1974823954,
+        1974823953,
+        311905689,
+        1897805041
+      ],
+      "geometry": [
+        {
+          "lat": 14.5983313,
+          "lon": 120.9838547
+        },
+        {
+          "lat": 14.5982921,
+          "lon": 120.9838456
+        },
+        {
+          "lat": 14.5982773,
+          "lon": 120.9839084
+        },
+        {
+          "lat": 14.5980235,
+          "lon": 120.9838482
+        },
+        {
+          "lat": 14.5979003,
+          "lon": 120.9838217
+        }
+      ],
+      "tags": {
+        "foot": "yes",
+        "highway": "footway",
+        "layer": "-1",
+        "tunnel": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 186841727,
+      "bounds": {
+        "minlat": 14.6016387,
+        "minlon": 120.9849046,
+        "maxlat": 14.602935,
+        "maxlon": 120.9856133
+      },
+      "nodes": [
+        11337310168,
+        11337296706,
+        10881224419,
+        1974746088,
+        10881151001,
+        1974746090,
+        13346630846,
+        11347651519
+      ],
+      "geometry": [
+        {
+          "lat": 14.6016387,
+          "lon": 120.9849046
+        },
+        {
+          "lat": 14.6018881,
+          "lon": 120.9849581
+        },
+        {
+          "lat": 14.6023255,
+          "lon": 120.9850489
+        },
+        {
+          "lat": 14.6028654,
+          "lon": 120.9851779
+        },
+        {
+          "lat": 14.6029269,
+          "lon": 120.985231
+        },
+        {
+          "lat": 14.602935,
+          "lon": 120.985276
+        },
+        {
+          "lat": 14.6027825,
+          "lon": 120.9856025
+        },
+        {
+          "lat": 14.6027774,
+          "lon": 120.9856133
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 187006815,
+      "bounds": {
+        "minlat": 14.5982429,
+        "minlon": 120.985399,
+        "maxlat": 14.5995796,
+        "maxlon": 120.9858825
+      },
+      "nodes": [
+        223766777,
+        1977628748,
+        1977628761,
+        1912447281,
+        1974698225,
+        1858450326
+      ],
+      "geometry": [
+        {
+          "lat": 14.5982429,
+          "lon": 120.9858825
+        },
+        {
+          "lat": 14.5988609,
+          "lon": 120.9856634
+        },
+        {
+          "lat": 14.5991622,
+          "lon": 120.9855532
+        },
+        {
+          "lat": 14.599297,
+          "lon": 120.9855039
+        },
+        {
+          "lat": 14.5995386,
+          "lon": 120.9854142
+        },
+        {
+          "lat": 14.5995796,
+          "lon": 120.985399
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Z. P. de Guzman Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 187486760,
+      "bounds": {
+        "minlat": 14.5968903,
+        "minlon": 120.9820673,
+        "maxlat": 14.5980979,
+        "maxlon": 120.9828895
+      },
+      "nodes": [
+        68085309,
+        412350294,
+        1977523957
+      ],
+      "geometry": [
+        {
+          "lat": 14.5980979,
+          "lon": 120.9820673
+        },
+        {
+          "lat": 14.5974407,
+          "lon": 120.9825086
+        },
+        {
+          "lat": 14.5968903,
+          "lon": 120.9828895
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Carlos Palanca Street",
+        "old_name": "Echague Street",
+        "old_name:en": "Echague Street",
+        "old_name:es": "Calle Echague",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 187486764,
+      "bounds": {
+        "minlat": 14.5973121,
+        "minlon": 120.9850796,
+        "maxlat": 14.5979163,
+        "maxlon": 120.9855045
+      },
+      "nodes": [
+        1981654325,
+        299405813,
+        299403202
+      ],
+      "geometry": [
+        {
+          "lat": 14.5979163,
+          "lon": 120.9850796
+        },
+        {
+          "lat": 14.5974298,
+          "lon": 120.9853698
+        },
+        {
+          "lat": 14.5973121,
+          "lon": 120.9855045
+        }
+      ],
+      "tags": {
+        "boat": "no",
+        "name": "Estero de Quiapo",
+        "waterway": "canal"
+      }
+    },
+    {
+      "type": "way",
+      "id": 187486767,
+      "bounds": {
+        "minlat": 14.6006475,
+        "minlon": 120.9834865,
+        "maxlat": 14.6006504,
+        "maxlon": 120.9844765
+      },
+      "nodes": [
+        163694861,
+        1501266941,
+        6329723193,
+        163694860
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006475,
+          "lon": 120.9834865
+        },
+        {
+          "lat": 14.6006498,
+          "lon": 120.9842261
+        },
+        {
+          "lat": 14.6006501,
+          "lon": 120.9843542
+        },
+        {
+          "lat": 14.6006504,
+          "lon": 120.9844765
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "2",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 223237409,
+      "bounds": {
+        "minlat": 14.6016766,
+        "minlon": 120.9824867,
+        "maxlat": 14.6022356,
+        "maxlon": 120.9825979
+      },
+      "nodes": [
+        2321522274,
+        13127328021,
+        13127328020,
+        1278060367
+      ],
+      "geometry": [
+        {
+          "lat": 14.6022356,
+          "lon": 120.9825979
+        },
+        {
+          "lat": 14.6017169,
+          "lon": 120.9825289
+        },
+        {
+          "lat": 14.6016884,
+          "lon": 120.9825142
+        },
+        {
+          "lat": 14.6016766,
+          "lon": 120.9824867
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Mabolo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 223237649,
+      "bounds": {
+        "minlat": 14.6000067,
+        "minlon": 120.9815036,
+        "maxlat": 14.6000899,
+        "maxlon": 120.982023
+      },
+      "nodes": [
+        2321524279,
+        2321524280
+      ],
+      "geometry": [
+        {
+          "lat": 14.6000067,
+          "lon": 120.982023
+        },
+        {
+          "lat": 14.6000899,
+          "lon": 120.9815036
+        }
+      ],
+      "tags": {
+        "alt_name": "Pedro Paterno Street",
+        "highway": "residential",
+        "lanes": "1",
+        "lit": "yes",
+        "name": "P. Paterno Street",
+        "name:en": "P. Paterno Street",
+        "name:es": "Calle P. Paterno",
+        "name:etymology": "Pedro Paterno",
+        "name:etymology:wikidata": "Q946237",
+        "name:tl": "Kalye P. Paterno"
+      }
+    },
+    {
+      "type": "way",
+      "id": 370191609,
+      "bounds": {
+        "minlat": 14.600595,
+        "minlon": 120.9815526,
+        "maxlat": 14.6036835,
+        "maxlon": 120.9818672
+      },
+      "nodes": [
+        185351944,
+        13330223718,
+        10866745610,
+        694426573,
+        7593891990,
+        29487749,
+        9905250096
+      ],
+      "geometry": [
+        {
+          "lat": 14.6036835,
+          "lon": 120.9818672
+        },
+        {
+          "lat": 14.6036259,
+          "lon": 120.9818654
+        },
+        {
+          "lat": 14.603353,
+          "lon": 120.9818592
+        },
+        {
+          "lat": 14.6023699,
+          "lon": 120.9818132
+        },
+        {
+          "lat": 14.6016262,
+          "lon": 120.9816969
+        },
+        {
+          "lat": 14.6009408,
+          "lon": 120.9815898
+        },
+        {
+          "lat": 14.600595,
+          "lon": 120.9815526
+        }
+      ],
+      "tags": {
+        "flood_prone": "yes",
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Rizal Avenue",
+        "name:en": "Rizal Avenue",
+        "name:es": "Avenida Rizal",
+        "name:etymology": "José Rizal",
+        "name:etymology:wikidata": "Q1500",
+        "name:etymology:wikipedia": "es:José Rizal",
+        "name:tl": "Abenida Rizal",
+        "oneway": "yes",
+        "ref": "150",
+        "sidewalk": "right",
+        "source:maxspeed": "sign",
+        "surface": "concrete",
+        "wikidata": "Q7339067"
+      }
+    },
+    {
+      "type": "way",
+      "id": 409263833,
+      "bounds": {
+        "minlat": 14.601507,
+        "minlon": 120.9846479,
+        "maxlat": 14.6018799,
+        "maxlon": 120.9847233
+      },
+      "nodes": [
+        736064980,
+        990043684
+      ],
+      "geometry": [
+        {
+          "lat": 14.6018799,
+          "lon": 120.9847233
+        },
+        {
+          "lat": 14.601507,
+          "lon": 120.9846479
+        }
+      ],
+      "tags": {
+        "foot": "no",
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "placement": "left_of:2",
+        "ref": "170"
+      }
+    },
+    {
+      "type": "way",
+      "id": 409263834,
+      "bounds": {
+        "minlat": 14.6012069,
+        "minlon": 120.9846863,
+        "maxlat": 14.6018462,
+        "maxlon": 120.984816
+      },
+      "nodes": [
+        990043648,
+        5798974983
+      ],
+      "geometry": [
+        {
+          "lat": 14.6012069,
+          "lon": 120.9846863
+        },
+        {
+          "lat": 14.6018462,
+          "lon": 120.984816
+        }
+      ],
+      "tags": {
+        "destination": "Quezon City",
+        "destination:street": "España Boulevard",
+        "foot": "no",
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 409263835,
+      "bounds": {
+        "minlat": 14.5973923,
+        "minlon": 120.9838374,
+        "maxlat": 14.5982685,
+        "maxlon": 120.9840062
+      },
+      "nodes": [
+        312701885,
+        400699372
+      ],
+      "geometry": [
+        {
+          "lat": 14.5982685,
+          "lon": 120.9840062
+        },
+        {
+          "lat": 14.5973923,
+          "lon": 120.9838374
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "maxspeed:type": "sign",
+        "name": "Quezon Boulevard",
+        "name:es": "Bulevar Quezón",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "ref": "170",
+        "wikipedia": "en:Quezon Boulevard"
+      }
+    },
+    {
+      "type": "way",
+      "id": 409263836,
+      "bounds": {
+        "minlat": 14.597382,
+        "minlon": 120.9839346,
+        "maxlat": 14.5978898,
+        "maxlon": 120.9840382
+      },
+      "nodes": [
+        400699349,
+        9789113343
+      ],
+      "geometry": [
+        {
+          "lat": 14.597382,
+          "lon": 120.9839346
+        },
+        {
+          "lat": 14.5978898,
+          "lon": 120.9840382
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "maxspeed:type": "sign",
+        "name": "Quezon Boulevard",
+        "name:es": "Bulevar Quezón",
+        "oneway": "yes",
+        "ref": "170",
+        "wikipedia": "en:Quezon Boulevard"
+      }
+    },
+    {
+      "type": "way",
+      "id": 416894845,
+      "bounds": {
+        "minlat": 14.5998087,
+        "minlon": 120.9804301,
+        "maxlat": 14.5998364,
+        "maxlon": 120.9814625
+      },
+      "nodes": [
+        4175753035,
+        9894846346,
+        4175753036
+      ],
+      "geometry": [
+        {
+          "lat": 14.5998113,
+          "lon": 120.9804301
+        },
+        {
+          "lat": 14.5998087,
+          "lon": 120.9805839
+        },
+        {
+          "lat": 14.5998364,
+          "lon": 120.9814625
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "1",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Bustos Street",
+        "name:en": "Bustos Street",
+        "name:es": "Calle Bustos",
+        "oneway": "yes",
+        "sidewalk": "both",
+        "surface": "concrete",
+        "width": "6"
+      }
+    },
+    {
+      "type": "way",
+      "id": 417132911,
+      "bounds": {
+        "minlat": 14.5978679,
+        "minlon": 120.9841128,
+        "maxlat": 14.5978744,
+        "maxlon": 120.9841518
+      },
+      "nodes": [
+        1974695862,
+        1974695863
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978744,
+          "lon": 120.9841128
+        },
+        {
+          "lat": 14.5978679,
+          "lon": 120.9841518
+        }
+      ],
+      "tags": {
+        "foot": "yes",
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 417132915,
+      "bounds": {
+        "minlat": 14.5979279,
+        "minlon": 120.984286,
+        "maxlat": 14.5979435,
+        "maxlon": 120.9842893
+      },
+      "nodes": [
+        1993325191,
+        4177464496
+      ],
+      "geometry": [
+        {
+          "lat": 14.5979435,
+          "lon": 120.9842893
+        },
+        {
+          "lat": 14.5979279,
+          "lon": 120.984286
+        }
+      ],
+      "tags": {
+        "foot": "yes",
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 417136518,
+      "bounds": {
+        "minlat": 14.598077,
+        "minlon": 120.9834868,
+        "maxlat": 14.5984651,
+        "maxlon": 120.9836153
+      },
+      "nodes": [
+        316549088,
+        316549089
+      ],
+      "geometry": [
+        {
+          "lat": 14.5984651,
+          "lon": 120.9834868
+        },
+        {
+          "lat": 14.598077,
+          "lon": 120.9836153
+        }
+      ],
+      "tags": {
+        "alt_name": "Lacson Underpass",
+        "foot": "yes",
+        "highway": "footway",
+        "layer": "-1",
+        "name": "Victory Lacson Underpass",
+        "tunnel": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 417136520,
+      "bounds": {
+        "minlat": 14.5992365,
+        "minlon": 120.9841103,
+        "maxlat": 14.5992863,
+        "maxlon": 120.98439
+      },
+      "nodes": [
+        4177513044,
+        4177513043
+      ],
+      "geometry": [
+        {
+          "lat": 14.5992863,
+          "lon": 120.9841103
+        },
+        {
+          "lat": 14.5992365,
+          "lon": 120.98439
+        }
+      ],
+      "tags": {
+        "bridge": "viaduct",
+        "highway": "footway",
+        "layer": "1"
+      }
+    },
+    {
+      "type": "way",
+      "id": 417136525,
+      "bounds": {
+        "minlat": 14.5991262,
+        "minlon": 120.9843649,
+        "maxlat": 14.5991278,
+        "maxlon": 120.9843759
+      },
+      "nodes": [
+        4177513040,
+        11347651526
+      ],
+      "geometry": [
+        {
+          "lat": 14.5991262,
+          "lon": 120.9843759
+        },
+        {
+          "lat": 14.5991278,
+          "lon": 120.9843649
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 417136527,
+      "bounds": {
+        "minlat": 14.5991443,
+        "minlon": 120.9840542,
+        "maxlat": 14.5991488,
+        "maxlon": 120.9840768
+      },
+      "nodes": [
+        4177513041,
+        4177513042
+      ],
+      "geometry": [
+        {
+          "lat": 14.5991488,
+          "lon": 120.9840542
+        },
+        {
+          "lat": 14.5991443,
+          "lon": 120.9840768
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 429988586,
+      "bounds": {
+        "minlat": 14.6009342,
+        "minlon": 120.9815898,
+        "maxlat": 14.6009408,
+        "maxlon": 120.9816851
+      },
+      "nodes": [
+        29487749,
+        67751572
+      ],
+      "geometry": [
+        {
+          "lat": 14.6009408,
+          "lon": 120.9815898
+        },
+        {
+          "lat": 14.6009342,
+          "lon": 120.9816851
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Gonzalo Puyat Street",
+        "name:en": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "oneway": "no",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 676953220,
+      "bounds": {
+        "minlat": 14.5973646,
+        "minlon": 120.9823937,
+        "maxlat": 14.5974407,
+        "maxlon": 120.9825086
+      },
+      "nodes": [
+        412350294,
+        1869703241
+      ],
+      "geometry": [
+        {
+          "lat": 14.5974407,
+          "lon": 120.9825086
+        },
+        {
+          "lat": 14.5973646,
+          "lon": 120.9823937
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "1",
+        "name": "Chica Street",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 741799316,
+      "bounds": {
+        "minlat": 14.6021806,
+        "minlon": 120.9819047,
+        "maxlat": 14.6023527,
+        "maxlon": 120.9831102
+      },
+      "nodes": [
+        443702374,
+        244118188,
+        1278060362,
+        2321522274,
+        443702372,
+        67751574
+      ],
+      "geometry": [
+        {
+          "lat": 14.60222,
+          "lon": 120.9831102
+        },
+        {
+          "lat": 14.6021806,
+          "lon": 120.9829911
+        },
+        {
+          "lat": 14.6021954,
+          "lon": 120.982842
+        },
+        {
+          "lat": 14.6022356,
+          "lon": 120.9825979
+        },
+        {
+          "lat": 14.6022956,
+          "lon": 120.9822683
+        },
+        {
+          "lat": 14.6023527,
+          "lon": 120.9819047
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Soler Street",
+        "name:en": "Soler Street",
+        "name:es": "Calle Soler",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 741799317,
+      "bounds": {
+        "minlat": 14.6008237,
+        "minlon": 120.9827227,
+        "maxlat": 14.60222,
+        "maxlon": 120.9831257
+      },
+      "nodes": [
+        163694862,
+        13287726275,
+        13287726276,
+        443702390,
+        443702374
+      ],
+      "geometry": [
+        {
+          "lat": 14.6008237,
+          "lon": 120.9827227
+        },
+        {
+          "lat": 14.6015473,
+          "lon": 120.9830335
+        },
+        {
+          "lat": 14.601726,
+          "lon": 120.9831103
+        },
+        {
+          "lat": 14.6017619,
+          "lon": 120.9831257
+        },
+        {
+          "lat": 14.60222,
+          "lon": 120.9831102
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Sales Street",
+        "name:en": "Sales Street",
+        "name:es": "Calle Sales",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 741799318,
+      "bounds": {
+        "minlat": 14.6007654,
+        "minlon": 120.9827227,
+        "maxlat": 14.6008237,
+        "maxlon": 120.9829093
+      },
+      "nodes": [
+        163694862,
+        700145058
+      ],
+      "geometry": [
+        {
+          "lat": 14.6008237,
+          "lon": 120.9827227
+        },
+        {
+          "lat": 14.6007654,
+          "lon": 120.9829093
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "2",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 741799319,
+      "bounds": {
+        "minlat": 14.600383,
+        "minlon": 120.9825299,
+        "maxlat": 14.6008237,
+        "maxlon": 120.9827227
+      },
+      "nodes": [
+        168180940,
+        163694862
+      ],
+      "geometry": [
+        {
+          "lat": 14.600383,
+          "lon": 120.9825299
+        },
+        {
+          "lat": 14.6008237,
+          "lon": 120.9827227
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Sales Street",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 741799320,
+      "bounds": {
+        "minlat": 14.6000614,
+        "minlon": 120.9827274,
+        "maxlat": 14.6003163,
+        "maxlon": 120.9834627
+      },
+      "nodes": [
+        168180941,
+        700145064
+      ],
+      "geometry": [
+        {
+          "lat": 14.6000614,
+          "lon": 120.9834627
+        },
+        {
+          "lat": 14.6003163,
+          "lon": 120.9827274
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Ronquillo Street",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 741799321,
+      "bounds": {
+        "minlat": 14.600383,
+        "minlon": 120.9822337,
+        "maxlat": 14.6004608,
+        "maxlon": 120.9825299
+      },
+      "nodes": [
+        699542890,
+        168180940
+      ],
+      "geometry": [
+        {
+          "lat": 14.6004608,
+          "lon": 120.9822337
+        },
+        {
+          "lat": 14.600383,
+          "lon": 120.9825299
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Ronquillo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 755568080,
+      "bounds": {
+        "minlat": 14.598219,
+        "minlon": 120.9818607,
+        "maxlat": 14.5982865,
+        "maxlon": 120.9818839
+      },
+      "nodes": [
+        7057458562,
+        1423836741,
+        7057458561
+      ],
+      "geometry": [
+        {
+          "lat": 14.5982865,
+          "lon": 120.9818839
+        },
+        {
+          "lat": 14.5982538,
+          "lon": 120.9818727
+        },
+        {
+          "lat": 14.598219,
+          "lon": 120.9818607
+        }
+      ],
+      "tags": {
+        "footway": "crossing",
+        "highway": "footway",
+        "noname": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 757990560,
+      "bounds": {
+        "minlat": 14.6021313,
+        "minlon": 120.9853025,
+        "maxlat": 14.6029779,
+        "maxlon": 120.9871009
+      },
+      "nodes": [
+        990043651,
+        9856431491,
+        410553785,
+        8647480823,
+        410553412,
+        13330223712,
+        8434658681
+      ],
+      "geometry": [
+        {
+          "lat": 14.6029779,
+          "lon": 120.9853025
+        },
+        {
+          "lat": 14.6028637,
+          "lon": 120.9855363
+        },
+        {
+          "lat": 14.6028086,
+          "lon": 120.9856507
+        },
+        {
+          "lat": 14.602642,
+          "lon": 120.9860192
+        },
+        {
+          "lat": 14.6026179,
+          "lon": 120.98607
+        },
+        {
+          "lat": 14.6021708,
+          "lon": 120.9870218
+        },
+        {
+          "lat": 14.6021313,
+          "lon": 120.9871009
+        }
+      ],
+      "tags": {
+        "cycleway:right:lane": "exclusive",
+        "foot": "use_sidepath",
+        "highway": "secondary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "C. M. Recto Avenue",
+        "name:etymology": "Claro M. Recto",
+        "old_name": "Calzada de Iris",
+        "old_name:2": "Calle Azcarraga",
+        "oneway": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "ref": "145",
+        "short_name": "Recto",
+        "source:maxspeed": "sign",
+        "wikipedia": "en:Recto Avenue"
+      }
+    },
+    {
+      "type": "way",
+      "id": 795146860,
+      "bounds": {
+        "minlat": 14.5958086,
+        "minlon": 120.9845131,
+        "maxlat": 14.5972357,
+        "maxlon": 120.9847834
+      },
+      "nodes": [
+        163700607,
+        400699327,
+        11970891878,
+        11975163656,
+        12010150178,
+        400699555
+      ],
+      "geometry": [
+        {
+          "lat": 14.5972357,
+          "lon": 120.9847834
+        },
+        {
+          "lat": 14.5966068,
+          "lon": 120.9846767
+        },
+        {
+          "lat": 14.5962661,
+          "lon": 120.9846109
+        },
+        {
+          "lat": 14.5960316,
+          "lon": 120.9845656
+        },
+        {
+          "lat": 14.5958505,
+          "lon": 120.9845283
+        },
+        {
+          "lat": 14.5958086,
+          "lon": 120.9845131
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Elizondo Street",
+        "name:es": "Calle Elizondo",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 813040004,
+      "bounds": {
+        "minlat": 14.6016102,
+        "minlon": 120.9830242,
+        "maxlat": 14.601633,
+        "maxlon": 120.9831011
+      },
+      "nodes": [
+        7594258839,
+        7594258840
+      ],
+      "geometry": [
+        {
+          "lat": 14.6016102,
+          "lon": 120.9831011
+        },
+        {
+          "lat": 14.601633,
+          "lon": 120.9830242
+        }
+      ],
+      "tags": {
+        "bridge": "yes",
+        "highway": "footway",
+        "layer": "1"
+      }
+    },
+    {
+      "type": "way",
+      "id": 820063543,
+      "bounds": {
+        "minlat": 14.6006519,
+        "minlon": 120.9845813,
+        "maxlat": 14.6012069,
+        "maxlon": 120.9846863
+      },
+      "nodes": [
+        163694858,
+        990043648
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006519,
+          "lon": 120.9845813
+        },
+        {
+          "lat": 14.6012069,
+          "lon": 120.9846863
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:right:protection:left": "solid_line",
+        "foot": "use_sidepath",
+        "highway": "primary",
+        "lanes": "4",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 820063583,
+      "bounds": {
+        "minlat": 14.5972964,
+        "minlon": 120.9843945,
+        "maxlat": 14.5976195,
+        "maxlon": 120.9844534
+      },
+      "nodes": [
+        400699534,
+        13307330753
+      ],
+      "geometry": [
+        {
+          "lat": 14.5972964,
+          "lon": 120.9843945
+        },
+        {
+          "lat": 14.5976195,
+          "lon": 120.9844534
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "A. Bautista Street",
+        "old_name": "Barbosa Street",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "short_name": "A. Baustista",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 820063584,
+      "bounds": {
+        "minlat": 14.5978277,
+        "minlon": 120.9845043,
+        "maxlat": 14.5978991,
+        "maxlon": 120.984885
+      },
+      "nodes": [
+        163700039,
+        400699533
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978277,
+          "lon": 120.984885
+        },
+        {
+          "lat": 14.5978991,
+          "lon": 120.9845043
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "F. R. Hidalgo Street",
+        "name:etymology:wikidata": "Q2391230",
+        "old_name": "Calle San Sebastian",
+        "postal_code": "1001",
+        "short_name": "R. Hidalgo Street;Hidalgo Street",
+        "wikidata": "Q20988233",
+        "wikipedia": "en:Hidalgo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 820063585,
+      "bounds": {
+        "minlat": 14.5978277,
+        "minlon": 120.984885,
+        "maxlat": 14.5978786,
+        "maxlon": 120.9849958
+      },
+      "nodes": [
+        1869644916,
+        163700039
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978786,
+          "lon": 120.9849958
+        },
+        {
+          "lat": 14.5978277,
+          "lon": 120.984885
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "F. R. Hidalgo Street",
+        "name:etymology:wikidata": "Q2391230",
+        "old_name": "Calle San Sebastian",
+        "postal_code": "1001",
+        "short_name": "R. Hidalgo Street;Hidalgo Street",
+        "wikidata": "Q20988233",
+        "wikipedia": "en:Hidalgo Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 820063586,
+      "bounds": {
+        "minlat": 14.5972357,
+        "minlon": 120.9843945,
+        "maxlat": 14.5972964,
+        "maxlon": 120.9847834
+      },
+      "nodes": [
+        400699534,
+        163700607
+      ],
+      "geometry": [
+        {
+          "lat": 14.5972964,
+          "lon": 120.9843945
+        },
+        {
+          "lat": 14.5972357,
+          "lon": 120.9847834
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Arlegui Street",
+        "name:en": "Arlegui Street",
+        "name:es": "Calle Arlegui",
+        "name:tl": "Kalye Arlegui",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "concrete",
+        "width": "9"
+      }
+    },
+    {
+      "type": "way",
+      "id": 820063587,
+      "bounds": {
+        "minlat": 14.5971184,
+        "minlon": 120.9847834,
+        "maxlat": 14.5972357,
+        "maxlon": 120.985452
+      },
+      "nodes": [
+        163700607,
+        400699649,
+        1869644915
+      ],
+      "geometry": [
+        {
+          "lat": 14.5972357,
+          "lon": 120.9847834
+        },
+        {
+          "lat": 14.5971806,
+          "lon": 120.9850976
+        },
+        {
+          "lat": 14.5971184,
+          "lon": 120.985452
+        }
+      ],
+      "tags": {
+        "designation": "national_tertiary_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "40",
+        "maxspeed:type": "PH:urban",
+        "name": "Arlegui Street",
+        "name:en": "Arlegui Street",
+        "name:es": "Calle Arlegui",
+        "name:tl": "Kalye Arlegui",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "concrete",
+        "width": "9"
+      }
+    },
+    {
+      "type": "way",
+      "id": 825090442,
+      "bounds": {
+        "minlat": 14.6006519,
+        "minlon": 120.9845813,
+        "maxlat": 14.6006543,
+        "maxlon": 120.9850373
+      },
+      "nodes": [
+        168181814,
+        11337267115,
+        11337267119,
+        163694858
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006528,
+          "lon": 120.9850373
+        },
+        {
+          "lat": 14.6006543,
+          "lon": 120.9847481
+        },
+        {
+          "lat": 14.6006543,
+          "lon": 120.9847284
+        },
+        {
+          "lat": 14.6006519,
+          "lon": 120.9845813
+        }
+      ],
+      "tags": {
+        "designation": "city_road",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "30",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "postal_code": "1001",
+        "sidewalk": "both",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 825090443,
+      "bounds": {
+        "minlat": 14.5995193,
+        "minlon": 120.983448,
+        "maxlat": 14.5996485,
+        "maxlon": 120.9842498
+      },
+      "nodes": [
+        33452917,
+        1974722751,
+        9759148645,
+        168181142
+      ],
+      "geometry": [
+        {
+          "lat": 14.5995193,
+          "lon": 120.9842498
+        },
+        {
+          "lat": 14.5995401,
+          "lon": 120.9841416
+        },
+        {
+          "lat": 14.5996236,
+          "lon": 120.9837292
+        },
+        {
+          "lat": 14.5996485,
+          "lon": 120.983448
+        }
+      ],
+      "tags": {
+        "alt_name": "Pedro Paterno Street",
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "P. Paterno Street",
+        "name:en": "P. Paterno Street",
+        "name:es": "Calle P. Paterno",
+        "name:etymology": "Pedro Paterno",
+        "name:etymology:wikidata": "Q946237",
+        "name:tl": "Kalye P. Paterno",
+        "oneway": "yes",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 825090444,
+      "bounds": {
+        "minlat": 14.6003173,
+        "minlon": 120.9844085,
+        "maxlat": 14.601507,
+        "maxlon": 120.9846479
+      },
+      "nodes": [
+        990043684,
+        9789113347,
+        1869749980,
+        163694860,
+        7900777563
+      ],
+      "geometry": [
+        {
+          "lat": 14.601507,
+          "lon": 120.9846479
+        },
+        {
+          "lat": 14.6014215,
+          "lon": 120.9846299
+        },
+        {
+          "lat": 14.6010738,
+          "lon": 120.9845604
+        },
+        {
+          "lat": 14.6006504,
+          "lon": 120.9844765
+        },
+        {
+          "lat": 14.6003173,
+          "lon": 120.9844085
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:right:protection:left": "solid_line",
+        "highway": "primary",
+        "lanes": "4",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 833362285,
+      "bounds": {
+        "minlat": 14.5996485,
+        "minlon": 120.983448,
+        "maxlat": 14.6000614,
+        "maxlon": 120.9834627
+      },
+      "nodes": [
+        168181142,
+        168180941
+      ],
+      "geometry": [
+        {
+          "lat": 14.5996485,
+          "lon": 120.983448
+        },
+        {
+          "lat": 14.6000614,
+          "lon": 120.9834627
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Evangelista Street",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 833362286,
+      "bounds": {
+        "minlat": 14.6006475,
+        "minlon": 120.9829093,
+        "maxlat": 14.6007654,
+        "maxlon": 120.9834865
+      },
+      "nodes": [
+        700145058,
+        1977462566,
+        9789113346,
+        163694861
+      ],
+      "geometry": [
+        {
+          "lat": 14.6007654,
+          "lon": 120.9829093
+        },
+        {
+          "lat": 14.6006869,
+          "lon": 120.9831649
+        },
+        {
+          "lat": 14.6006595,
+          "lon": 120.9833269
+        },
+        {
+          "lat": 14.6006475,
+          "lon": 120.9834865
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "lanes": "2",
+        "name": "Gonzalo Puyat Street",
+        "name:es": "Calle Gonzalo Púyat",
+        "old_name": "Raon Street",
+        "old_name:en": "Raon Street",
+        "old_name:es": "Calle Raón",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 840378995,
+      "bounds": {
+        "minlat": 14.5998364,
+        "minlon": 120.9814625,
+        "maxlat": 14.6005384,
+        "maxlon": 120.9815645
+      },
+      "nodes": [
+        4175753036,
+        2321524280,
+        13332290243,
+        29487748
+      ],
+      "geometry": [
+        {
+          "lat": 14.5998364,
+          "lon": 120.9814625
+        },
+        {
+          "lat": 14.6000899,
+          "lon": 120.9815036
+        },
+        {
+          "lat": 14.6004996,
+          "lon": 120.9815592
+        },
+        {
+          "lat": 14.6005384,
+          "lon": 120.9815645
+        }
+      ],
+      "tags": {
+        "flood_prone": "yes",
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Rizal Avenue",
+        "name:en": "Rizal Avenue",
+        "name:es": "Avenida Rizal",
+        "name:etymology": "José Rizal",
+        "name:etymology:wikidata": "Q1500",
+        "name:etymology:wikipedia": "es:José Rizal",
+        "name:fil": "Abenida Rizal",
+        "name:tl": "Abenida Rizal",
+        "oneway": "yes",
+        "ref": "150",
+        "sidewalk": "both",
+        "source:maxspeed": "sign",
+        "surface": "concrete",
+        "wikidata": "Q7339067"
+      }
+    },
+    {
+      "type": "way",
+      "id": 840378996,
+      "bounds": {
+        "minlat": 14.5990172,
+        "minlon": 120.9813397,
+        "maxlat": 14.5998364,
+        "maxlon": 120.9814625
+      },
+      "nodes": [
+        402590623,
+        1277952617,
+        13332290244,
+        4175753036
+      ],
+      "geometry": [
+        {
+          "lat": 14.5990172,
+          "lon": 120.9813397
+        },
+        {
+          "lat": 14.5990946,
+          "lon": 120.9813516
+        },
+        {
+          "lat": 14.599627,
+          "lon": 120.9814312
+        },
+        {
+          "lat": 14.5998364,
+          "lon": 120.9814625
+        }
+      ],
+      "tags": {
+        "flood_prone": "yes",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Rizal Avenue",
+        "name:en": "Rizal Avenue",
+        "name:es": "Avenida Rizal",
+        "name:etymology": "José Rizal",
+        "name:etymology:wikidata": "Q1500",
+        "name:etymology:wikipedia": "es:José Rizal",
+        "name:fil": "Abenida Rizal",
+        "name:tl": "Abenida Rizal",
+        "oneway": "yes",
+        "ref": "150",
+        "source:maxspeed": "sign",
+        "surface": "concrete",
+        "wikidata": "Q7339067"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1018619052,
+      "bounds": {
+        "minlat": 14.5981856,
+        "minlon": 120.9829914,
+        "maxlat": 14.5987673,
+        "maxlon": 120.9830879
+      },
+      "nodes": [
+        1278908805,
+        1869749978
+      ],
+      "geometry": [
+        {
+          "lat": 14.5987673,
+          "lon": 120.9830879
+        },
+        {
+          "lat": 14.5981856,
+          "lon": 120.9829914
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Palma Street"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1065961620,
+      "bounds": {
+        "minlat": 14.5983231,
+        "minlon": 120.9841991,
+        "maxlat": 14.5988582,
+        "maxlon": 120.9842401
+      },
+      "nodes": [
+        9883437501,
+        9789113344,
+        163700040
+      ],
+      "geometry": [
+        {
+          "lat": 14.5983231,
+          "lon": 120.9841991
+        },
+        {
+          "lat": 14.598673,
+          "lon": 120.9842401
+        },
+        {
+          "lat": 14.5988582,
+          "lon": 120.9842277
+        }
+      ],
+      "tags": {
+        "bicycle": "designated",
+        "cycleway:right": "lane",
+        "destination:ref": "170",
+        "foot": "use_sidepath",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1065961621,
+      "bounds": {
+        "minlat": 14.5978898,
+        "minlon": 120.9840382,
+        "maxlat": 14.5988582,
+        "maxlon": 120.9842277
+      },
+      "nodes": [
+        9789113343,
+        163700040
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978898,
+          "lon": 120.9840382
+        },
+        {
+          "lat": 14.5988582,
+          "lon": 120.9842277
+        }
+      ],
+      "tags": {
+        "bicycle": "no",
+        "highway": "primary",
+        "lanes": "2",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "ref": "170",
+        "wikipedia": "en:Quezon Boulevard"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1065961622,
+      "bounds": {
+        "minlat": 14.5978898,
+        "minlon": 120.9840382,
+        "maxlat": 14.5980327,
+        "maxlon": 120.9841442
+      },
+      "nodes": [
+        9789113343,
+        12010073422
+      ],
+      "geometry": [
+        {
+          "lat": 14.5978898,
+          "lon": 120.9840382
+        },
+        {
+          "lat": 14.5980327,
+          "lon": 120.9841442
+        }
+      ],
+      "tags": {
+        "foot": "no",
+        "highway": "cycleway",
+        "oneway": "yes",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1067095144,
+      "bounds": {
+        "minlat": 14.5970618,
+        "minlon": 120.9821685,
+        "maxlat": 14.5973646,
+        "maxlon": 120.9823937
+      },
+      "nodes": [
+        1869703219,
+        1869703241
+      ],
+      "geometry": [
+        {
+          "lat": 14.5970618,
+          "lon": 120.9821685
+        },
+        {
+          "lat": 14.5973646,
+          "lon": 120.9823937
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "name": "Orozco Street",
+        "name:en": "Orozco Street",
+        "name:es": "Calle Orozco",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1076360289,
+      "bounds": {
+        "minlat": 14.5977558,
+        "minlon": 120.9867341,
+        "maxlat": 14.5977895,
+        "maxlon": 120.9867493
+      },
+      "nodes": [
+        400737679,
+        1346513341
+      ],
+      "geometry": [
+        {
+          "lat": 14.5977895,
+          "lon": 120.9867341
+        },
+        {
+          "lat": 14.5977558,
+          "lon": 120.9867493
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Carcer Street",
+        "name:en": "Carcer Street",
+        "name:es": "Calle Carcer",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1078000709,
+      "bounds": {
+        "minlat": 14.5981839,
+        "minlon": 120.9841728,
+        "maxlat": 14.5983231,
+        "maxlon": 120.9841991
+      },
+      "nodes": [
+        9883437502,
+        9883437501
+      ],
+      "geometry": [
+        {
+          "lat": 14.5981839,
+          "lon": 120.9841728
+        },
+        {
+          "lat": 14.5983231,
+          "lon": 120.9841991
+        }
+      ],
+      "tags": {
+        "bicycle": "designated",
+        "cycleway:right": "lane",
+        "destination:ref": "170",
+        "foot": "use_sidepath",
+        "highway": "tertiary",
+        "lanes": "1",
+        "lit": "yes",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1078000710,
+      "bounds": {
+        "minlat": 14.5979782,
+        "minlon": 120.9841341,
+        "maxlat": 14.5981839,
+        "maxlon": 120.9841728
+      },
+      "nodes": [
+        9789113345,
+        12010073422,
+        9883437502
+      ],
+      "geometry": [
+        {
+          "lat": 14.5979782,
+          "lon": 120.9841341
+        },
+        {
+          "lat": 14.5980327,
+          "lon": 120.9841442
+        },
+        {
+          "lat": 14.5981839,
+          "lon": 120.9841728
+        }
+      ],
+      "tags": {
+        "bicycle": "designated",
+        "cycleway:right": "lane",
+        "destination:ref": "170",
+        "foot": "use_sidepath",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1080683751,
+      "bounds": {
+        "minlat": 14.6005384,
+        "minlon": 120.9815645,
+        "maxlat": 14.6009342,
+        "maxlon": 120.9816851
+      },
+      "nodes": [
+        29487748,
+        9905250095,
+        67751572
+      ],
+      "geometry": [
+        {
+          "lat": 14.6005384,
+          "lon": 120.9815645
+        },
+        {
+          "lat": 14.6005872,
+          "lon": 120.9816207
+        },
+        {
+          "lat": 14.6009342,
+          "lon": 120.9816851
+        }
+      ],
+      "tags": {
+        "flood_prone": "yes",
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Rizal Avenue",
+        "name:en": "Rizal Avenue",
+        "name:es": "Avenida Rizal",
+        "name:etymology": "José Rizal",
+        "name:etymology:wikidata": "Q1500",
+        "name:etymology:wikipedia": "es:José Rizal",
+        "name:fil": "Abenida Rizal",
+        "name:tl": "Abenida Rizal",
+        "oneway": "yes",
+        "ref": "150",
+        "sidewalk": "both",
+        "source:maxspeed": "sign",
+        "surface": "concrete",
+        "wikidata": "Q7339067"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1081831190,
+      "bounds": {
+        "minlat": 14.6005384,
+        "minlon": 120.9815526,
+        "maxlat": 14.600595,
+        "maxlon": 120.9815645
+      },
+      "nodes": [
+        9905250096,
+        29487748
+      ],
+      "geometry": [
+        {
+          "lat": 14.600595,
+          "lon": 120.9815526
+        },
+        {
+          "lat": 14.6005384,
+          "lon": 120.9815645
+        }
+      ],
+      "tags": {
+        "flood_prone": "yes",
+        "highway": "primary",
+        "lanes": "3",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Rizal Avenue",
+        "name:en": "Rizal Avenue",
+        "name:es": "Avenida Rizal",
+        "name:etymology": "José Rizal",
+        "name:etymology:wikidata": "Q1500",
+        "name:etymology:wikipedia": "es:José Rizal",
+        "name:tl": "Abenida Rizal",
+        "oneway": "yes",
+        "ref": "150",
+        "sidewalk": "right",
+        "source:maxspeed": "sign",
+        "surface": "concrete",
+        "wikidata": "Q7339067"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1127952094,
+      "bounds": {
+        "minlat": 14.5973682,
+        "minlon": 120.9840168,
+        "maxlat": 14.5979782,
+        "maxlon": 120.9841341
+      },
+      "nodes": [
+        163700108,
+        1974695862,
+        9789113345
+      ],
+      "geometry": [
+        {
+          "lat": 14.5973682,
+          "lon": 120.9840168
+        },
+        {
+          "lat": 14.5978744,
+          "lon": 120.9841128
+        },
+        {
+          "lat": 14.5979782,
+          "lon": 120.9841341
+        }
+      ],
+      "tags": {
+        "destination:ref": "170",
+        "highway": "tertiary",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1170885896,
+      "bounds": {
+        "minlat": 14.5991488,
+        "minlon": 120.9840542,
+        "maxlat": 14.5995401,
+        "maxlon": 120.9841416
+      },
+      "nodes": [
+        1974722751,
+        4177513041
+      ],
+      "geometry": [
+        {
+          "lat": 14.5995401,
+          "lon": 120.9841416
+        },
+        {
+          "lat": 14.5991488,
+          "lon": 120.9840542
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1171046552,
+      "bounds": {
+        "minlat": 14.5992433,
+        "minlon": 120.9834195,
+        "maxlat": 14.5992473,
+        "maxlon": 120.9834746
+      },
+      "nodes": [
+        10882573102,
+        1974746575
+      ],
+      "geometry": [
+        {
+          "lat": 14.5992433,
+          "lon": 120.9834746
+        },
+        {
+          "lat": 14.5992473,
+          "lon": 120.9834195
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1171046554,
+      "bounds": {
+        "minlat": 14.5988567,
+        "minlon": 120.9836328,
+        "maxlat": 14.5991587,
+        "maxlon": 120.9836707
+      },
+      "nodes": [
+        1974746527,
+        1974746528,
+        1974746540,
+        10882573104
+      ],
+      "geometry": [
+        {
+          "lat": 14.5988567,
+          "lon": 120.9836328
+        },
+        {
+          "lat": 14.5989561,
+          "lon": 120.9836553
+        },
+        {
+          "lat": 14.5991193,
+          "lon": 120.9836693
+        },
+        {
+          "lat": 14.5991587,
+          "lon": 120.9836707
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1222407315,
+      "bounds": {
+        "minlat": 14.600701,
+        "minlon": 120.984728,
+        "maxlat": 14.6007025,
+        "maxlon": 120.9847433
+      },
+      "nodes": [
+        4178004400,
+        11337268348
+      ],
+      "geometry": [
+        {
+          "lat": 14.6007025,
+          "lon": 120.984728
+        },
+        {
+          "lat": 14.600701,
+          "lon": 120.9847433
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "bridge": "viaduct",
+        "covered": "yes",
+        "highway": "footway",
+        "layer": "1"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1222407317,
+      "bounds": {
+        "minlat": 14.6006099,
+        "minlon": 120.9843562,
+        "maxlat": 14.600619,
+        "maxlon": 120.9847098
+      },
+      "nodes": [
+        4178004399,
+        11337268349
+      ],
+      "geometry": [
+        {
+          "lat": 14.600619,
+          "lon": 120.9847098
+        },
+        {
+          "lat": 14.6006099,
+          "lon": 120.9843562
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "bridge": "viaduct",
+        "covered": "yes",
+        "fine:oneway": "5,000 PHP",
+        "highway": "footway",
+        "layer": "1",
+        "name": "Raon Footbridge",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "oneway:foot": "yes",
+        "smoothness": "intermediate",
+        "surface": "concrete"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1222408468,
+      "bounds": {
+        "minlat": 14.6006926,
+        "minlon": 120.9847378,
+        "maxlat": 14.6008014,
+        "maxlon": 120.9847511
+      },
+      "nodes": [
+        11337267118,
+        11337267117,
+        11337267116
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006926,
+          "lon": 120.9847378
+        },
+        {
+          "lat": 14.600787,
+          "lon": 120.9847511
+        },
+        {
+          "lat": 14.6008014,
+          "lon": 120.9847503
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1222408469,
+      "bounds": {
+        "minlat": 14.6006185,
+        "minlon": 120.9847197,
+        "maxlat": 14.6006926,
+        "maxlon": 120.9847378
+      },
+      "nodes": [
+        11337267114,
+        11337267119,
+        11337267118
+      ],
+      "geometry": [
+        {
+          "lat": 14.6006185,
+          "lon": 120.9847197
+        },
+        {
+          "lat": 14.6006543,
+          "lon": 120.9847284
+        },
+        {
+          "lat": 14.6006926,
+          "lon": 120.9847378
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "crossing": "unmarked",
+        "crossing:markings": "no",
+        "dog": "leashed",
+        "footway": "crossing",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "asphalt",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1222408470,
+      "bounds": {
+        "minlat": 14.6007885,
+        "minlon": 120.9847433,
+        "maxlat": 14.6015231,
+        "maxlon": 120.9848593
+      },
+      "nodes": [
+        1501266939,
+        11337267116,
+        11337296704
+      ],
+      "geometry": [
+        {
+          "lat": 14.6007885,
+          "lon": 120.9847433
+        },
+        {
+          "lat": 14.6008014,
+          "lon": 120.9847503
+        },
+        {
+          "lat": 14.6015231,
+          "lon": 120.9848593
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223366228,
+      "bounds": {
+        "minlat": 14.601767,
+        "minlon": 120.9857884,
+        "maxlat": 14.6020256,
+        "maxlon": 120.9863033
+      },
+      "nodes": [
+        11973488739,
+        11973488740,
+        1305392784
+      ],
+      "geometry": [
+        {
+          "lat": 14.6020256,
+          "lon": 120.9857884
+        },
+        {
+          "lat": 14.6018033,
+          "lon": 120.9862736
+        },
+        {
+          "lat": 14.601767,
+          "lon": 120.9863033
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "name": "Buenviaje Street",
+        "postal_code": "1001",
+        "source": "Bing"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223366229,
+      "bounds": {
+        "minlat": 14.6020277,
+        "minlon": 120.9860836,
+        "maxlat": 14.6025607,
+        "maxlon": 120.9872146
+      },
+      "nodes": [
+        11347651517,
+        10881150995
+      ],
+      "geometry": [
+        {
+          "lat": 14.6025607,
+          "lon": 120.9860836
+        },
+        {
+          "lat": 14.6020277,
+          "lon": 120.9872146
+        }
+      ],
+      "tags": {
+        "covered": "yes",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223366232,
+      "bounds": {
+        "minlat": 14.6003777,
+        "minlon": 120.984661,
+        "maxlat": 14.6004916,
+        "maxlon": 120.9846887
+      },
+      "nodes": [
+        11347651522,
+        11337267120
+      ],
+      "geometry": [
+        {
+          "lat": 14.6003777,
+          "lon": 120.984661
+        },
+        {
+          "lat": 14.6004916,
+          "lon": 120.9846887
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223366234,
+      "bounds": {
+        "minlat": 14.6005089,
+        "minlon": 120.984693,
+        "maxlat": 14.6006185,
+        "maxlon": 120.9847197
+      },
+      "nodes": [
+        11347651523,
+        11337267114
+      ],
+      "geometry": [
+        {
+          "lat": 14.6005089,
+          "lon": 120.984693
+        },
+        {
+          "lat": 14.6006185,
+          "lon": 120.9847197
+        }
+      ],
+      "tags": {
+        "bicycle": "dismount",
+        "covered": "yes",
+        "dog": "leashed",
+        "footway": "sidewalk",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223366235,
+      "bounds": {
+        "minlat": 14.6004888,
+        "minlon": 120.9846887,
+        "maxlat": 14.6004916,
+        "maxlon": 120.9847034
+      },
+      "nodes": [
+        11337267120,
+        1897672250
+      ],
+      "geometry": [
+        {
+          "lat": 14.6004916,
+          "lon": 120.9846887
+        },
+        {
+          "lat": 14.6004888,
+          "lon": 120.9847034
+        }
+      ],
+      "tags": {
+        "covered": "yes",
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223684132,
+      "bounds": {
+        "minlat": 14.5988567,
+        "minlon": 120.9833903,
+        "maxlat": 14.598879,
+        "maxlon": 120.9836328
+      },
+      "nodes": [
+        316547840,
+        1974746527
+      ],
+      "geometry": [
+        {
+          "lat": 14.598879,
+          "lon": 120.9833903
+        },
+        {
+          "lat": 14.5988567,
+          "lon": 120.9836328
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223684133,
+      "bounds": {
+        "minlat": 14.6012069,
+        "minlon": 120.9846863,
+        "maxlat": 14.6015853,
+        "maxlon": 120.9848533
+      },
+      "nodes": [
+        990043648,
+        5798974976,
+        281873482
+      ],
+      "geometry": [
+        {
+          "lat": 14.6012069,
+          "lon": 120.9846863
+        },
+        {
+          "lat": 14.6014305,
+          "lon": 120.984791
+        },
+        {
+          "lat": 14.6015853,
+          "lon": 120.9848533
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:separation:left": "solid_line",
+        "destination:ref": "145",
+        "highway": "primary_link",
+        "lanes": "1",
+        "lit": "yes",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1223795109,
+      "bounds": {
+        "minlat": 14.6021322,
+        "minlon": 120.9857894,
+        "maxlat": 14.6021547,
+        "maxlon": 120.9858383
+      },
+      "nodes": [
+        11337296707,
+        11351190761
+      ],
+      "geometry": [
+        {
+          "lat": 14.6021547,
+          "lon": 120.9857894
+        },
+        {
+          "lat": 14.6021322,
+          "lon": 120.9858383
+        }
+      ],
+      "tags": {
+        "highway": "footway",
+        "smoothness": "intermediate",
+        "surface": "concrete",
+        "tactile_paving": "no",
+        "wheelchair": "yes",
+        "width": "2"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1263692997,
+      "bounds": {
+        "minlat": 14.6000614,
+        "minlon": 120.9834627,
+        "maxlat": 14.6006475,
+        "maxlon": 120.9834865
+      },
+      "nodes": [
+        168180941,
+        163694861
+      ],
+      "geometry": [
+        {
+          "lat": 14.6000614,
+          "lon": 120.9834627
+        },
+        {
+          "lat": 14.6006475,
+          "lon": 120.9834865
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "name": "Evangelista Street",
+        "oneway": "yes",
+        "postal_code": "1001"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1286366874,
+      "bounds": {
+        "minlat": 14.6018752,
+        "minlon": 120.985724,
+        "maxlat": 14.6018888,
+        "maxlon": 120.985758
+      },
+      "nodes": [
+        11931382607,
+        11931382606
+      ],
+      "geometry": [
+        {
+          "lat": 14.6018752,
+          "lon": 120.985758
+        },
+        {
+          "lat": 14.6018888,
+          "lon": 120.985724
+        }
+      ],
+      "tags": {
+        "footway": "crossing",
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1286366875,
+      "bounds": {
+        "minlat": 14.6014731,
+        "minlon": 120.9855373,
+        "maxlat": 14.6014843,
+        "maxlon": 120.9855758
+      },
+      "nodes": [
+        11931382609,
+        11931382608
+      ],
+      "geometry": [
+        {
+          "lat": 14.6014843,
+          "lon": 120.9855373
+        },
+        {
+          "lat": 14.6014731,
+          "lon": 120.9855758
+        }
+      ],
+      "tags": {
+        "footway": "crossing",
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1291971506,
+      "bounds": {
+        "minlat": 14.5998589,
+        "minlon": 120.9822832,
+        "maxlat": 14.600383,
+        "maxlon": 120.9825299
+      },
+      "nodes": [
+        161728862,
+        168180940
+      ],
+      "geometry": [
+        {
+          "lat": 14.5998589,
+          "lon": 120.9822832
+        },
+        {
+          "lat": 14.600383,
+          "lon": 120.9825299
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lit": "yes",
+        "name": "Sales Street",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1291971507,
+      "bounds": {
+        "minlat": 14.5998589,
+        "minlon": 120.9820013,
+        "maxlat": 14.5999562,
+        "maxlon": 120.9822832
+      },
+      "nodes": [
+        161728862,
+        223659098
+      ],
+      "geometry": [
+        {
+          "lat": 14.5998589,
+          "lon": 120.9822832
+        },
+        {
+          "lat": 14.5999562,
+          "lon": 120.9820013
+        }
+      ],
+      "tags": {
+        "alt_name": "Pedro Paterno Street",
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "P. Paterno Street",
+        "name:en": "P. Paterno Street",
+        "name:es": "Calle P. Paterno",
+        "name:etymology": "Pedro Paterno",
+        "name:etymology:wikidata": "Q946237",
+        "name:tl": "Kalye P. Paterno",
+        "oneway": "yes",
+        "sidewalk": "both"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1296112551,
+      "bounds": {
+        "minlat": 14.5979518,
+        "minlon": 120.9841544,
+        "maxlat": 14.5979554,
+        "maxlon": 120.9841708
+      },
+      "nodes": [
+        12010091283,
+        1895792600
+      ],
+      "geometry": [
+        {
+          "lat": 14.5979554,
+          "lon": 120.9841544
+        },
+        {
+          "lat": 14.5979518,
+          "lon": 120.9841708
+        }
+      ],
+      "tags": {
+        "alt_name": "Lacson Underpass",
+        "foot": "yes",
+        "highway": "footway",
+        "name": "Victory Lacson Underpass",
+        "note": "underground shops"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1301612042,
+      "bounds": {
+        "minlat": 14.6003163,
+        "minlon": 120.9825299,
+        "maxlat": 14.600383,
+        "maxlon": 120.9827274
+      },
+      "nodes": [
+        700145064,
+        168180940
+      ],
+      "geometry": [
+        {
+          "lat": 14.6003163,
+          "lon": 120.9827274
+        },
+        {
+          "lat": 14.600383,
+          "lon": 120.9825299
+        }
+      ],
+      "tags": {
+        "highway": "unclassified",
+        "name": "Ronquillo Street",
+        "oneway": "no"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1416574667,
+      "bounds": {
+        "minlat": 14.5980427,
+        "minlon": 120.9835661,
+        "maxlat": 14.598435,
+        "maxlon": 120.9836558
+      },
+      "nodes": [
+        13017691584,
+        13017691583,
+        13017691582
+      ],
+      "geometry": [
+        {
+          "lat": 14.5980427,
+          "lon": 120.9835661
+        },
+        {
+          "lat": 14.5982114,
+          "lon": 120.9835992
+        },
+        {
+          "lat": 14.598435,
+          "lon": 120.9836558
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1416574668,
+      "bounds": {
+        "minlat": 14.5981715,
+        "minlon": 120.9833975,
+        "maxlat": 14.5982517,
+        "maxlon": 120.9837986
+      },
+      "nodes": [
+        13017691586,
+        13017691583,
+        13017691585
+      ],
+      "geometry": [
+        {
+          "lat": 14.5981715,
+          "lon": 120.9837986
+        },
+        {
+          "lat": 14.5982114,
+          "lon": 120.9835992
+        },
+        {
+          "lat": 14.5982517,
+          "lon": 120.9833975
+        }
+      ],
+      "tags": {
+        "highway": "footway"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1444840708,
+      "bounds": {
+        "minlat": 14.6004908,
+        "minlon": 120.9845487,
+        "maxlat": 14.6006519,
+        "maxlon": 120.9845813
+      },
+      "nodes": [
+        7900794488,
+        163694858
+      ],
+      "geometry": [
+        {
+          "lat": 14.6004908,
+          "lon": 120.9845487
+        },
+        {
+          "lat": 14.6006519,
+          "lon": 120.9845813
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:right:protection:left": "solid_line",
+        "foot": "use_sidepath",
+        "highway": "primary",
+        "lanes": "4",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1444847985,
+      "bounds": {
+        "minlat": 14.5995193,
+        "minlon": 120.9842498,
+        "maxlat": 14.6003173,
+        "maxlon": 120.9844085
+      },
+      "nodes": [
+        7900777563,
+        33452917
+      ],
+      "geometry": [
+        {
+          "lat": 14.6003173,
+          "lon": 120.9844085
+        },
+        {
+          "lat": 14.5995193,
+          "lon": 120.9842498
+        }
+      ],
+      "tags": {
+        "cycleway:right": "lane",
+        "cycleway:right:lane": "exclusive",
+        "cycleway:right:protection:left": "solid_line",
+        "highway": "primary",
+        "lanes": "4",
+        "lit": "yes",
+        "maxspeed": "60",
+        "maxspeed:bus": "50",
+        "maxspeed:hgv": "50",
+        "name": "Quezon Boulevard",
+        "oneway": "yes",
+        "oneway:bicycle": "yes",
+        "parking:both": "no",
+        "parking:both:restriction": "no_stopping",
+        "parking:both:restriction:reason": "cycleway",
+        "placement": "left_of:2",
+        "ref": "170",
+        "surface": "asphalt"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1450989311,
+      "bounds": {
+        "minlat": 14.5976195,
+        "minlon": 120.9844534,
+        "maxlat": 14.5978991,
+        "maxlon": 120.9845043
+      },
+      "nodes": [
+        13307330753,
+        400699533
+      ],
+      "geometry": [
+        {
+          "lat": 14.5976195,
+          "lon": 120.9844534
+        },
+        {
+          "lat": 14.5978991,
+          "lon": 120.9845043
+        }
+      ],
+      "tags": {
+        "highway": "residential",
+        "lanes": "2",
+        "lit": "yes",
+        "name": "A. Bautista Street",
+        "old_name": "Barbosa Street",
+        "oneway": "yes",
+        "postal_code": "1001",
+        "short_name": "A. Baustista",
+        "surface": "concrete"
+      }
+    }
+  ]
+}

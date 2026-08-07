@@ -24,5 +24,5 @@ export function buildOverpassQuery(bbox: BBox): string {
   way["place"~"^(city|town|village|hamlet|suburb|neighbourhood)$"](${bboxStr});
   node["place"~"^(city|town|village|hamlet|suburb|neighbourhood)$"](${bboxStr});
 );
-out:geom;`;
+out geom;`;
 }

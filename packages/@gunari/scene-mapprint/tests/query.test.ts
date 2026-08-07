@@ -35,8 +35,8 @@ describe("buildOverpassQuery", () => {
     expect(q).toContain('["place"');
   });
 
-  it("ends with out:geom;", () => {
+  it("ends with out geom;", () => {
     const q = buildOverpassQuery(bbox);
-    expect(q.trim().endsWith("out:geom;")).toBe(true);
+    expect(q.trim().endsWith("out geom;")).toBe(true);
   });
 });
