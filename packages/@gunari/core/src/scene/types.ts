@@ -4,7 +4,14 @@ export type MarkerStyleId = "solid" | "ring" | "heart" | "star";
 export type ZoomId = "neighborhood" | "district" | "city";
 export type LayoutId = "classic" | "poster";
 
+export interface SceneLocation {
+  lat: number;
+  lng: number;
+  label: string;
+}
+
 export interface SceneInput {
+  location: SceneLocation;
   shape: ShapeId;
   style: MapStyleId;
   marker: MarkerStyleId;

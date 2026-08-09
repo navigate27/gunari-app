@@ -1,6 +1,6 @@
-import { describe, it, expectTypeOf } from "vitest";
+import { describe, it, expectTypeOf, expect } from "vitest";
 import type { Scene, SceneInput, SceneCapabilities, SceneRegistry } from "../src/scene/scene";
-import type { ShapeId, MapStyleId, MarkerStyleId, ZoomId, LayoutId, SceneViewport } from "../src/scene/types";
+import type { ShapeId, MapStyleId, MarkerStyleId, ZoomId, LayoutId, SceneViewport, SceneLocation } from "../src/scene/types";
 import type { ThemePalette } from "../src/theme/theme";
 
 describe("Scene contract types", () => {
@@ -25,7 +25,7 @@ describe("Scene contract types", () => {
     expectTypeOf<FakeScene["capabilities"]>().toEqualTypeOf<SceneCapabilities>();
     expectTypeOf<FakeScene["load"]>().parameters.toEqualTypeOf<[SceneInput, AbortSignal]>();
     expectTypeOf<FakeScene["project"]>().parameters.toEqualTypeOf<[{ foo: number }, SceneViewport, number]>();
-    expectTypeOf<FakeScene["render"]>().parameters.toEqualTypeOf<[CanvasRenderingContext2D, { bar: number }, unknown]>();
+    expectTypeOf<FakeScene["render"]>().parameters.toEqualTypeOf<[CanvasRenderingContext2D, { bar: number }, unknown, SceneInput, SceneViewport, number, number]>();
   });
   it("SceneRegistry is a Record of scenes by id", () => {
     const reg: SceneRegistry = { x: {} as never };
@@ -33,5 +33,25 @@ describe("Scene contract types", () => {
   });
   it("ThemePalette has the shared base fields", () => {
     expectTypeOf<ThemePalette>().toMatchTypeOf<{ id: string; label: string; light: boolean }>();
+  });
+});
+
+describe("SceneInput", () => {
+  it("includes a location field with lat, lng, label", () => {
+    const loc: SceneLocation = { lat: 14.5995, lng: 120.9842, label: "Manila, Metro Manila, Philippines" };
+    const input: SceneInput = {
+      location: loc,
+      shape: "square",
+      style: "classic",
+      marker: "solid",
+      zoom: "district",
+      rotation: 0,
+      labels: false,
+      layout: "classic",
+    };
+    expect(input.location.lat).toBe(14.5995);
+    expect(input.location.lng).toBe(120.9842);
+    expect(input.location.label).toBe("Manila, Metro Manila, Philippines");
+    expect(input.shape).toBe("square");
   });
 });
