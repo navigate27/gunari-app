@@ -24,6 +24,7 @@ async function main(): Promise<void> {
   const geometry = parseOsm(fixtureJson, BBOX);
   const viewport: SceneViewport = { cx: 0.5, cy: 0.5, r: 0.4 };
   const input: SceneInput = {
+    location: { lat: 14.5995, lng: 120.9842, label: "Manila" },
     shape: "square",
     style: "classic",
     marker: "solid",
