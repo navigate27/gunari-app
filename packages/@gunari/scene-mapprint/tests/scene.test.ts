@@ -40,7 +40,7 @@ describe("mapPrintScene", () => {
     const data: MapPrintSceneData = {
       geometry: {
         bbox: [120.98, 14.59, 120.99, 14.60],
-        roads: [{ class: "residential", points: [[120.98, 14.59], [120.985, 14.595], [120.99, 14.60]], name: "" }],
+        roads: [{ class: "residential", points: [[120.98, 14.59], [120.985, 14.5955], [120.99, 14.60]], name: "" }],
         water: [], waterways: [], parks: [], labels: [],
       },
       bbox: [120.98, 14.59, 120.99, 14.60],
@@ -56,7 +56,7 @@ describe("mapPrintScene", () => {
     const data: MapPrintSceneData = {
       geometry: {
         bbox: [120.9, 14.55, 121.1, 14.65],
-        roads: [{ class: "residential", points: [[120.98, 14.59], [120.985, 14.595], [120.99, 14.60]], name: "" }],
+        roads: [{ class: "residential", points: [[120.98, 14.59], [120.985, 14.5955], [120.99, 14.60]], name: "" }],
         water: [], waterways: [], parks: [], labels: [],
       },
       bbox: [120.9, 14.55, 121.1, 14.65],
@@ -67,6 +67,9 @@ describe("mapPrintScene", () => {
     // city tolerance is coarser — the middle point may be simplified away
     // (the exact result depends on the simplification algorithm; just assert roads exist)
     expect(out.roads.length).toBe(1);
+    // city tolerance (0.003) exceeds the middle point's deviation (~0.001),
+    // so Douglas-Peucker simplifies it to 2 points
+    expect(out.roads[0].points.length).toBe(2);
   });
 
   it("render calls renderMap with the full 7 args", () => {
