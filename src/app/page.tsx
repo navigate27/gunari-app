@@ -62,7 +62,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
-              className="mt-10"
+              className="mt-10 flex flex-col items-center gap-4"
             >
               <Link href="/create">
                 <motion.button
@@ -72,6 +72,16 @@ export default function LandingPage() {
                   className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold via-[#E8D5A0] to-gold px-10 font-ui text-base uppercase tracking-wide text-ink shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_8px_30px_-8px_rgba(201,163,90,0.6)] transition-[border-color,box-shadow] duration-300 hover:border-gold/70 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4),0_12px_40px_-6px_rgba(201,163,90,0.9)]"
                 >
                   Create Your Gunari
+                </motion.button>
+              </Link>
+              <Link href="/map">
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                  className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-mist/30 bg-transparent px-8 font-ui text-sm uppercase tracking-wide text-mist transition-colors duration-300 hover:border-mist/60 hover:bg-mist/5"
+                >
+                  Map Print
                 </motion.button>
               </Link>
             </motion.div>
