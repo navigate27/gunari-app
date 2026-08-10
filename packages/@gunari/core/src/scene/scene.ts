@@ -4,7 +4,7 @@ import type {
   SceneViewport,
 } from "./types";
 
-export type { SceneCapabilities, SceneInput, SceneViewport } from "./types";
+export type { SceneCapabilities, SceneInput, SceneLocation, SceneViewport } from "./types";
 
 /**
  * Opaque marker types. Each scene defines its own `SceneData` and
@@ -19,7 +19,15 @@ export interface Scene<D = SceneData, G = SceneGeometry> {
   readonly capabilities: SceneCapabilities;
   load(input: SceneInput, signal: AbortSignal): Promise<D>;
   project(data: D, viewport: SceneViewport, rotation: number): G;
-  render(ctx: CanvasRenderingContext2D, geometry: G, palette: unknown): void;
+  render(
+    ctx: CanvasRenderingContext2D,
+    geometry: G,
+    palette: unknown,
+    input: SceneInput,
+    viewport: SceneViewport,
+    w: number,
+    h: number,
+  ): void;
 }
 
 export type SceneRegistry = Record<string, Scene>;

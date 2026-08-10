@@ -1,3 +1,4 @@
+import type { SceneInput, SceneViewport } from "../scene/types";
 import type { LayoutId } from "../scene/types";
 import type { ThemePalette } from "../theme/theme";
 
@@ -6,7 +7,15 @@ export const ARTWORK_H = 1920;
 
 /** A scene's render function, called by the scaffold inside the scene slot. */
 export interface SceneRenderFn {
-  (ctx: CanvasRenderingContext2D, geometry: unknown, palette: unknown): void;
+  (
+    ctx: CanvasRenderingContext2D,
+    geometry: unknown,
+    palette: unknown,
+    input: SceneInput,
+    viewport: SceneViewport,
+    w: number,
+    h: number,
+  ): void;
 }
 
 export interface ScaffoldMeta {
@@ -27,6 +36,10 @@ export interface ScaffoldInput {
   sceneGeometry: unknown;
   /** Opaque scene palette, passed through to scene.render. */
   scenePalette: unknown;
+  /** The user's scene input (shape, marker, theme, labels, layout, rotation, location, zoom). */
+  sceneInput: SceneInput;
+  /** The scene slot's viewport (cx/cy/r in canvas-normalized 0..1). */
+  sceneViewport: SceneViewport;
 }
 
 /** Inner canvas region after the frame border. */
@@ -41,7 +54,15 @@ export function renderScaffold(ctx: CanvasRenderingContext2D, input: ScaffoldInp
   drawBackground(ctx, W, H, p);
   drawFrame(ctx, inner, p);
 
-  input.scene.render(ctx, input.sceneGeometry, input.scenePalette);
+  input.scene.render(
+    ctx,
+    input.sceneGeometry,
+    input.scenePalette,
+    input.sceneInput,
+    input.sceneViewport,
+    W,
+    H,
+  );
 
   drawTitle(ctx, inner, p, input);
   if (input.message?.trim()) drawMessage(ctx, inner, p, input);
@@ -103,8 +124,11 @@ function drawMetadata(ctx: CanvasRenderingContext2D, inner: { x: number; y: numb
   ctx.font = `400 ${Math.round(size)}px "Geist", sans-serif`;
   const cx = inner.x + inner.w / 2;
   const y = input.layout === "poster" ? inner.y + inner.h * 0.92 : inner.y + inner.h * 0.9;
-  const dateStr = formatMetaDate(input.meta.date, input.meta.time);
-  ctx.fillText(`${dateStr}  ·  ${input.meta.location.toUpperCase()}`, cx, y, inner.w * 0.9);
+  const hasDateTime = input.meta.date?.trim() && input.meta.time?.trim();
+  const text = hasDateTime
+    ? `${formatMetaDate(input.meta.date, input.meta.time)}  ·  ${input.meta.location.toUpperCase()}`
+    : input.meta.location.toUpperCase();
+  ctx.fillText(text, cx, y, inner.w * 0.9);
   ctx.restore();
 }
 

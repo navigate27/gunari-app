@@ -30,3 +30,8 @@ next-env.d.ts
 
 # star catalog cache (regenerable)
 /public/stars.json
+
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

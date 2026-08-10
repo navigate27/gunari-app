@@ -21,6 +21,7 @@ const viewport: SceneViewport = { cx: 0.5, cy: 0.5, r: 0.4 };
 const W = 540, H = 960; // half-scale for golden-image storage efficiency
 
 const baseInput: SceneInput = {
+  location: { lat: 14.5995, lng: 120.9842, label: "Manila" },
   shape: "square", style: "classic", marker: "solid",
   zoom: "district", rotation: 0, labels: false, layout: "classic",
 };
