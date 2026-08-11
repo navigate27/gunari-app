@@ -74,16 +74,6 @@ export default function LandingPage() {
                   Create Your Gunari
                 </motion.button>
               </Link>
-              <Link href="/map">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                  className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-mist/30 bg-transparent px-8 font-ui text-sm uppercase tracking-wide text-mist transition-colors duration-300 hover:border-mist/60 hover:bg-mist/5"
-                >
-                  Map Print
-                </motion.button>
-              </Link>
             </motion.div>
           </section>
         </div>
