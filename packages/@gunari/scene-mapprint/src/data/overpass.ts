@@ -18,28 +18,32 @@ export class OverpassError extends Error {
 }
 
 /**
- * Fetch OSM data for a bbox. Tries each Overpass endpoint in order with a
- * 10 s client-side timeout. On 429 (rate limit) or 5xx, falls through to
- * the next endpoint. On all-fail, throws OverpassError.
+ * Fetch OSM data for a bbox. Races every Overpass endpoint in parallel with
+ * a 10 s client-side timeout each; the first success wins and the others are
+ * aborted. On 429 (rate limit) or 5xx, that endpoint's attempt rejects so
+ * Promise.any falls through to the next winner. On all-fail, throws
+ * OverpassError.
  */
 export async function fetchOsm(
   bbox: BBox,
   signal: AbortSignal,
   endpoints: readonly string[] = OVERPASS_ENDPOINTS
 ): Promise<OsmResponse> {
+  if (signal.aborted) throw new OverpassError("aborted");
+  if (endpoints.length === 0) {
+    throw new OverpassError("all Overpass endpoints failed: no endpoints provided");
+  }
   const query = buildOverpassQuery(bbox);
-  let lastError: unknown = null;
 
-  for (const url of endpoints) {
-    if (signal.aborted) throw new OverpassError("aborted");
+  const controllers = endpoints.map(() => new AbortController());
+  const onAbort = () => {
+    for (const c of controllers) c.abort();
+  };
+  signal.addEventListener("abort", onAbort, { once: true });
 
-    const controller = new AbortController();
+  const attempts = endpoints.map(async (url, i) => {
+    const controller = controllers[i];
     const timeout = setTimeout(() => controller.abort(), CLIENT_TIMEOUT_MS);
-    // Link the caller's signal to the per-request controller so either
-    // abort source cancels the fetch.
-    const onAbort = () => controller.abort();
-    signal.addEventListener("abort", onAbort, { once: true });
-
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -48,26 +52,32 @@ export async function fetchOsm(
         signal: controller.signal,
       });
       if (res.status === 429 || res.status >= 500) {
-        lastError = new OverpassError(`${url} returned ${res.status}`, res.status);
-        continue;
+        throw new OverpassError(`${url} returned ${res.status}`, res.status);
       }
       if (!res.ok) {
-        lastError = new OverpassError(`${url} returned ${res.status}`, res.status);
-        continue;
+        throw new OverpassError(`${url} returned ${res.status}`, res.status);
       }
-      const json = (await res.json()) as OsmResponse;
-      return json;
-    } catch (err) {
-      if (signal.aborted) throw new OverpassError("aborted");
-      lastError = err;
-      continue;
+      return (await res.json()) as OsmResponse;
     } finally {
       clearTimeout(timeout);
-      signal.removeEventListener("abort", onAbort);
     }
-  }
+  });
 
-  throw new OverpassError(
-    `all Overpass endpoints failed: ${lastError instanceof Error ? lastError.message : "unknown"}`
-  );
+  try {
+    const winner = await Promise.any(attempts);
+    // Abort the losing fetches to free their network resources.
+    for (const c of controllers) {
+      if (!c.signal.aborted) c.abort();
+    }
+    return winner;
+  } catch (err) {
+    if (signal.aborted) throw new OverpassError("aborted");
+    const messages =
+      err instanceof AggregateError
+        ? err.errors.map((e) => (e instanceof Error ? e.message : String(e))).join("; ")
+        : String(err);
+    throw new OverpassError(`all Overpass endpoints failed: ${messages}`);
+  } finally {
+    signal.removeEventListener("abort", onAbort);
+  }
 }

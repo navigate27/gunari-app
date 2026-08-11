@@ -8,6 +8,7 @@ import { projectGeometry } from "./projection/project";
 import { renderMap } from "./render/render";
 import { type MapThemePalette } from "./styles/themes";
 import { MapDataCache } from "./data/cache";
+import { IndexedDBCacheStorage } from "./data/indexed-db-storage";
 
 export interface MapPrintSceneData {
   geometry: MapGeometry;
@@ -21,7 +22,11 @@ const SIMPLIFY_TOLERANCE: Record<SceneInput["zoom"], number> = {
   city: 0.003,
 };
 
-const cache = new MapDataCache();
+// Browser-only persistent layer (IndexedDB). In Node/jsdom, indexedDB is
+// undefined and the cache falls back to memory-only — safe for tests.
+const cache = new MapDataCache({
+  storage: typeof indexedDB !== "undefined" ? new IndexedDBCacheStorage() : undefined,
+});
 
 export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
   id: "mapprint",
@@ -39,7 +44,7 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
   async load(input, signal) {
     const { lat, lng } = input.location;
     const bbox = bboxForZoom(lat, lng, input.zoom);
-    const cached = cache.get(bbox);
+    const cached = await cache.getWithPersistence(bbox);
     if (cached) return { geometry: cached, bbox, zoom: input.zoom };
 
     let osm: OsmResponse;
@@ -48,11 +53,11 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
     } catch (err) {
       if (err instanceof OverpassError && err.message === "aborted") throw err;
       const empty: MapGeometry = { bbox, roads: [], water: [], waterways: [], parks: [], labels: [] };
-      cache.set(bbox, empty);
+      await cache.setWithPersistence(bbox, empty);
       return { geometry: empty, bbox, zoom: input.zoom };
     }
     const geometry = parseOsm(osm, bbox);
-    cache.set(bbox, geometry);
+    await cache.setWithPersistence(bbox, geometry);
     return { geometry, bbox, zoom: input.zoom };
   },
 
