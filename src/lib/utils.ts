@@ -22,6 +22,12 @@ export function formatCoordinate(value: number, kind: "lat" | "lng"): string {
   return `${deg}°${min}′${sec}″ ${dir}`;
 }
 
+export function formatLatLng(lat: number, lng: number): string {
+  const ns = lat >= 0 ? "N" : "S";
+  const ew = lng >= 0 ? "E" : "W";
+  return `${Math.abs(lat).toFixed(3)}°${ns} / ${Math.abs(lng).toFixed(3)}°${ew}`;
+}
+
 export function pad2(n: number): string {
   return n < 10 ? `0${n}` : `${n}`;
 }

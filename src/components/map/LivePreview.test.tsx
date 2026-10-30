@@ -44,6 +44,7 @@ const input: MapPrintInput = {
   message: undefined,
   shape: "square", style: "classic", marker: "solid",
   zoom: "district", rotation: 0, labels: false, layout: "classic",
+  showCoordinates: false,
 };
 
 const data: MapPrintSceneData = {
@@ -80,5 +81,20 @@ describe("LivePreview", () => {
     expect(scaffoldInput.meta.location).toBe("Manila");
     expect(scaffoldInput.meta.date).toBe("");
     expect(scaffoldInput.meta.time).toBe("");
+  });
+
+  it("passes a formatted coordinates line to the scaffold only when enabled", async () => {
+    const { renderScaffold } = await import("@gunari/core");
+    const mock = renderScaffold as ReturnType<typeof vi.fn>;
+    mock.mockClear();
+    render(
+      <LivePreview input={{ ...input, showCoordinates: true }} data={data} geometry={mockGeometry} loading={false} />,
+    );
+    expect(mock.mock.calls[0][1].meta.coordinates).toBe("14.600°N / 120.984°E");
+
+    cleanup();
+    mock.mockClear();
+    render(<LivePreview input={input} data={data} geometry={mockGeometry} loading={false} />);
+    expect(mock.mock.calls[0][1].meta.coordinates).toBeUndefined();
   });
 });

@@ -22,6 +22,8 @@ export interface ScaffoldMeta {
   date: string;        // YYYY-MM-DD
   time: string;        // HH:mm
   location: string;    // human-readable label
+  /** Optional coordinates line drawn under the location, e.g. "14.600°N / 120.984°E". */
+  coordinates?: string;
 }
 
 export interface ScaffoldInput {
@@ -129,6 +131,11 @@ function drawMetadata(ctx: CanvasRenderingContext2D, inner: { x: number; y: numb
     ? `${formatMetaDate(input.meta.date, input.meta.time)}  ·  ${input.meta.location.toUpperCase()}`
     : input.meta.location.toUpperCase();
   ctx.fillText(text, cx, y, inner.w * 0.9);
+  if (input.meta.coordinates?.trim()) {
+    ctx.globalAlpha = 0.8;
+    ctx.font = `400 ${Math.round(inner.w * 0.022)}px "Geist", sans-serif`;
+    ctx.fillText(input.meta.coordinates.trim(), cx, y + size * 1.7, inner.w * 0.9);
+  }
   ctx.restore();
 }
 

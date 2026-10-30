@@ -8,6 +8,7 @@ import { pickRandomPair } from "@/lib/content/pairs";
 export type MapPrintInput = SceneInput & {
   title: string;
   message?: string;
+  showCoordinates: boolean;
 };
 
 export function MAP_PREVIEW_VIEWPORT(layout: SceneInput["layout"]): SceneViewport {
@@ -31,6 +32,7 @@ const DEFAULT_INPUT: MapPrintInput = {
   rotation: 0,
   labels: false,
   layout: "classic",
+  showCoordinates: false,
 };
 
 const DEBOUNCE_MS = 250;

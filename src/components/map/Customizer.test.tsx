@@ -19,6 +19,7 @@ const baseInput: MapPrintInput = {
   rotation: 0,
   labels: false,
   layout: "classic",
+  showCoordinates: false,
 };
 
 describe("Customizer", () => {
@@ -53,5 +54,12 @@ describe("Customizer", () => {
     render(<Customizer input={baseInput} update={update} updateLocation={updateLocation} />);
     fireEvent.change(screen.getByLabelText(/title/i), { target: { value: "New Title" } });
     expect(update).toHaveBeenCalledWith("title", "New Title");
+  });
+
+  it("toggles the coordinates line", () => {
+    const update = vi.fn();
+    render(<Customizer input={baseInput} update={update} updateLocation={vi.fn()} />);
+    fireEvent.click(screen.getByRole("switch", { name: /coordinates/i }));
+    expect(update).toHaveBeenCalledWith("showCoordinates", true);
   });
 });

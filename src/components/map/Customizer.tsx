@@ -4,18 +4,23 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { LocationInput } from "@/components/create/LocationInput";
 import { Input, Label } from "@/components/ui/Input";
-import { Picker } from "@/components/ui/Picker";
+import { Picker, type PickerOption } from "@/components/ui/Picker";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import type { SceneInput } from "@gunari/core";
+import { getMapTheme } from "@gunari/scene-mapprint";
 
-const THEMES: { value: SceneInput["style"]; label: string }[] = [
+const THEME_IDS: { value: SceneInput["style"]; label: string }[] = [
   { value: "classic", label: "Classic" },
   { value: "midnight", label: "Midnight" },
   { value: "blueprint", label: "Blueprint" },
   { value: "paper", label: "Paper" },
   { value: "twilight", label: "Twilight" },
 ];
+const THEMES: PickerOption<SceneInput["style"]>[] = THEME_IDS.map((t) => {
+  const { background } = getMapTheme(t.value);
+  return { ...t, swatch: `linear-gradient(180deg, ${background.top}, ${background.bottom})` };
+});
 const SHAPES: { value: SceneInput["shape"]; label: string }[] = [
   { value: "square", label: "Square" },
   { value: "circle", label: "Circle" },
@@ -106,7 +111,12 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         />
       </section>
       <RotationField value={input.rotation} onChange={(v) => update("rotation", v)} />
-      <LabelsToggle value={input.labels} onChange={(v) => update("labels", v)} />
+      <SwitchRow label="Labels" value={input.labels} onChange={(v) => update("labels", v)} />
+      <SwitchRow
+        label="Coordinates"
+        value={input.showCoordinates}
+        onChange={(v) => update("showCoordinates", v)}
+      />
       <section>
         <SectionTitle>Layout</SectionTitle>
         <Picker
@@ -182,20 +192,22 @@ function RotationField({
   );
 }
 
-function LabelsToggle({
+function SwitchRow({
+  label,
   value,
   onChange,
 }: {
+  label: string;
   value: boolean;
   onChange: (v: boolean) => void;
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[11px] uppercase tracking-[0.25em] text-mist">Labels</span>
+      <span className="text-[11px] uppercase tracking-[0.25em] text-mist">{label}</span>
       <button
         type="button"
         role="switch"
-        aria-label="Labels"
+        aria-label={label}
         aria-checked={value}
         onClick={() => onChange(!value)}
         className={cn(

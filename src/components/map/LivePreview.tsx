@@ -1,14 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { renderScaffold, ARTWORK_W, ARTWORK_H, type SceneRenderFn } from "@gunari/core";
-import { mapPrintScene, getMapTheme, type MapPrintSceneData, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
+import { motion, AnimatePresence } from "motion/react";
+import { renderScaffold, ARTWORK_W, ARTWORK_H } from "@gunari/core";
+import type { MapPrintSceneData, ProjectedMapGeometry } from "@gunari/scene-mapprint";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
-import { MAP_PREVIEW_VIEWPORT } from "@/hooks/useMapPrintState";
+import { buildMapScaffoldInput } from "@/lib/render/map-scaffold";
+import { diagonalClipPath, easeInOutCubic } from "@/lib/render/transitions";
 
-const PREVIEW_W = 540;
-const PREVIEW_H = 960;
-const SCALE = PREVIEW_W / ARTWORK_W; // 0.5
+const FALLBACK_W = 540;
+const THEME_WIPE_MS = 800;
+const CHANGE_FADE_MS = 400;
+
+type Transition = "wipe" | "fade";
 
 export interface LivePreviewProps {
   input: MapPrintInput;
@@ -17,50 +21,141 @@ export interface LivePreviewProps {
   loading: boolean;
 }
 
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 export function LivePreview({ input, data, geometry, loading }: LivePreviewProps) {
+  const cardRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
+  const animRef = React.useRef(0);
+  const prevRef = React.useRef<{ input: MapPrintInput; data: MapPrintSceneData | null } | null>(null);
+  const [pixelW, setPixelW] = React.useState(0);
+
+  // Size the backing store to the displayed size in device pixels, so the
+  // preview stays sharp on high-density screens instead of being upscaled.
+  React.useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const measure = () => {
+      const dpr = window.devicePixelRatio || 1;
+      setPixelW(Math.min(ARTWORK_W, Math.round(el.clientWidth * dpr)));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
+    const overlay = overlayRef.current;
     if (!canvas) return;
-    canvas.width = PREVIEW_W;
-    canvas.height = PREVIEW_H;
+    const w = pixelW || FALLBACK_W;
+    const h = Math.round((w * ARTWORK_H) / ARTWORK_W);
+
+    // Snapshot the frame being replaced before the canvas is repainted.
+    const prev = prevRef.current;
+    let transition: Transition | null = null;
+    if (prev && overlay && canvas.width === w && !prefersReducedMotion()) {
+      if (prev.input.style !== input.style) transition = "wipe";
+      else if (
+        prev.data !== data ||
+        prev.input.shape !== input.shape ||
+        prev.input.marker !== input.marker ||
+        prev.input.layout !== input.layout ||
+        prev.input.labels !== input.labels ||
+        prev.input.showCoordinates !== input.showCoordinates
+      ) {
+        transition = "fade";
+      }
+    }
+    prevRef.current = { input, data };
+
+    if (transition && overlay) {
+      cancelAnimationFrame(animRef.current);
+      overlay.width = canvas.width;
+      overlay.height = canvas.height;
+      const octx = overlay.getContext("2d");
+      if (octx) {
+        octx.drawImage(canvas, 0, 0);
+        const wipe = transition === "wipe";
+        const duration = wipe ? THEME_WIPE_MS : CHANGE_FADE_MS;
+        overlay.style.opacity = "1";
+        overlay.style.clipPath = wipe ? diagonalClipPath(0) : "none";
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          if (wipe) overlay.style.clipPath = diagonalClipPath(easeInOutCubic(t));
+          else overlay.style.opacity = String(1 - easeInOutCubic(t));
+          if (t < 1) {
+            animRef.current = requestAnimationFrame(tick);
+          } else {
+            octx.clearRect(0, 0, overlay.width, overlay.height);
+            overlay.style.opacity = "0";
+          }
+        };
+        animRef.current = requestAnimationFrame(tick);
+      }
+    }
+
+    canvas.width = w;
+    canvas.height = h;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.clearRect(0, 0, PREVIEW_W, PREVIEW_H);
-    ctx.scale(SCALE, SCALE);
+    ctx.clearRect(0, 0, w, h);
+    ctx.scale(w / ARTWORK_W, w / ARTWORK_W);
     if (!geometry || !data) {
-      // Empty state: just background
       ctx.fillStyle = "#1a1b1f";
       ctx.fillRect(0, 0, ARTWORK_W, ARTWORK_H);
       return;
     }
-    const palette = getMapTheme(input.style);
-    renderScaffold(ctx, {
-      layout: input.layout,
-      title: input.title,
-      message: input.message,
-      meta: { date: "", time: "", location: input.location.label },
-      palette,
-      scene: { render: mapPrintScene.render as unknown as SceneRenderFn },
-      sceneGeometry: geometry,
-      scenePalette: palette,
-      sceneInput: input,
-      sceneViewport: MAP_PREVIEW_VIEWPORT(input.layout),
-    });
-  }, [input, data, geometry]);
+    renderScaffold(ctx, buildMapScaffoldInput(input, geometry));
+  }, [input, data, geometry, pixelW]);
+
+  React.useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div className="relative mx-auto max-w-[540px]">
-      <canvas
-        ref={canvasRef}
-        className="w-full rounded-lg border border-mist/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]"
-      />
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-ink/40 backdrop-blur-sm">
-          <span className="text-[11px] uppercase tracking-[0.25em] text-mist">Loading map…</span>
-        </div>
-      )}
+    <div className="relative mx-auto w-full max-w-[504px]">
+      <motion.div
+        ref={cardRef}
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-line shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]"
+      >
+        <canvas
+          ref={canvasRef}
+          className="block h-full w-full"
+          aria-label="Map print preview"
+        />
+        <canvas
+          ref={overlayRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full select-none"
+          style={{ opacity: 0 }}
+        />
+        <AnimatePresence>
+          {loading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex items-center justify-center bg-ink/40 backdrop-blur-sm"
+            >
+              <span className="text-[10px] uppercase tracking-[0.3em] text-mist">
+                Drawing the map…
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

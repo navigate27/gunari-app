@@ -94,6 +94,35 @@ describe("renderScaffold", () => {
     expect(fakeSceneRender).toHaveBeenCalledTimes(1);
   });
 
+  it("draws the coordinates line only when provided", () => {
+    const base: ScaffoldInput = {
+      layout: "classic",
+      title: "Manila",
+      message: "",
+      meta: { date: "", time: "", location: "Manila, PH" },
+      palette,
+      scene: { render: vi.fn() as never },
+      sceneGeometry: {} as never,
+      scenePalette: palette,
+      sceneInput: {
+        location: { lat: 14.5995, lng: 120.9842, label: "Manila" },
+        shape: "square", style: "classic", marker: "solid",
+        zoom: "district", rotation: 0, labels: false, layout: "classic",
+      },
+      sceneViewport: { cx: 0.5, cy: 0.5, r: 0.4 },
+    };
+    const without = makeMockCtx();
+    renderScaffold(without.ctx, base);
+    expect(without.calls.some((c) => c.includes("°"))).toBe(false);
+
+    const withCoords = makeMockCtx();
+    renderScaffold(withCoords.ctx, {
+      ...base,
+      meta: { ...base.meta, coordinates: "14.600°N / 120.984°E" },
+    });
+    expect(withCoords.calls).toContain("fillText:14.600°N / 120.984°E");
+  });
+
   it("does not draw message when message is empty", () => {
     const { ctx, calls } = makeMockCtx();
     const input: ScaffoldInput = {
