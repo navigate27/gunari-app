@@ -11,7 +11,7 @@ function mockCtx() {
     beginPath: vi.fn(), moveTo: vi.fn(), lineTo: vi.fn(),
     arc: vi.fn(), bezierCurveTo: vi.fn(), closePath: vi.fn(),
     fill: vi.fn(), stroke: vi.fn(),
-    translate: vi.fn(), scale: vi.fn(),
+    translate: vi.fn(), scale: vi.fn(), clip: vi.fn(), fillRect: vi.fn(), quadraticCurveTo: vi.fn(),
     createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
     createRadialGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
     fillStyle: "", strokeStyle: "", lineWidth: 1, globalAlpha: 1,
@@ -55,8 +55,8 @@ describe("drawPin anchoring and drop-in", () => {
 });
 
 describe("MARKERS registry", () => {
-  it("has entries for solid, ring, heart, star", () => {
-    expect(Object.keys(MARKERS).sort()).toEqual(["heart", "ring", "solid", "star"]);
+  it("has entries for solid, ring, heart, star, home", () => {
+    expect(Object.keys(MARKERS).sort()).toEqual(["heart", "home", "ring", "solid", "star"]);
   });
 
   it("every marker calls drawPin once and drawSymbol once", () => {

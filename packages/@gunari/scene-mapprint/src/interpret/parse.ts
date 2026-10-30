@@ -1,4 +1,5 @@
-import type { BBox, Label, MapGeometry, Polygon, Road, RoadClass } from "./types";
+import type { PlaceCategory } from "@gunari/core";
+import type { BBox, Label, MapGeometry, Poi, Polygon, Road, RoadClass } from "./types";
 
 export interface OsmNode {
   type: "node";
@@ -54,6 +55,35 @@ const BUILT_LANDUSE = ["residential", "commercial", "retail", "industrial", "con
 const GREEN_LANDUSE = ["forest", "grass", "meadow", "recreation_ground", "village_green", "cemetery", "farmland", "orchard"];
 const GREEN_NATURAL = ["wood", "scrub", "grassland", "wetland", "heath"];
 
+const FOOD_AMENITY = ["restaurant", "cafe", "fast_food", "bar", "pub", "food_court", "ice_cream", "biergarten"];
+const LANDMARK_TOURISM = ["attraction", "museum", "gallery", "artwork", "viewpoint", "zoo", "theme_park"];
+const LODGING_TOURISM = ["hotel", "hostel", "guest_house", "motel", "apartment"];
+const LANDMARK_AMENITY = ["theatre", "cinema", "marketplace"];
+const COMMUNITY_AMENITY = [
+  "school", "university", "college", "hospital", "clinic", "place_of_worship",
+  "library", "townhall", "police", "fire_station", "bank",
+];
+
+/** Most places to keep per kind, so one busy kind (banks, shops) can't crowd out the others. */
+const MAX_POIS_PER_CATEGORY = 150;
+const POI_PRIORITY: PlaceCategory[] = ["landmarks", "lodging", "community", "food", "shops"];
+
+function categorize(tags: Record<string, string>): PlaceCategory | null {
+  if (!tags.name) return null;
+  if (tags.historic) return "landmarks";
+  if (tags.tourism) {
+    if (LANDMARK_TOURISM.includes(tags.tourism)) return "landmarks";
+    if (LODGING_TOURISM.includes(tags.tourism)) return "lodging";
+  }
+  if (tags.amenity) {
+    if (FOOD_AMENITY.includes(tags.amenity)) return "food";
+    if (LANDMARK_AMENITY.includes(tags.amenity)) return "landmarks";
+    if (COMMUNITY_AMENITY.includes(tags.amenity)) return "community";
+  }
+  if (tags.shop) return "shops";
+  return null;
+}
+
 const PLACE_CLASSES = ["city", "town", "village", "hamlet", "suburb", "neighbourhood"];
 
 /**
@@ -68,6 +98,7 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
   const built: Polygon[] = [];
   const green: Polygon[] = [];
   const labels: Label[] = [];
+  const pois: Poi[] = [];
 
   for (const el of json.elements) {
     if (el.type === "node" && el.tags?.place && PLACE_CLASSES.includes(el.tags.place)) {
@@ -75,9 +106,27 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
       labels.push({ text: el.tags.name ?? "—", x: el.lon, y: el.lat, class: "place" });
       continue;
     }
+    if (el.type === "node") {
+      const category = categorize(el.tags ?? {});
+      if (category) pois.push({ name: el.tags!.name, category, x: el.lon, y: el.lat });
+      continue;
+    }
     if (el.type !== "way" || !el.geometry) continue;
     const pts: [number, number][] = el.geometry.map((p) => [p.lon, p.lat]);
     const tags = el.tags ?? {};
+
+    // A named building or area (a mall, a church, a museum): mark its centre.
+    // Roads, water and land use are handled below and never become places.
+    if (!tags.highway && !tags.waterway && !tags.natural && !tags.landuse && !tags.leisure) {
+      const category = categorize(tags);
+      if (category) {
+        const n = pts.length;
+        const cx = pts.reduce((sum, p) => sum + p[0], 0) / n;
+        const cy = pts.reduce((sum, p) => sum + p[1], 0) / n;
+        pois.push({ name: tags.name, category, x: cx, y: cy });
+        continue;
+      }
+    }
 
     if (tags.highway && tags.highway in HIGHWAY_CLASS_MAP) {
       roads.push({
@@ -117,5 +166,20 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
   // Sort roads by class so the renderer draws motorways last (on top).
   roads.sort((a, b) => ROAD_CLASSES.indexOf(a.class) - ROAD_CLASSES.indexOf(b.class));
 
-  return { bbox, roads, water, waterways, parks, built, green, labels };
+  // One place per name and kind, capped per kind, rarer kinds first.
+  const seen = new Set<string>();
+  const perKind = new Map<PlaceCategory, number>();
+  const kept = pois
+    .sort((a, b) => POI_PRIORITY.indexOf(a.category) - POI_PRIORITY.indexOf(b.category))
+    .filter((p) => {
+      const key = `${p.category}:${p.name}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      const n = perKind.get(p.category) ?? 0;
+      if (n >= MAX_POIS_PER_CATEGORY) return false;
+      perKind.set(p.category, n + 1);
+      return true;
+    });
+
+  return { bbox, roads, water, waterways, parks, built, green, labels, pois: kept };
 }

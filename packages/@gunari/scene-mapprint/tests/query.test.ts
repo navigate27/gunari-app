@@ -46,4 +46,13 @@ describe("buildOverpassQuery", () => {
     expect(q).toContain("forest|grass");
     expect(q).toContain("wood|scrub");
   });
+
+  it("only asks for named places when pois is set", () => {
+    expect(buildOverpassQuery(bbox)).not.toContain('["name"]["shop"]');
+    const q = buildOverpassQuery(bbox, { pois: true });
+    expect(q).toContain('node["name"]["shop"]');
+    expect(q).toContain("restaurant");
+    expect(q).toContain('["historic"]');
+    expect(q).toContain('way["name"]["shop"~"^(mall');
+  });
 });

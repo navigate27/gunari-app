@@ -1,4 +1,4 @@
-import type { RoadClass, BBox } from "../interpret/types";
+import type { RoadClass, BBox, Poi } from "../interpret/types";
 
 export interface ProjectedRoad {
   class: RoadClass;
@@ -27,6 +27,7 @@ export interface ProjectedMapGeometry {
   built?: ProjectedPolygon[];
   green?: ProjectedPolygon[];
   labels: ProjectedLabel[];
+  pois?: Poi[];
   bbox: BBox;
   rotation: number;
   /** Enlargement applied when projecting; needed to map pins and drags back to the ground. */

@@ -1,3 +1,5 @@
+import type { PlaceCategory } from "@gunari/core";
+
 export type BBox = [number, number, number, number]; // minLng, minLat, maxLng, maxLat
 
 export type RoadClass =
@@ -18,6 +20,14 @@ export interface Polygon {
   points: [number, number][];
   holes?: [number, number][][];
   name?: string;
+}
+
+/** A named place (shop, cafe, landmark...). x/y are lng/lat at parse time, canvas-normalized after projection. */
+export interface Poi {
+  name: string;
+  category: PlaceCategory;
+  x: number;
+  y: number;
 }
 
 export interface Label {
@@ -42,4 +52,6 @@ export interface MapGeometry {
   /** Woods, grass, farmland and other green land that isn't a park. */
   green?: Polygon[];
   labels: Label[];
+  /** Named places. Absent in entries cached before places existed; empty when not fetched (city zoom). */
+  pois?: Poi[];
 }

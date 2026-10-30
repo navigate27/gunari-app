@@ -33,32 +33,182 @@ export function shade(hex: string, amount: number): string {
   return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
 }
 
-/** Pin proportions, in units of r. The tip sits at the origin and the body rises above it. */
-const BODY_R = 0.75;
-const BODY_CY = -1.55;
+type Painter = (ctx: CanvasRenderingContext2D, r: number, palette: MarkerPalette) => void;
 
 /**
- * Draw the pin: a soft ground shadow, a gradient teardrop whose TIP sits on
- * (x, y), and a highlight. The symbol is drawn separately on the body.
- * `progress` (0..1) drops the pin in from above with a small bounce.
+ * A marker silhouette. Coordinates are in units of r with the anchor (the
+ * spot on the ground) at the origin and the body rising above it (negative y).
  */
-export function drawPin(
+interface Shape {
+  /** Trace the silhouette (begin the path, no fill). */
+  trace: (ctx: CanvasRenderingContext2D, r: number) => void;
+  /** Draw the detail on top of the filled body. */
+  symbol?: Painter;
+  /** Where the body is, for hit-testing: its centre and radius. */
+  hit: { centerY: number; radius: number };
+  /** Top of the body, for the gradient. */
+  top: number;
+  /** Ground shadow: half-width and vertical offset. */
+  shadow: { rx: number; y: number };
+  /** Soft halo drawn behind the body, as a multiple of r. */
+  halo?: number;
+}
+
+const PIN_R = 0.75;
+const PIN_CY = -1.55;
+
+const pin: Shape = {
+  trace(ctx, r) {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-0.12 * r, -0.55 * r, -PIN_R * r, -0.95 * r, -PIN_R * r, PIN_CY * r);
+    ctx.arc(0, PIN_CY * r, PIN_R * r, Math.PI, 0, false);
+    ctx.bezierCurveTo(PIN_R * r, -0.95 * r, 0.12 * r, -0.55 * r, 0, 0);
+    ctx.closePath();
+  },
+  symbol(ctx, r, palette) {
+    ctx.fillStyle = palette.markerSymbol;
+    ctx.beginPath();
+    ctx.arc(0, PIN_CY * r, r * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  },
+  hit: { centerY: PIN_CY, radius: PIN_R },
+  top: -2.3,
+  shadow: { rx: 0.7, y: 0 },
+};
+
+/** A target: a disc with a ring and dot, centred on the spot rather than pointing at it. */
+const ring: Shape = {
+  trace(ctx, r) {
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.78, 0, Math.PI * 2);
+    ctx.closePath();
+  },
+  symbol(ctx, r, palette) {
+    ctx.strokeStyle = palette.markerSymbol;
+    ctx.lineWidth = Math.max(1, r * 0.13);
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.45, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = palette.markerSymbol;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.16, 0, Math.PI * 2);
+    ctx.fill();
+  },
+  hit: { centerY: 0, radius: 0.9 },
+  top: -0.8,
+  shadow: { rx: 0.8, y: 0.62 },
+  halo: 1.5,
+};
+
+/** The whole pin is a heart, pointing down at the spot. */
+const heart: Shape = {
+  trace(ctx, r) {
+    const s = r * 1.05;
+    const X = (u: number) => u * s;
+    const Y = (v: number) => (v - 0.92) * s;
+    ctx.beginPath();
+    ctx.moveTo(X(0), Y(0.92));
+    ctx.bezierCurveTo(X(-0.25), Y(0.7), X(-1), Y(0.2), X(-1), Y(-0.28));
+    ctx.bezierCurveTo(X(-1), Y(-0.7), X(-0.65), Y(-0.92), X(-0.35), Y(-0.92));
+    ctx.bezierCurveTo(X(-0.15), Y(-0.92), X(-0.02), Y(-0.8), X(0), Y(-0.6));
+    ctx.bezierCurveTo(X(0.02), Y(-0.8), X(0.15), Y(-0.92), X(0.35), Y(-0.92));
+    ctx.bezierCurveTo(X(0.65), Y(-0.92), X(1), Y(-0.7), X(1), Y(-0.28));
+    ctx.bezierCurveTo(X(1), Y(0.2), X(0.25), Y(0.7), X(0), Y(0.92));
+    ctx.closePath();
+  },
+  hit: { centerY: -1.1, radius: 1.0 },
+  top: -1.95,
+  shadow: { rx: 0.6, y: 0 },
+};
+
+/** A five-point star on a short stem. */
+const star: Shape = {
+  trace(ctx, r) {
+    const cy = -1.35 * r;
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const radius = (i % 2 === 0 ? 1.0 : 0.46) * r;
+      const angle = (i * Math.PI) / 5 - Math.PI / 2;
+      const px = Math.cos(angle) * radius;
+      const py = cy + Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    // The stem down to the spot.
+    ctx.moveTo(-0.2 * r, -0.95 * r);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(0.2 * r, -0.95 * r);
+    ctx.closePath();
+  },
+  hit: { centerY: -1.3, radius: 1.0 },
+  top: -2.35,
+  shadow: { rx: 0.5, y: 0 },
+};
+
+/** A little house standing on the spot. */
+const home: Shape = {
+  trace(ctx, r) {
+    ctx.beginPath();
+    ctx.moveTo(-0.85 * r, 0);
+    ctx.lineTo(-0.85 * r, -1.05 * r);
+    ctx.lineTo(0, -1.95 * r);
+    ctx.lineTo(0.85 * r, -1.05 * r);
+    ctx.lineTo(0.85 * r, 0);
+    ctx.closePath();
+  },
+  symbol(ctx, r, palette) {
+    ctx.fillStyle = palette.markerSymbol;
+    ctx.beginPath();
+    ctx.moveTo(-0.24 * r, 0);
+    ctx.lineTo(-0.24 * r, -0.75 * r);
+    ctx.quadraticCurveTo(0, -0.95 * r, 0.24 * r, -0.75 * r);
+    ctx.lineTo(0.24 * r, 0);
+    ctx.closePath();
+    ctx.fill();
+  },
+  hit: { centerY: -1.0, radius: 1.0 },
+  top: -1.95,
+  shadow: { rx: 0.95, y: 0 },
+};
+
+const SHAPES: Record<MarkerStyleId, Shape> = {
+  solid: pin,
+  ring,
+  heart,
+  star,
+  home,
+};
+
+/** Body circle of each marker (centre height above the anchor and radius, in units of r), for hit-testing. */
+export const MARKER_HIT: Record<MarkerStyleId, { centerY: number; radius: number }> = {
+  solid: pin.hit,
+  ring: ring.hit,
+  heart: heart.hit,
+  star: star.hit,
+  home: home.hit,
+};
+
+function drawBody(
   ctx: CanvasRenderingContext2D,
+  shape: Shape,
   x: number,
   y: number,
   r: number,
   palette: MarkerPalette,
-  progress = 1
+  progress: number,
+  withSymbol: boolean
 ): void {
   const t = clamp01(progress);
   if (t <= 0) return;
   const lift = (1 - easeOutBounce(t)) * r * 5;
 
-  // Ground shadow under the tip, tightening as the pin lands.
+  // Ground shadow, tightening as the marker lands.
   ctx.save();
-  ctx.translate(x, y);
+  ctx.translate(x, y + shape.shadow.y * r);
   ctx.scale(1, 0.32);
-  const sr = r * 0.7 * (0.45 + 0.55 * t);
+  const sr = r * shape.shadow.rx * (0.45 + 0.55 * t);
   const sg = ctx.createRadialGradient(0, 0, 0, 0, 0, sr);
   sg.addColorStop(0, "rgba(0,0,0,0.38)");
   sg.addColorStop(1, "rgba(0,0,0,0)");
@@ -73,17 +223,22 @@ export function drawPin(
   ctx.translate(x, y - lift);
   ctx.globalAlpha = clamp01(t * 4);
 
-  const grad = ctx.createLinearGradient(0, -2.3 * r, 0, 0);
+  if (shape.halo) {
+    ctx.fillStyle = palette.marker;
+    const prev = ctx.globalAlpha;
+    ctx.globalAlpha = prev * 0.18;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * shape.halo, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = prev;
+  }
+
+  const grad = ctx.createLinearGradient(0, shape.top * r, 0, 0);
   grad.addColorStop(0, shade(palette.marker, 0.22));
   grad.addColorStop(0.55, palette.marker);
   grad.addColorStop(1, shade(palette.marker, -0.14));
 
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.bezierCurveTo(-0.12 * r, -0.55 * r, -BODY_R * r, -0.95 * r, -BODY_R * r, BODY_CY * r);
-  ctx.arc(0, BODY_CY * r, BODY_R * r, Math.PI, 0, false);
-  ctx.bezierCurveTo(BODY_R * r, -0.95 * r, 0.12 * r, -0.55 * r, 0, 0);
-  ctx.closePath();
+  shape.trace(ctx, r);
   ctx.shadowColor = "rgba(0,0,0,0.3)";
   ctx.shadowBlur = r * 0.35;
   ctx.shadowOffsetY = r * 0.12;
@@ -93,80 +248,37 @@ export function drawPin(
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
 
-  // Specular highlight along the upper left of the body.
-  ctx.strokeStyle = "rgba(255,255,255,0.35)";
-  ctx.lineWidth = Math.max(1, r * 0.07);
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.arc(0, BODY_CY * r, BODY_R * r * 0.82, Math.PI * 1.08, Math.PI * 1.55, false);
-  ctx.stroke();
+  // Specular highlight: a soft light from the upper left, kept inside the body.
+  ctx.save();
+  ctx.clip();
+  const hx = -shape.hit.radius * 0.35 * r;
+  const hy = (shape.hit.centerY - shape.hit.radius * 0.4) * r;
+  const hl = ctx.createRadialGradient(hx, hy, 0, hx, hy, shape.hit.radius * r * 1.1);
+  hl.addColorStop(0, "rgba(255,255,255,0.4)");
+  hl.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = hl;
+  ctx.fillRect(-2.5 * r, -3 * r, 5 * r, 4 * r);
+  ctx.restore();
+
+  if (withSymbol) shape.symbol?.(ctx, r, palette);
   ctx.restore();
 }
 
-type Symbol = (ctx: CanvasRenderingContext2D, x: number, y: number, r: number, palette: MarkerPalette) => void;
-
-function withBody(
+/** The classic teardrop pin, without its symbol. Kept for callers that only want the silhouette. */
+export function drawPin(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
   r: number,
-  progress: number,
-  paint: (cx: number, cy: number) => void
+  palette: MarkerPalette,
+  progress = 1
 ): void {
-  const t = clamp01(progress);
-  const lift = (1 - easeOutBounce(t)) * r * 5;
-  ctx.save();
-  ctx.globalAlpha = clamp01(t * 4);
-  paint(x, y - lift + BODY_CY * r);
-  ctx.restore();
+  drawBody(ctx, pin, x, y, r, palette, progress, false);
 }
-
-const drawSolid: Symbol = (ctx, cx, cy, r, palette) => {
-  ctx.fillStyle = palette.markerSymbol;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
-  ctx.fill();
-};
-
-const drawRing: Symbol = (ctx, cx, cy, r, palette) => {
-  ctx.strokeStyle = palette.markerSymbol;
-  ctx.lineWidth = Math.max(1, r * 0.1);
-  ctx.beginPath();
-  ctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
-  ctx.stroke();
-};
-
-const drawHeart: Symbol = (ctx, cx, cy, r, palette) => {
-  const s = r * 0.34;
-  ctx.fillStyle = palette.markerSymbol;
-  ctx.beginPath();
-  ctx.moveTo(cx, cy + s * 0.95);
-  ctx.bezierCurveTo(cx - s * 1.35, cy + s * 0.1, cx - s * 1.05, cy - s * 0.95, cx, cy - s * 0.35);
-  ctx.bezierCurveTo(cx + s * 1.05, cy - s * 0.95, cx + s * 1.35, cy + s * 0.1, cx, cy + s * 0.95);
-  ctx.closePath();
-  ctx.fill();
-};
-
-const drawStar: Symbol = (ctx, cx, cy, r, palette) => {
-  const outer = r * 0.4;
-  const inner = outer * 0.42;
-  ctx.fillStyle = palette.markerSymbol;
-  ctx.beginPath();
-  for (let i = 0; i < 10; i++) {
-    const radius = i % 2 === 0 ? outer : inner;
-    const angle = (i * Math.PI) / 5 - Math.PI / 2;
-    const px = cx + Math.cos(angle) * radius;
-    const py = cy + Math.sin(angle) * radius;
-    if (i === 0) ctx.moveTo(px, py);
-    else ctx.lineTo(px, py);
-  }
-  ctx.closePath();
-  ctx.fill();
-};
 
 export interface MarkerStyle {
   id: MarkerStyleId;
-  /** Draws the pin with its tip on (x, y). `progress` animates the drop-in. */
+  /** Draws the marker anchored on (x, y). `progress` animates the drop-in. */
   draw(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -177,22 +289,19 @@ export interface MarkerStyle {
   ): void;
 }
 
-function makeMarker(id: MarkerStyleId, symbol: Symbol): MarkerStyle {
+function makeMarker(id: MarkerStyleId): MarkerStyle {
   return {
     id,
     draw(ctx, x, y, r, palette, progress = 1) {
-      drawPin(ctx, x, y, r, palette, progress);
-      withBody(ctx, x, y, r, progress, (cx, cy) => symbol(ctx, cx, cy, r, palette));
+      drawBody(ctx, SHAPES[id], x, y, r, palette, progress, true);
     },
   };
 }
 
 export const MARKERS: Record<MarkerStyleId, MarkerStyle> = {
-  solid: makeMarker("solid", drawSolid),
-  ring: makeMarker("ring", drawRing),
-  heart: makeMarker("heart", drawHeart),
-  star: makeMarker("star", drawStar),
+  solid: makeMarker("solid"),
+  ring: makeMarker("ring"),
+  heart: makeMarker("heart"),
+  star: makeMarker("star"),
+  home: makeMarker("home"),
 };
-
-/** Pin geometry exported so hit-testing can match what is drawn (body centre above the tip, in units of r). */
-export const PIN_BODY = { radius: BODY_R, centerY: BODY_CY } as const;

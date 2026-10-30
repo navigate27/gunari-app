@@ -1,6 +1,6 @@
 import type { OsmResponse } from "../interpret/parse";
 import type { BBox } from "../interpret/types";
-import { buildOverpassQuery } from "./query";
+import { buildOverpassQuery, type QueryOptions } from "./query";
 
 export const OVERPASS_ENDPOINTS = [
   "https://overpass.komoot.io/api/interpreter",
@@ -27,13 +27,14 @@ export class OverpassError extends Error {
 export async function fetchOsm(
   bbox: BBox,
   signal: AbortSignal,
-  endpoints: readonly string[] = OVERPASS_ENDPOINTS
+  endpoints: readonly string[] = OVERPASS_ENDPOINTS,
+  queryOptions: QueryOptions = {}
 ): Promise<OsmResponse> {
   if (signal.aborted) throw new OverpassError("aborted");
   if (endpoints.length === 0) {
     throw new OverpassError("all Overpass endpoints failed: no endpoints provided");
   }
-  const query = buildOverpassQuery(bbox);
+  const query = buildOverpassQuery(bbox, queryOptions);
 
   const controllers = endpoints.map(() => new AbortController());
   const onAbort = () => {

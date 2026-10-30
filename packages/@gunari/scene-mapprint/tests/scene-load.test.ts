@@ -62,4 +62,12 @@ describe("mapPrintScene.load caching", () => {
     expect(hit?.zoom).toBe("district");
     expect(hit?.geometry.roads.length).toBeGreaterThan(0);
   });
+
+  it("fetches named places up close but not for the city view", async () => {
+    fetchMock.mockResolvedValue(sample as never);
+    await mapPrintScene.load({ ...input(10.4), zoom: "district" }, signal);
+    expect(fetchMock.mock.calls.at(-1)![3]).toEqual({ pois: true });
+    await mapPrintScene.load({ ...input(10.5), zoom: "city" }, signal);
+    expect(fetchMock.mock.calls.at(-1)![3]).toEqual({ pois: false });
+  });
 });

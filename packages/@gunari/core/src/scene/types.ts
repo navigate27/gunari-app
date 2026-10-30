@@ -2,7 +2,10 @@ export type ShapeId = "square" | "circle" | "heart";
 export type MapStyleId =
   | "classic" | "midnight" | "blueprint" | "paper" | "twilight"
   | "atlas" | "ink" | "mist" | "nocturne" | "lagoon" | "chalk";
-export type MarkerStyleId = "solid" | "ring" | "heart" | "star";
+export type MarkerStyleId = "solid" | "ring" | "heart" | "star" | "home";
+
+/** Kinds of named places that can be shown on the map. */
+export type PlaceCategory = "food" | "shops" | "landmarks" | "lodging" | "community";
 export type ZoomId = "neighborhood" | "district" | "city";
 export type LayoutId = "classic" | "poster";
 
@@ -23,6 +26,8 @@ export interface SceneInput {
   layout: LayoutId;
   /** Where the pin sits. Omitted = at the map centre. */
   pin?: { lat: number; lng: number };
+  /** Which kinds of named places to show. Omitted or empty = none. */
+  places?: readonly PlaceCategory[];
 }
 
 export interface SceneCapabilities {

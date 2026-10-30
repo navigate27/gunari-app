@@ -102,3 +102,73 @@ describe("parseOsm land use", () => {
     expect(out.green).toHaveLength(0);
   });
 });
+
+describe("parseOsm named places", () => {
+  const node = (id: number, tags: Record<string, string>, lat = 14.6, lon = 120.98) => ({
+    type: "node" as const, id, lat, lon, tags,
+  });
+  const bbox: [number, number, number, number] = [120.97, 14.59, 120.99, 14.61];
+  const parse = (elements: object[]) => parseOsm({ elements } as never, bbox);
+
+  it("sorts named nodes into food, shops, landmarks, lodging and community", () => {
+    const out = parse([
+      node(1, { name: "Aling Nena", amenity: "restaurant" }),
+      node(2, { name: "Mercury Drug", shop: "chemist" }),
+      node(3, { name: "Rizal Museum", tourism: "museum" }),
+      node(4, { name: "The Manila Hotel", tourism: "hotel" }),
+      node(5, { name: "Ateneo", amenity: "university" }),
+      node(6, { name: "Old Gate", historic: "monument" }),
+    ]);
+    const byName = Object.fromEntries(out.pois!.map((p) => [p.name, p.category]));
+    expect(byName).toEqual({
+      "Aling Nena": "food",
+      "Mercury Drug": "shops",
+      "Rizal Museum": "landmarks",
+      "The Manila Hotel": "lodging",
+      "Ateneo": "community",
+      "Old Gate": "landmarks",
+    });
+  });
+
+  it("ignores unnamed or uncategorised nodes", () => {
+    const out = parse([node(1, { amenity: "restaurant" }), node(2, { name: "A bench", amenity: "bench" })]);
+    expect(out.pois).toEqual([]);
+  });
+
+  it("marks the centre of a named building or area", () => {
+    const out = parse([
+      {
+        type: "way", id: 9, tags: { name: "San Agustin Church", amenity: "place_of_worship" },
+        geometry: [{ lat: 14.6, lon: 120.98 }, { lat: 14.602, lon: 120.98 }, { lat: 14.602, lon: 120.982 }, { lat: 14.6, lon: 120.982 }],
+      },
+    ]);
+    expect(out.pois).toHaveLength(1);
+    expect(out.pois![0].x).toBeCloseTo(120.981, 6);
+    expect(out.pois![0].y).toBeCloseTo(14.601, 6);
+  });
+
+  it("never turns roads or land use into places", () => {
+    const out = parse([
+      {
+        type: "way", id: 1, tags: { name: "Rizal Avenue", highway: "primary" },
+        geometry: [{ lat: 14.6, lon: 120.98 }, { lat: 14.601, lon: 120.981 }],
+      },
+    ]);
+    expect(out.pois).toEqual([]);
+    expect(out.roads).toHaveLength(1);
+  });
+
+  it("keeps one place per name and kind, rarer kinds first, capped per kind", () => {
+    const many = Array.from({ length: 700 }, (_, i) => node(i + 10, { name: `Shop ${i}`, shop: "convenience" }, 14.6, 120.98));
+    const out = parse([
+      ...many,
+      node(1, { name: "Dupe", amenity: "cafe" }),
+      node(2, { name: "Dupe", amenity: "cafe" }),
+      node(3, { name: "Cathedral", historic: "church" }),
+    ]);
+    expect(out.pois!.filter((p) => p.category === "shops")).toHaveLength(150);
+    expect(out.pois!.filter((p) => p.category === "food")).toHaveLength(1);
+    expect(out.pois![0].name).toBe("Cathedral");
+    expect(out.pois!.filter((p) => p.name === "Dupe")).toHaveLength(1);
+  });
+});

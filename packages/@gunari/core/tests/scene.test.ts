@@ -14,7 +14,7 @@ describe("Scene contract types", () => {
     >();
   });
   it("MarkerStyleId is the expected union", () => {
-    expectTypeOf<MarkerStyleId>().toEqualTypeOf<"solid" | "ring" | "heart" | "star">();
+    expectTypeOf<MarkerStyleId>().toEqualTypeOf<"solid" | "ring" | "heart" | "star" | "home">();
   });
   it("ZoomId is the expected union", () => {
     expectTypeOf<ZoomId>().toEqualTypeOf<"neighborhood" | "district" | "city">();

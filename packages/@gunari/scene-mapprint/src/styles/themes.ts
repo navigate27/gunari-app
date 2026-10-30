@@ -25,6 +25,8 @@ export interface MapThemePalette extends ThemePalette {
   casing?: Partial<Record<RoadClass, { color: string; extra: number }>>;
   /** Waterway stroke width in px at 1080w. Default 2. */
   waterwayWidth?: number;
+  /** One colour for every place dot, instead of a colour per kind (for monochrome styles). */
+  poiColor?: string;
 }
 
 export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
@@ -210,6 +212,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
     water: "#151515",
     waterway: "#111111",
     waterwayWidth: 3.4,
+    poiColor: "#111111",
     park: "#e4e4e4",
     green: "#efefef",
     marker: "#111111",

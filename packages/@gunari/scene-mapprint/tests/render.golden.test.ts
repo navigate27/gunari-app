@@ -64,7 +64,7 @@ describe("golden: render.manila-district", () => {
     });
   }
 
-  for (const markerId of ["solid", "ring", "heart", "star"] as const) {
+  for (const markerId of ["solid", "ring", "heart", "star", "home"] as const) {
     it(`renders ${markerId} marker matching the golden image`, async () => {
       const tolerance = 0.02;
       const geom = projectGeometry(manilaDistrict, viewport, 0, 0.001);

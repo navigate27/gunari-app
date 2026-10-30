@@ -21,7 +21,7 @@ function recorder() {
     shadowColor: "", shadowBlur: 0, shadowOffsetY: 0, lineCap: "", lineJoin: "",
     font: "", textAlign: "", textBaseline: "",
     save() {}, restore() {}, beginPath() {}, closePath() {}, clip() {}, rect() {}, arc() {},
-    moveTo() {}, bezierCurveTo() {}, scale() {},
+    moveTo() {}, bezierCurveTo() {}, scale() {}, strokeText() {},
     fillText(t: string) { rec.texts.push(t); },
     lineTo() { rec.lineTos++; },
     translate(x: number, y: number) { rec.translates.push([x, y]); },
@@ -161,5 +161,51 @@ describe("renderMap stroke scale", () => {
     expect(widthOfMotorway(4)).toBeCloseTo(base * 2, 6);
     expect(widthOfMotorway(100)).toBeCloseTo(base * 2.2, 6);
     expect(widthOfMotorway(0.1)).toBeCloseTo(base * 0.85, 6);
+  });
+});
+
+describe("renderMap named places", () => {
+  const poiGeom: ProjectedMapGeometry = {
+    ...geom,
+    pois: [
+      { name: "Rizal Museum", category: "landmarks", x: 0.5, y: 0.45 },
+      { name: "Aling Nena", category: "food", x: 0.4, y: 0.55 },
+      { name: "Mercury Drug", category: "shops", x: 0.6, y: 0.55 },
+      { name: "Too far away", category: "food", x: 0.99, y: 0.01 },
+    ],
+  };
+  const draw = (places: SceneInput["places"], style: "atlas" | "ink" = "atlas") => {
+    const { ctx, rec } = recorder();
+    renderMap(ctx, poiGeom, MAP_THEMES[style], { ...input, style, places }, viewport, 1080, 1920);
+    return rec;
+  };
+
+  it("draws nothing unless categories are chosen", () => {
+    expect(draw(undefined).texts).toEqual([]);
+    expect(draw([]).texts).toEqual([]);
+  });
+
+  it("draws only the chosen categories, skipping places outside the map shape", () => {
+    expect(draw(["food"]).texts).toEqual(["Aling Nena"]);
+    expect(draw(["landmarks", "shops"]).texts.sort()).toEqual(["Mercury Drug", "Rizal Museum"]);
+  });
+
+  it("colours dots by kind, or one colour for monochrome styles", () => {
+    expect(draw(["food"]).fills).toContain("#e0703a");
+    expect(draw(["food"], "ink").fills).toContain(MAP_THEMES.ink.poiColor);
+    expect(draw(["food"], "ink").fills).not.toContain("#e0703a");
+  });
+
+  it("drops a place whose dot would sit on one already drawn", () => {
+    const { ctx, rec } = recorder();
+    renderMap(
+      ctx,
+      { ...poiGeom, pois: [
+        { name: "First", category: "food", x: 0.5, y: 0.5 },
+        { name: "Second", category: "food", x: 0.5005, y: 0.5 },
+      ] },
+      MAP_THEMES.atlas, { ...input, places: ["food"] }, viewport, 1080, 1920,
+    );
+    expect(rec.texts).toEqual(["First"]);
   });
 });

@@ -87,6 +87,12 @@ export function projectGeometry(
     return { ...l };
   });
 
+  // Named places: lng/lat to canvas, then the same rotation as everything else.
+  const pois = (geom.pois ?? []).map((p) => {
+    const [x, y] = place(projectPoint(p.x, p.y));
+    return { ...p, x, y };
+  });
+
   // Rotation: rotate every projected point around the viewport center.
   if (rotation !== 0) {
     for (const r of roads) r.points = rotate(r.points);
@@ -101,6 +107,9 @@ export function projectGeometry(
     }
     for (const l of labels) {
       [l.x, l.y] = rotate([[l.x, l.y]])[0];
+    }
+    for (const p of pois) {
+      [p.x, p.y] = rotate([[p.x, p.y]])[0];
     }
   }
 
@@ -130,6 +139,7 @@ export function projectGeometry(
     built,
     green,
     labels,
+    pois,
     bbox,
     rotation,
     zoomScale: viewport.zoomScale ?? 1,

@@ -1,4 +1,4 @@
-import type { SceneInput, SceneViewport } from "@gunari/core";
+import type { PlaceCategory, SceneInput, SceneViewport } from "@gunari/core";
 import type { ProjectedMapGeometry, ProjectedPolygon, ProjectedRoad } from "../projection/types";
 import type { MapThemePalette } from "../styles/themes";
 import { SHAPES } from "../shapes/shapes";
@@ -22,6 +22,26 @@ const REVEAL_CLASS_START: Record<RoadClass, number> = {
 };
 const REVEAL_STAGGER = 0.38;
 const REVEAL_ROAD_SPAN = 0.3;
+
+const POI_COLORS: Record<PlaceCategory, string> = {
+  food: "#e0703a",
+  shops: "#3f7fd9",
+  landmarks: "#d0443e",
+  lodging: "#8a5cc8",
+  community: "#2f9a6a",
+};
+const POI_NAME_MAX = 24;
+
+interface Box {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+function collides(boxes: Box[], b: Box): boolean {
+  return boxes.some((p) => Math.abs(p.x - b.x) < (p.w + b.w) / 2 && Math.abs(p.y - b.y) < (p.h + b.h) / 2);
+}
 
 function clamp01(t: number): number {
   return Math.min(1, Math.max(0, t));
@@ -210,7 +230,52 @@ export function renderMap(
     strokeAll(style.color, style.width * strokeScale);
   }
 
-  // 5. Labels (when input.labels)
+  // 5. Named places (shops, food, landmarks...), then road and area names.
+  // They share one list so nothing is drawn on top of anything else.
+  const placed: Box[] = [];
+  const wanted = input.places ?? [];
+  if (wanted.length > 0 && geom.pois && geom.pois.length > 0) {
+    const size = Math.max(10, Math.min(canvasW, canvasH) * 0.016);
+    const dotR = size * 0.34;
+    const panX = (viewport.panX ?? 0) * canvasW;
+    const panY = (viewport.panY ?? 0) * canvasH;
+    ctx.globalAlpha = animating ? smooth((reveal - 0.8) / 0.2) : 1;
+    ctx.font = `500 ${size}px "Geist", sans-serif`;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.lineJoin = "round";
+    for (const poi of geom.pois) {
+      if (!wanted.includes(poi.category)) continue;
+      const x = poi.x * canvasW;
+      const y = poi.y * canvasH;
+      // Skip places well outside the map shape.
+      if (Math.hypot(x + panX - cx, y + panY - cy) > r * 1.05) continue;
+      const dot: Box = { x, y, w: dotR * 2 + 2, h: dotR * 2 + 2 };
+      if (collides(placed, dot)) continue;
+      placed.push(dot);
+      ctx.fillStyle = palette.poiColor ?? POI_COLORS[poi.category];
+      ctx.strokeStyle = palette.background.top;
+      ctx.lineWidth = Math.max(1.5, dotR * 0.5);
+      ctx.beginPath();
+      ctx.arc(x, y, dotR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fill();
+
+      const name = poi.name.length > POI_NAME_MAX ? `${poi.name.slice(0, POI_NAME_MAX - 1)}…` : poi.name;
+      const w = name.length * size * 0.52;
+      const text: Box = { x: x + dotR + 4 + w / 2, y, w, h: size * 1.2 };
+      if (collides(placed, text)) continue;
+      placed.push(text);
+      ctx.strokeStyle = palette.background.top;
+      ctx.lineWidth = size * 0.35;
+      ctx.strokeText(name, x + dotR + 4, y);
+      ctx.fillStyle = palette.labelColor;
+      ctx.fillText(name, x + dotR + 4, y);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Road and area names (when input.labels)
   if (input.labels) {
     ctx.globalAlpha = animating ? smooth((reveal - 0.85) / 0.15) : 1;
     ctx.fillStyle = palette.labelColor;
@@ -219,16 +284,15 @@ export function renderMap(
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     // Draw each label only if it doesn't collide with one already placed.
-    const placed: { x: number; y: number; w: number; h: number }[] = [];
     for (const l of geom.labels) {
       if (l.x === 0 && l.y === 0) continue;
       const x = l.x * canvasW;
       const y = l.y * canvasH;
       const w = l.text.length * size * 0.55;
       const h = size * 1.2;
-      const clash = placed.some((p) => Math.abs(p.x - x) < (p.w + w) / 2 && Math.abs(p.y - y) < (p.h + h) / 2);
-      if (clash) continue;
-      placed.push({ x, y, w, h });
+      const box: Box = { x, y, w, h };
+      if (collides(placed, box)) continue;
+      placed.push(box);
       ctx.fillText(l.text, x, y);
     }
     ctx.globalAlpha = 1;
