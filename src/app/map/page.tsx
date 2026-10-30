@@ -199,6 +199,19 @@ export default function MapPage() {
             </motion.div>
 
             <Customizer input={input} update={update} updateLocation={updateLocation} />
+
+            <p className="mt-10 text-[11px] leading-relaxed text-stone">
+              Map data ©{" "}
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-mist"
+              >
+                OpenStreetMap contributors
+              </a>
+              .
+            </p>
           </div>
         </div>
       </div>

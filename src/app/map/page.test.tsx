@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, it, expect, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
 
 vi.mock("@/hooks/useMapPrintState", () => ({
   useMapPrintState: () => ({
@@ -26,11 +26,20 @@ vi.mock("@/lib/render/png-map", () => ({
 vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
 
 describe("/map page", () => {
+  afterEach(cleanup);
+
   it("renders Randomize, Save, and Share buttons", () => {
     render(<Page />);
     expect(screen.getByText(/Randomize/i)).toBeInTheDocument();
     expect(screen.getByText(/^Save$/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Share/i)).toBeInTheDocument();
+  });
+
+  it("credits OpenStreetMap contributors", () => {
+    render(<Page />);
+    expect(
+      screen.getByRole("link", { name: /OpenStreetMap contributors/i }),
+    ).toHaveAttribute("href", "https://www.openstreetmap.org/copyright");
   });
 });
 

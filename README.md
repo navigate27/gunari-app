@@ -15,7 +15,8 @@ Built as a client-side-only MVP: no database, no auth, no backend. All astronomy
 - **Animation:** Motion
 - **Astronomy:** Astronomy Engine + a filtered Hipparcos star catalog
 - **Rendering:** HTML5 Canvas API (pixel-perfect PNG export at 1080×1920)
-- **Location:** Google Places + Geocoding APIs (optional — falls back to manual lat/lng)
+- **Location:** Photon geocoding (OpenStreetMap data, no API key)
+- **Map data:** OpenStreetMap via public Overpass servers (Map Print)
 - **Hosting:** Vercel
 
 ## Getting started
@@ -29,7 +30,11 @@ App runs at http://localhost:7842.
 
 ## Environment variables
 
-Copy `.env.example` to `.env.local` and fill in the two `NEXT_PUBLIC_GOOGLE_*` keys if you want location autocomplete. Without them, Gunari falls back to manual latitude/longitude entry. Both keys are exposed to the browser by design (the PRD specifies no backend).
+No environment variables are required. Location search uses Photon and Map Print uses Overpass, both public OpenStreetMap services that need no key and are called from the browser.
+
+Optionally set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) so share links and the sitemap use your own domain.
+
+Map data is © OpenStreetMap contributors, credited on the `/map` page.
 
 ## Star catalogs
 
@@ -67,7 +72,7 @@ src/
   lib/
     astronomy/     # Astronomy Engine wrappers
     content/        # generated content (pairs.ts)
-    location/       # Google Places/Geocoding helpers
+    location/       # Photon geocoding helpers
     render/         # Canvas renderer
 scripts/            # catalog build scripts
 public/             # static assets + generated JSON
@@ -80,7 +85,7 @@ tech-stack          # locked tech stack
 1. Run `npm run build` locally to confirm the build passes.
 2. Push the repo to GitHub (Vercel doesn't import from Forgejo).
 3. Import the project on vercel.com — Vercel auto-detects Next.js. Accept the defaults.
-4. Add the two `NEXT_PUBLIC_GOOGLE_*` keys under **Settings → Environment Variables** if you want location autocomplete.
+4. Optionally add `NEXT_PUBLIC_SITE_URL` under **Settings → Environment Variables**.
 5. Make sure `public/stars.json` and `src/lib/content/pairs.ts` are available to Vercel — either commit them, or set the build command to `npm run catalogs && next build`.
 6. Each push to `main` auto-deploys to production; PRs get preview deployments.
 
