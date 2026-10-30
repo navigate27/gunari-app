@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { renderMap } from "../src/render/render";
-import { MAP_THEMES } from "../src/styles/themes";
+import { MAP_THEMES, poiColors } from "../src/styles/themes";
 import { projectLatLng } from "../src/projection/frame";
 import type { ProjectedMapGeometry } from "../src/projection/types";
 import type { SceneInput, SceneViewport } from "@gunari/core";
@@ -190,10 +190,10 @@ describe("renderMap named places", () => {
     expect(draw(["landmarks", "shops"]).texts.sort()).toEqual(["Mercury Drug", "Rizal Museum"]);
   });
 
-  it("colours dots by kind, or one colour for monochrome styles", () => {
-    expect(draw(["food"]).fills).toContain("#e0703a");
+  it("colours dots by kind from the theme, or one colour for monochrome styles", () => {
+    expect(draw(["food"]).fills).toContain(poiColors(MAP_THEMES.atlas).food);
     expect(draw(["food"], "ink").fills).toContain(MAP_THEMES.ink.poiColor);
-    expect(draw(["food"], "ink").fills).not.toContain("#e0703a");
+    expect(draw(["food"], "ink").fills).not.toContain(poiColors(MAP_THEMES.atlas).food);
   });
 
   it("drops a place whose dot would sit on one already drawn", () => {

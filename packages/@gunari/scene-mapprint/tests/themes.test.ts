@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { MAP_THEMES, getMapTheme } from "../src/styles/themes";
+import { MAP_THEMES, getMapTheme, poiColors } from "../src/styles/themes";
 import type { MapStyleId } from "@gunari/core";
 
 const EXPECTED_IDS: MapStyleId[] = [
@@ -62,5 +62,21 @@ describe("MAP_THEMES", () => {
 
   it("getMapTheme returns the matching palette", () => {
     expect(getMapTheme("midnight")).toBe(MAP_THEMES.midnight);
+  });
+
+  it("place dot colours follow the theme: brighter on dark, deeper on light, one colour for Ink", () => {
+    const lum = (hex: string) => {
+      const n = parseInt(hex.slice(1), 16);
+      return ((n >> 16) & 255) * 0.299 + ((n >> 8) & 255) * 0.587 + (n & 255) * 0.114;
+    };
+    const mean = (id: keyof typeof MAP_THEMES) =>
+      Object.values(poiColors(MAP_THEMES[id])).reduce((s, c) => s + lum(c), 0) / 5;
+    expect(mean("nocturne")).toBeGreaterThan(mean("atlas"));
+    expect(mean("midnight")).toBeGreaterThan(mean("classic"));
+    expect(new Set(Object.values(poiColors(MAP_THEMES.ink))).size).toBe(1);
+    expect(poiColors(MAP_THEMES.blueprint).food).not.toBe(poiColors(MAP_THEMES.classic).food);
+    for (const id of Object.keys(MAP_THEMES) as (keyof typeof MAP_THEMES)[]) {
+      for (const c of Object.values(poiColors(MAP_THEMES[id]))) expect(c).toMatch(/^#[0-9a-f]{6}$/i);
+    }
   });
 });

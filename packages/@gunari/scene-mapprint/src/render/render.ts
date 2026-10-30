@@ -1,6 +1,6 @@
-import type { PlaceCategory, SceneInput, SceneViewport } from "@gunari/core";
+import type { SceneInput, SceneViewport } from "@gunari/core";
 import type { ProjectedMapGeometry, ProjectedPolygon, ProjectedRoad } from "../projection/types";
-import type { MapThemePalette } from "../styles/themes";
+import { poiColors, type MapThemePalette } from "../styles/themes";
 import { SHAPES } from "../shapes/shapes";
 import { MARKERS } from "../markers/markers";
 import type { RoadClass } from "../interpret/types";
@@ -23,13 +23,6 @@ const REVEAL_CLASS_START: Record<RoadClass, number> = {
 const REVEAL_STAGGER = 0.38;
 const REVEAL_ROAD_SPAN = 0.3;
 
-const POI_COLORS: Record<PlaceCategory, string> = {
-  food: "#e0703a",
-  shops: "#3f7fd9",
-  landmarks: "#d0443e",
-  lodging: "#8a5cc8",
-  community: "#2f9a6a",
-};
 const POI_NAME_MAX = 24;
 
 interface Box {
@@ -237,6 +230,7 @@ export function renderMap(
   if (wanted.length > 0 && geom.pois && geom.pois.length > 0) {
     const size = Math.max(10, Math.min(canvasW, canvasH) * 0.016);
     const dotR = size * 0.34;
+    const colors = poiColors(palette);
     const panX = (viewport.panX ?? 0) * canvasW;
     const panY = (viewport.panY ?? 0) * canvasH;
     ctx.globalAlpha = animating ? smooth((reveal - 0.8) / 0.2) : 1;
@@ -253,7 +247,7 @@ export function renderMap(
       const dot: Box = { x, y, w: dotR * 2 + 2, h: dotR * 2 + 2 };
       if (collides(placed, dot)) continue;
       placed.push(dot);
-      ctx.fillStyle = palette.poiColor ?? POI_COLORS[poi.category];
+      ctx.fillStyle = colors[poi.category];
       ctx.strokeStyle = palette.background.top;
       ctx.lineWidth = Math.max(1.5, dotR * 0.5);
       ctx.beginPath();

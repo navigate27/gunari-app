@@ -1,4 +1,4 @@
-import type { MapStyleId, ThemePalette } from "@gunari/core";
+import type { MapStyleId, PlaceCategory, ThemePalette } from "@gunari/core";
 import type { RoadClass } from "../interpret/types";
 
 export interface MapThemePalette extends ThemePalette {
@@ -27,6 +27,8 @@ export interface MapThemePalette extends ThemePalette {
   waterwayWidth?: number;
   /** One colour for every place dot, instead of a colour per kind (for monochrome styles). */
   poiColor?: string;
+  /** Place dot colours that differ from the light/dark defaults. */
+  poi?: Partial<Record<PlaceCategory, string>>;
 }
 
 export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
@@ -43,6 +45,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
       residential: { color: "#7a7a7a", width: 0.9 },
       path:        { color: "#9a9a9a", width: 0.6 },
     },
+    poi: { food: "#b5532c", shops: "#3a6aa6", landmarks: "#a8322d", lodging: "#6b4aa3", community: "#2d7a57" },
     water: "#cfd6dc",
     waterway: "#9aa8b5",
     park: "#d4dcc6",
@@ -93,6 +96,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
       residential: { color: "#3f7aa8", width: 0.9 },
       path:        { color: "#2c5f8c", width: 0.6 },
     },
+    poi: { food: "#ffd166", shops: "#9ecbff", landmarks: "#ff8fa3", lodging: "#c9b6ff", community: "#7ee8c1" },
     water: "#1a3a5e",
     waterway: "#5a92c4",
     park: "#14304a",
@@ -118,6 +122,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
       residential: { color: "#777", width: 0.7 },
       path:        { color: "#999", width: 0.5 },
     },
+    poi: { food: "#b5532c", shops: "#3a6aa6", landmarks: "#a8322d", lodging: "#6b4aa3", community: "#2d7a57" },
     water: "#c4d0d8",
     waterway: "#a4b4c0",
     park: "#d6dcc8",
@@ -143,6 +148,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
       residential: { color: "#7a6798", width: 0.9 },
       path:        { color: "#5a4a7a", width: 0.6 },
     },
+    poi: { food: "#ffb86b", shops: "#8fb4ff", landmarks: "#ff8aa8", lodging: "#e0a6ff", community: "#7ee0c0" },
     water: "#1f1a40",
     waterway: "#5a4a7a",
     park: "#2a1a3c",
@@ -243,6 +249,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
       tertiary:    { color: "#e4e4e8", extra: 0.8 },
       residential: { color: "#e8e8ec", extra: 0.7 },
     },
+    poi: { food: "#e08a5a", shops: "#6f94d8", landmarks: "#d9706b", lodging: "#9a7bd0", community: "#5aa882" },
     water: "#e6eaf2",
     waterway: "#c9bdd9",
     waterwayWidth: 1.6,
@@ -340,6 +347,7 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
       tertiary:    { color: "#e2e2e2", extra: 0.9 },
       residential: { color: "#e8e8e8", extra: 0.8 },
     },
+    poi: { food: "#e08a5a", shops: "#6f94d8", landmarks: "#d9706b", lodging: "#9a7bd0", community: "#5aa882" },
     water: "#dfe9ee",
     waterway: "#a9c7d6",
     waterwayWidth: 2.4,
@@ -356,6 +364,30 @@ export const MAP_THEMES: Record<MapStyleId, MapThemePalette> = {
     light: true,
   },
 };
+
+const POI_LIGHT: Record<PlaceCategory, string> = {
+  food: "#d9622b",
+  shops: "#2f6fd0",
+  landmarks: "#c43a36",
+  lodging: "#7c4fc0",
+  community: "#23875a",
+};
+const POI_DARK: Record<PlaceCategory, string> = {
+  food: "#ff9a5c",
+  shops: "#6fa8ff",
+  landmarks: "#ff6b6b",
+  lodging: "#b58cff",
+  community: "#4fd6a0",
+};
+
+/** The dot colour for each kind of place in a theme: tuned to its background, or one colour for monochrome styles. */
+export function poiColors(palette: MapThemePalette): Record<PlaceCategory, string> {
+  if (palette.poiColor) {
+    const c = palette.poiColor;
+    return { food: c, shops: c, landmarks: c, lodging: c, community: c };
+  }
+  return { ...(palette.light ? POI_LIGHT : POI_DARK), ...palette.poi };
+}
 
 export function getMapTheme(id: MapStyleId): MapThemePalette {
   return MAP_THEMES[id];

@@ -27,6 +27,9 @@ export interface TextSpot {
 }
 
 export interface ArtworkLayout {
+  /** Canvas size this layout is for. */
+  w: number;
+  h: number;
   inner: { x: number; y: number; w: number; h: number };
   /** Font sizes derive from the shorter inner side so type stays the same across formats. */
   base: number;
@@ -71,6 +74,8 @@ export function artworkLayout(format: FormatId, layout: LayoutId): ArtworkLayout
   const s = SPECS[format][layout];
   const at = (frac: number) => inner.y + inner.h * frac;
   return {
+    w,
+    h,
     inner,
     base,
     slot: {
@@ -84,5 +89,51 @@ export function artworkLayout(format: FormatId, layout: LayoutId): ArtworkLayout
     message: { x: s.textX, y: at(s.message), maxW: s.textW * 0.78 },
     meta: { x: s.textX, y: at(s.meta), maxW: s.textW * 0.9 },
     wordmark: { x: s.textX, y: inner.y + inner.h - 24, maxW: s.textW },
+  };
+}
+
+
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const lerpSpot = (a: TextSpot, b: TextSpot, t: number): TextSpot => ({
+  x: lerp(a.x, b.x, t),
+  y: lerp(a.y, b.y, t),
+  maxW: lerp(a.maxW, b.maxW, t),
+});
+
+/**
+ * A layout partway between two others (t = 0 is `a`, t = 1 is `b`), for
+ * animating a change of format or layout. The canvas size, the map slot and
+ * every text position move together, in pixels.
+ */
+export function blendLayouts(a: ArtworkLayout, b: ArtworkLayout, t: number): ArtworkLayout {
+  if (t <= 0) return a;
+  if (t >= 1) return b;
+  const w = lerp(a.w, b.w, t);
+  const h = lerp(a.h, b.h, t);
+  const min = Math.min(w, h);
+  const inner = { x: MARGIN, y: MARGIN, w: w - MARGIN * 2, h: h - MARGIN * 2 };
+  const px = (l: ArtworkLayout) => ({
+    cx: l.slot.cx * l.w,
+    cy: l.slot.cy * l.h,
+    r: l.slot.r * Math.min(l.w, l.h),
+  });
+  const sa = px(a);
+  const sb = px(b);
+  return {
+    w,
+    h,
+    inner,
+    base: Math.min(inner.w, inner.h),
+    slot: {
+      cx: lerp(sa.cx, sb.cx, t) / w,
+      cy: lerp(sa.cy, sb.cy, t) / h,
+      r: lerp(sa.r, sb.r, t) / min,
+      canvasW: w,
+      canvasH: h,
+    },
+    title: lerpSpot(a.title, b.title, t),
+    message: lerpSpot(a.message, b.message, t),
+    meta: lerpSpot(a.meta, b.meta, t),
+    wordmark: lerpSpot(a.wordmark, b.wordmark, t),
   };
 }
