@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from "vitest";
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import { LivePreview } from "./LivePreview";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import type { MapPrintSceneData, ProjectedMapGeometry } from "@gunari/scene-mapprint";
@@ -77,7 +77,7 @@ describe("LivePreview", () => {
     const call = (renderScaffold as ReturnType<typeof vi.fn>).mock.calls[0];
     const scaffoldInput = call[1];
     expect(scaffoldInput.sceneInput).toEqual(input);
-    expect(scaffoldInput.sceneViewport).toEqual({ cx: 0.5, cy: 0.5, r: 0.4, canvasW: 1080, canvasH: 1920 });
+    expect(scaffoldInput.sceneViewport).toEqual({ cx: 0.5, cy: 0.5, r: 0.4, canvasW: 1080, canvasH: 1920, panX: 0, panY: 0 });
     expect(scaffoldInput.title).toBe("Test");
     expect(scaffoldInput.meta.location).toBe("Manila");
     expect(scaffoldInput.meta.date).toBe("");
@@ -97,5 +97,39 @@ describe("LivePreview", () => {
     mock.mockClear();
     render(<LivePreview input={input} data={data} geometry={mockGeometry} loading={false} />);
     expect(mock.mock.calls[0][1].meta.coordinates).toBeUndefined();
+  });
+
+  it("reports drags as pan offsets and commits on release", () => {
+    const onPan = vi.fn();
+    const onPanEnd = vi.fn();
+    const { container } = render(
+      <LivePreview
+        input={input}
+        data={data}
+        geometry={mockGeometry}
+        loading={false}
+        onPan={onPan}
+        onPanEnd={onPanEnd}
+      />,
+    );
+    const card = container.querySelector("canvas")!.parentElement!;
+    card.getBoundingClientRect = () =>
+      ({ width: 200, height: 400, left: 0, top: 0, right: 200, bottom: 400, x: 0, y: 0, toJSON() {} }) as DOMRect;
+    fireEvent.pointerDown(card, { clientX: 100, clientY: 100, pointerId: 1 });
+    fireEvent.pointerMove(card, { clientX: 120, clientY: 140, pointerId: 1 });
+    expect(onPan).toHaveBeenLastCalledWith({ x: 0.1, y: 0.1 });
+    fireEvent.pointerUp(card, { pointerId: 1 });
+    expect(onPanEnd).toHaveBeenCalledTimes(1);
+  });
+
+  it("is not draggable before the map has loaded", () => {
+    const onPan = vi.fn();
+    const { container } = render(
+      <LivePreview input={input} data={null} geometry={null} loading={false} onPan={onPan} />,
+    );
+    const card = container.querySelector("canvas")!.parentElement!;
+    fireEvent.pointerDown(card, { clientX: 0, clientY: 0, pointerId: 1 });
+    fireEvent.pointerMove(card, { clientX: 50, clientY: 50, pointerId: 1 });
+    expect(onPan).not.toHaveBeenCalled();
   });
 });

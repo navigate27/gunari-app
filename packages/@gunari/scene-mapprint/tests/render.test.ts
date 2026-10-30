@@ -18,6 +18,7 @@ function mockCtx() {
       closePath: () => calls.push("closePath"),
       rect: () => calls.push("rect"),
       clip: () => calls.push("clip"),
+      translate: (x: number, y: number) => calls.push(`translate:${x},${y}`),
       fill: () => calls.push("fill"),
       stroke: () => calls.push("stroke"),
       fillText: (t: string) => calls.push(`fillText:${t}`),
@@ -91,5 +92,15 @@ describe("renderMap", () => {
     // The renderer should have set strokeStyle to the motorway color at some point.
     // (We can't capture the exact moment, but strokeStyle should be a string.)
     expect(typeof ctx.strokeStyle).toBe("string");
+  });
+
+  it("pans the map under the shape mask, after clipping and before drawing", () => {
+    const { ctx, calls } = mockCtx();
+    renderMap(ctx, geom, MAP_THEMES.classic, baseInput, { ...viewport, panX: 0.1, panY: -0.05 }, 1080, 1920);
+    const clip = calls.indexOf("clip");
+    const translate = calls.indexOf("translate:108,-96");
+    expect(clip).toBeGreaterThanOrEqual(0);
+    expect(translate).toBeGreaterThan(clip);
+    expect(calls.indexOf("stroke")).toBeGreaterThan(translate);
   });
 });

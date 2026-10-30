@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { artworkLayout, type FormatId, type SceneInput, type SceneViewport } from "@gunari/core";
-import { mapPrintScene, type MapPrintSceneData, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
+import { mapPrintScene, panLocation, type MapPrintSceneData, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
 import { pickRandomPair } from "@/lib/content/pairs";
 
 export type MapPrintInput = SceneInput & {
@@ -52,6 +52,9 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
 
+  const [pan, setPanState] = React.useState({ x: 0, y: 0 });
+  const panRef = React.useRef(pan);
+
   const abortRef = React.useRef<AbortController | null>(null);
   const debounceRef = React.useRef<number | null>(null);
   const inputRef = React.useRef(input);
@@ -60,6 +63,17 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
   // Load on mount + whenever location or zoom changes (debounced).
   React.useEffect(() => {
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    // Views already loaded this session show immediately, with no debounce
+    // and no loading state.
+    const cached = mapPrintScene.peek(inputRef.current);
+    if (cached) {
+      setData(cached);
+      setError(null);
+      setLoading(false);
+      panRef.current = { x: 0, y: 0 };
+      setPanState(panRef.current);
+      return;
+    }
     debounceRef.current = window.setTimeout(() => {
       const controller = new AbortController();
       abortRef.current = controller;
@@ -70,6 +84,10 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
           if (!controller.signal.aborted) {
             setData(d);
             setError(null);
+            // The new data is centred on the dragged-to spot, so the
+            // temporary drag offset is no longer needed.
+            panRef.current = { x: 0, y: 0 };
+            setPanState(panRef.current);
           }
         })
         .catch((err: unknown) => {
@@ -110,6 +128,27 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
     [],
   );
 
+  const setPan = React.useCallback((next: { x: number; y: number }) => {
+    panRef.current = next;
+    setPanState(next);
+  }, []);
+
+  /** Turn the drag offset into a new map centre, which reloads the map data. */
+  const commitPan = React.useCallback(() => {
+    const { x, y } = panRef.current;
+    if (x === 0 && y === 0) return;
+    const cur = inputRef.current;
+    const next = panLocation(
+      cur.location,
+      cur.zoom,
+      MAP_PREVIEW_VIEWPORT(cur.layout, cur.format),
+      cur.rotation,
+      x,
+      y,
+    );
+    setInput((prev) => ({ ...prev, location: { ...prev.location, ...next } }));
+  }, []);
+
   const randomize = React.useCallback(() => {
     setInput((prev) => {
       const themes: SceneInput["style"][] = ["classic", "midnight", "blueprint", "paper", "twilight"];
@@ -135,6 +174,9 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
     update,
     updateLocation,
     randomize,
+    pan,
+    setPan,
+    commitPan,
     data,
     geometry,
     loading,

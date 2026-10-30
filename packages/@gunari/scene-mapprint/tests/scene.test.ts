@@ -78,7 +78,7 @@ describe("mapPrintScene", () => {
       globalAlpha: 1, lineWidth: 1, lineCap: "" as CanvasLineCap, lineJoin: "" as CanvasLineJoin,
       createLinearGradient: () => ({ addColorStop: () => {} }),
       beginPath: () => {}, moveTo: () => {}, lineTo: () => {}, closePath: () => {},
-      fill: () => {}, stroke: () => {}, clip: () => {}, rect: () => {}, arc: () => {},
+      fill: () => {}, stroke: () => {}, clip: () => {}, rect: () => {}, arc: () => {}, translate: () => {},
       bezierCurveTo: () => {}, textAlign: "" as CanvasTextAlign, textBaseline: "" as CanvasTextBaseline,
       font: "", fillText: () => {},
     } as unknown as CanvasRenderingContext2D;

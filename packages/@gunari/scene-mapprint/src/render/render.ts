@@ -37,6 +37,8 @@ export function renderMap(
   ctx.save();
   // Shape mask
   SHAPES[input.shape].apply(ctx, cx, cy, r);
+  // Pan moves the map under the fixed mask.
+  ctx.translate((viewport.panX ?? 0) * canvasW, (viewport.panY ?? 0) * canvasH);
 
   // 1. Water polygons (fill)
   for (const w of geom.water) {

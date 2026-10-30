@@ -32,7 +32,10 @@ function hasFeatures(g: MapGeometry): boolean {
   return g.roads.length + g.water.length + g.waterways.length + g.parks.length > 0;
 }
 
-export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
+export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
+  /** Synchronous lookup of already-loaded data, so cached views show without waiting. */
+  peek(input: SceneInput): MapPrintSceneData | null;
+} = {
   id: "mapprint",
 
   capabilities: {
@@ -44,6 +47,12 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
     supportsRotation: true,
     supportsLabels: true,
   } satisfies SceneCapabilities,
+
+  peek(input) {
+    const bbox = bboxForZoom(input.location.lat, input.location.lng, input.zoom);
+    const cached = cache.get(bbox);
+    return cached && hasFeatures(cached) ? { geometry: cached, bbox, zoom: input.zoom } : null;
+  },
 
   async load(input, signal) {
     const { lat, lng } = input.location;

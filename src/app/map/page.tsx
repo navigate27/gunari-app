@@ -13,7 +13,7 @@ import { useMapPrintState } from "@/hooks/useMapPrintState";
 import { downloadMapPng, shareMapPng } from "@/lib/render/png-map";
 
 export default function MapPage() {
-  const { input, update, updateLocation, randomize, data, geometry, loading } =
+  const { input, update, updateLocation, randomize, pan, setPan, commitPan, data, geometry, loading } =
     useMapPrintState();
   const [generating, setGenerating] = React.useState(false);
   const [flash, setFlash] = React.useState<string | null>(null);
@@ -122,7 +122,15 @@ export default function MapPage() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
           <div className="order-1 lg:order-1">
             <div className="lg:sticky lg:top-10">
-              <LivePreview input={input} data={data} geometry={geometry} loading={loading} />
+              <LivePreview
+                input={input}
+                data={data}
+                geometry={geometry}
+                loading={loading && !data}
+                pan={pan}
+                onPan={setPan}
+                onPanEnd={commitPan}
+              />
             </div>
           </div>
 
@@ -140,7 +148,7 @@ export default function MapPage() {
                     variant="accent"
                     size="md"
                     onClick={onRandomize}
-                    disabled={!geometry}
+                    disabled={!geometry || loading}
                     className="w-full"
                   >
                     <motion.span
@@ -170,14 +178,14 @@ export default function MapPage() {
                   variant="outline"
                   size="md"
                   onClick={onDownload}
-                  disabled={generating || !geometry}
+                  disabled={generating || !geometry || loading}
                 >
                   <Download size={14} />
                   Save
                 </Button>
               </div>
               <div className="flex items-center gap-2">
-                <IconButton label="Share" onClick={onShare} disabled={generating || !geometry}>
+                <IconButton label="Share" onClick={onShare} disabled={generating || !geometry || loading}>
                   <Share2 size={16} />
                 </IconButton>
               </div>

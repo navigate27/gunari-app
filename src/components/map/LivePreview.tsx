@@ -20,7 +20,13 @@ export interface LivePreviewProps {
   data: MapPrintSceneData | null;
   geometry: ProjectedMapGeometry | null;
   loading: boolean;
+  /** Drag offset of the map content, canvas-normalized. */
+  pan?: { x: number; y: number };
+  onPan?: (pan: { x: number; y: number }) => void;
+  onPanEnd?: () => void;
 }
+
+const NO_PAN = { x: 0, y: 0 };
 
 function prefersReducedMotion(): boolean {
   return (
@@ -30,11 +36,20 @@ function prefersReducedMotion(): boolean {
   );
 }
 
-export function LivePreview({ input, data, geometry, loading }: LivePreviewProps) {
+export function LivePreview({
+  input,
+  data,
+  geometry,
+  loading,
+  pan = NO_PAN,
+  onPan,
+  onPanEnd,
+}: LivePreviewProps) {
   const cardRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const overlayRef = React.useRef<HTMLCanvasElement | null>(null);
   const animRef = React.useRef(0);
+  const dragRef = React.useRef<{ x: number; y: number; pan: { x: number; y: number }; id: number } | null>(null);
   const prevRef = React.useRef<{ input: MapPrintInput; data: MapPrintSceneData | null } | null>(null);
   const [pixelW, setPixelW] = React.useState(0);
   const format = FORMATS[input.format];
@@ -120,10 +135,33 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
       ctx.fillRect(0, 0, format.w, format.h);
       return;
     }
-    renderScaffold(ctx, buildMapScaffoldInput(input, geometry));
-  }, [input, data, geometry, pixelW, format]);
+    renderScaffold(ctx, buildMapScaffoldInput(input, geometry, pan));
+  }, [input, data, geometry, pixelW, format, pan]);
 
   React.useEffect(() => () => cancelAnimationFrame(animRef.current), []);
+
+  const canPan = Boolean(onPan && geometry);
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!canPan) return;
+    dragRef.current = { x: e.clientX, y: e.clientY, pan, id: e.pointerId };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragRef.current;
+    if (!d || d.id !== e.pointerId) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    onPan?.({
+      x: d.pan.x + (e.clientX - d.x) / rect.width,
+      y: d.pan.y + (e.clientY - d.y) / rect.height,
+    });
+  };
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragRef.current;
+    if (!d || d.id !== e.pointerId) return;
+    dragRef.current = null;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+    onPanEnd?.();
+  };
 
   return (
     <div
@@ -136,7 +174,13 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         style={{ aspectRatio: `${format.w} / ${format.h}`, transition: "aspect-ratio 0.5s ease-out" }}
-        className="relative overflow-hidden rounded-[20px] border border-line shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        className={`relative touch-none select-none overflow-hidden rounded-[20px] border border-line shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] ${
+          canPan ? "cursor-grab active:cursor-grabbing" : ""
+        }`}
       >
         <canvas
           ref={canvasRef}
@@ -164,6 +208,11 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
           )}
         </AnimatePresence>
       </motion.div>
+      {canPan && (
+        <p className="mt-3 text-center text-[10px] uppercase tracking-[0.25em] text-stone">
+          Drag the map to move it
+        </p>
+      )}
     </div>
   );
 }

@@ -48,4 +48,18 @@ describe("mapPrintScene.load caching", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(again.geometry.roads.length).toBeGreaterThan(0);
   });
+
+  it("peek returns loaded data synchronously and nothing for unseen or failed views", async () => {
+    expect(mapPrintScene.peek(input(10.3))).toBeNull();
+
+    fetchMock.mockRejectedValueOnce(new OverpassError("down"));
+    await mapPrintScene.load(input(10.3), signal);
+    expect(mapPrintScene.peek(input(10.3))).toBeNull();
+
+    fetchMock.mockResolvedValueOnce(sample as never);
+    await mapPrintScene.load(input(10.3), signal);
+    const hit = mapPrintScene.peek(input(10.3));
+    expect(hit?.zoom).toBe("district");
+    expect(hit?.geometry.roads.length).toBeGreaterThan(0);
+  });
 });

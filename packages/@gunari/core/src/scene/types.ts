@@ -40,4 +40,10 @@ export interface SceneViewport {
   /** Canvas size the fractions refer to. Defaults to the 1080x1920 story canvas. */
   canvasW?: number;
   canvasH?: number;
+  /**
+   * Shifts the map content inside the slot by this much (canvas-normalized,
+   * screen space) without moving the slot itself. Used for drag-to-pan.
+   */
+  panX?: number;
+  panY?: number;
 }

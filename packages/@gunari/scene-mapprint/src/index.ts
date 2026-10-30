@@ -4,6 +4,7 @@ export * from "./data/query";
 export * from "./data/overpass";
 export * from "./data/cache";
 export * from "./projection/viewport";
+export * from "./projection/pan";
 export * from "./projection/types";
 export * from "./projection/project";
 export * from "./shapes/shapes";
