@@ -50,9 +50,9 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   // translates — it stays put and only spins. Springs back on release.
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
-  const rotateY = useTransform(dragX, [-50, 50], [-14, 14]);
-  const rotateZ = useTransform(dragX, [-50, 50], [-2, 2]);
-  const rotateX = useTransform(dragY, [-50, 50], [7, -7]);
+  const rotateY = useTransform(dragX, [-50, 50], [-7, 7]);
+  const rotateZ = useTransform(dragX, [-50, 50], [-1, 1]);
+  const rotateX = useTransform(dragY, [-50, 50], [3.5, -3.5]);
 
   const dragRef = React.useRef<{
     startX: number;
