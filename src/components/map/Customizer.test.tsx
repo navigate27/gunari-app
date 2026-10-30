@@ -103,4 +103,19 @@ describe("Customizer", () => {
       expect(marker).toHaveTextContent(label);
     }
   });
+
+  it("colours the place options to match the map theme", () => {
+    const swatch = (style: "classic" | "nocturne") => {
+      const { container, unmount } = render(
+        <Customizer input={{ ...baseInput, style }} update={vi.fn()} updateLocation={vi.fn()} />,
+      );
+      const food = [...container.querySelectorAll('[aria-label="Places"] button')].find((b) =>
+        /food/i.test(b.textContent ?? ""),
+      )!;
+      const color = (food.querySelector("div > span") as HTMLElement).style.borderColor;
+      unmount();
+      return color;
+    };
+    expect(swatch("classic")).not.toBe(swatch("nocturne"));
+  });
 });

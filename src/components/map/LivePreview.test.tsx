@@ -221,4 +221,45 @@ describe("LivePreview", () => {
     render(<LivePreview input={input} data={data} geometry={withBox} loading={true} />);
     expect(screen.getByText("Updating map")).toBeInTheDocument();
   });
+
+  it("glides the card between formats instead of jumping", async () => {
+    const { renderScaffold } = await import("@gunari/core");
+    const mock = renderScaffold as ReturnType<typeof vi.fn>;
+    let now = 1000;
+    const queue: FrameRequestCallback[] = [];
+    vi.spyOn(performance, "now").mockImplementation(() => now);
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => queue.push(cb));
+    vi.stubGlobal("cancelAnimationFrame", () => {});
+    const step = (ms: number) => {
+      now += ms;
+      queue.splice(0).forEach((cb) => cb(now));
+    };
+
+    const withBox = { ...mockGeometry, bbox: [120.97, 14.59, 120.99, 14.61], rotation: 0 } as unknown as ProjectedMapGeometry;
+    const { container, rerender } = render(
+      <LivePreview input={input} data={data} geometry={withBox} loading={false} />,
+    );
+    step(2500); // let the opening draw-in finish
+    const card = container.querySelector("canvas")!.parentElement!;
+    expect(card.style.aspectRatio.replace(/\s/g, "")).toBe("1080/1920");
+
+    mock.mockClear();
+    rerender(
+      <LivePreview input={{ ...input, format: "square" }} data={data} geometry={withBox} loading={false} />,
+    );
+    step(350);
+    const mid = card.style.aspectRatio.split("/").map((n) => parseFloat(n));
+    expect(mid[0] / mid[1]).toBeGreaterThan(0.56);
+    expect(mid[0] / mid[1]).toBeLessThan(1);
+    const midSpec = mock.mock.calls.at(-1)![1].layoutSpec;
+    expect(midSpec.h).toBeGreaterThan(1080);
+    expect(midSpec.h).toBeLessThan(1920);
+
+    step(600);
+    expect(card.style.aspectRatio.replace(/\s/g, "")).toBe("1080/1080");
+    expect(mock.mock.calls.at(-1)![1].layoutSpec).toBeUndefined();
+
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
 });

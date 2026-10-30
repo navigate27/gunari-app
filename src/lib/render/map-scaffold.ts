@@ -1,4 +1,4 @@
-import type { ScaffoldInput, SceneRenderFn, ThemePalette } from "@gunari/core";
+import { artworkLayout, type ArtworkLayout, type ScaffoldInput, type SceneRenderFn, type ThemePalette } from "@gunari/core";
 import {
   CARD_STYLES,
   bboxForZoom,
@@ -6,7 +6,7 @@ import {
   getMapTheme,
   type ProjectedMapGeometry,
 } from "@gunari/scene-mapprint";
-import { MAP_PREVIEW_VIEWPORT, type MapPrintInput } from "@/hooks/useMapPrintState";
+import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import { formatLatLng } from "@/lib/utils";
 
 /** A map with nothing drawn yet, so the frame, title and theme can show while data loads. */
@@ -29,10 +29,14 @@ export function buildMapScaffoldInput(
   geometry: ProjectedMapGeometry,
   pan: { x: number; y: number } = { x: 0, y: 0 },
   reveal?: number,
+  /** A layout partway between two, for frames during a format or layout change. */
+  layoutSpec?: ArtworkLayout,
 ): ScaffoldInput {
+  const layout = layoutSpec ?? artworkLayout(input.format, input.layout);
   const mapPalette = getMapTheme(input.style);
   return {
     format: input.format,
+    layoutSpec,
     layout: input.layout,
     title: input.title,
     message: input.message,
@@ -50,7 +54,7 @@ export function buildMapScaffoldInput(
     scenePalette: mapPalette,
     sceneInput: input,
     sceneViewport: {
-      ...MAP_PREVIEW_VIEWPORT(input.layout, input.format),
+      ...layout.slot,
       zoomScale: geometry.zoomScale,
       panX: pan.x,
       panY: pan.y,

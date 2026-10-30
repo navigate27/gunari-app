@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Download, Facebook, Instagram, Share2, Shuffle, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
 import { AppHeader } from "@/components/layout/AppHeader";
+import { MobileTabs } from "@/components/ui/MobileTabs";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { RedditIcon, XIcon } from "@/components/ui/icons";
@@ -136,15 +137,6 @@ export default function CreatePage() {
   };
 
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const [tab, setTab] = React.useState<MobileTab>("editor");
-  const [direction, setDirection] = React.useState(1);
-
-  const selectTab = (next: MobileTab) => {
-    if (next === tab) return;
-    setDirection(TABS.findIndex((t) => t.id === next) > TABS.findIndex((t) => t.id === tab) ? 1 : -1);
-    setTab(next);
-  };
-
   // On mobile the preview unmounts while editing. Hold it on the input it last
   // showed and release the edits once the Preview tab has finished entering, so
   // the card's change animations play in view instead of off-screen.
@@ -305,74 +297,17 @@ export default function CreatePage() {
             <div>{editor}</div>
           </div>
         ) : (
-          <>
-            <div
-              role="tablist"
-              aria-label="Create view"
-              className="sticky top-0 z-20 -mx-5 mb-6 flex border-b border-white/10 bg-ink/90 px-5 backdrop-blur-md sm:-mx-8 sm:px-8"
-            >
-              {TABS.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="tab"
-                  id={`tab-${t.id}`}
-                  aria-selected={tab === t.id}
-                  aria-controls={`panel-${t.id}`}
-                  onClick={() => selectTab(t.id)}
-                  className={`relative flex-1 cursor-pointer py-5 text-xs uppercase tracking-[0.25em] transition-colors duration-200 ${
-                    tab === t.id ? "text-gold" : "text-stone hover:text-mist"
-                  }`}
-                >
-                  {t.label}
-                  {tab === t.id && (
-                    <motion.span
-                      layoutId="create-tab-indicator"
-                      className="absolute inset-x-0 -bottom-px h-px bg-gold"
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                    />
-                  )}
-                </button>
-              ))}
-            </div>
-            <AnimatePresence mode="wait" initial={false} custom={direction}>
-              <motion.div
-                key={tab}
-                role="tabpanel"
-                id={`panel-${tab}`}
-                aria-labelledby={`tab-${tab}`}
-                custom={direction}
-                variants={panelVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                onAnimationComplete={(def) => {
-                  if (def === "center" && tab === "preview") setPreviewInput(input);
-                }}
-              >
-                {tab === "preview" ? preview : editor}
-              </motion.div>
-            </AnimatePresence>
-          </>
+          <MobileTabs
+            label="Create view"
+            editor={editor}
+            preview={preview}
+            onPreviewShown={() => setPreviewInput(input)}
+          />
         )}
       </div>
     </main>
   );
 }
-
-type MobileTab = "editor" | "preview";
-
-const TABS: { id: MobileTab; label: string }[] = [
-  { id: "editor", label: "Editor" },
-  { id: "preview", label: "Preview" },
-];
-
-const panelVariants = {
-  enter: (dir: number) => ({ opacity: 0, x: dir * 32 }),
-  center: { opacity: 1, x: 0 },
-  exit: (dir: number) => ({ opacity: 0, x: dir * -32 }),
-};
 
 function slug(s: string): string {
   return s

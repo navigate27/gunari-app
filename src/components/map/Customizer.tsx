@@ -15,6 +15,7 @@ import {
   CARD_ORDER,
   CARD_STYLES,
   getMapTheme,
+  poiColors,
   sliderFromViewKm,
   viewKmFromSlider,
 } from "@gunari/scene-mapprint";
@@ -52,12 +53,12 @@ const MARKERS: { value: SceneInput["marker"]; label: string }[] = [
   { value: "star", label: "Star" },
   { value: "home", label: "Home" },
 ];
-const PLACE_OPTIONS: PickerOption<PlaceCategory>[] = [
-  { value: "food", label: "Food & drink", swatch: "#e0703a" },
-  { value: "shops", label: "Shops", swatch: "#3f7fd9" },
-  { value: "landmarks", label: "Landmarks", swatch: "#d0443e" },
-  { value: "lodging", label: "Lodging", swatch: "#8a5cc8" },
-  { value: "community", label: "Community", swatch: "#2f9a6a" },
+const PLACE_KINDS: { value: PlaceCategory; label: string }[] = [
+  { value: "food", label: "Food & drink" },
+  { value: "shops", label: "Shops" },
+  { value: "landmarks", label: "Landmarks" },
+  { value: "lodging", label: "Lodging" },
+  { value: "community", label: "Community" },
 ];
 const CARD_OPTIONS: PickerOption<CardStyleId>[] = CARD_ORDER.map((id) => {
   if (id === "match") return { value: id, label: CARD_LABELS[id] };
@@ -84,6 +85,12 @@ export interface CustomizerProps {
 }
 
 export function Customizer({ input, update, updateLocation }: CustomizerProps) {
+  // The dots on the map take the map theme's colours, so the options do too.
+  const placeOptions = React.useMemo<PickerOption<PlaceCategory>[]>(() => {
+    const colors = poiColors(getMapTheme(input.style));
+    return PLACE_KINDS.map((k) => ({ ...k, swatch: colors[k.value] }));
+  }, [input.style]);
+
   return (
     <div className="space-y-8">
       <section className="space-y-4">
@@ -160,7 +167,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         <SectionTitle>Places</SectionTitle>
         <MultiPicker
           label="Places"
-          options={PLACE_OPTIONS}
+          options={placeOptions}
           value={[...(input.places ?? [])]}
           onChange={(v) => update("places", v)}
           columns={2}

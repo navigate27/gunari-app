@@ -3,10 +3,12 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Minus, Plus } from "lucide-react";
-import { renderScaffold, FORMATS } from "@gunari/core";
+import { artworkLayout, blendLayouts, renderScaffold, FORMATS, type ArtworkLayout } from "@gunari/core";
 import {
   MARKER_HIT,
   clampViewKm,
+  mapPrintScene,
+  zoomScaleFor,
   projectLatLng,
   unprojectCanvas,
   type MapPrintSceneData,
@@ -21,6 +23,8 @@ const MAX_CARD_W = { story: 504, square: 540, landscape: 720 } as const;
 const THEME_WIPE_MS = 800;
 const CHANGE_FADE_MS = 400;
 const REVEAL_MS = 1700;
+const CHANGE_MS = 700;
+const NUDGE_MS = 140;
 const PIN_RADIUS = 0.04;
 
 type Transition = "wipe" | "fade";
@@ -61,6 +65,24 @@ function distToSegment(p: Pt, a: Pt, b: Pt): number {
   return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
 }
 
+/** What the card is showing at one moment: layout, map rotation and zoom. */
+interface View {
+  layout: ArtworkLayout;
+  rotation: number;
+  viewKm: number;
+}
+
+function blendViews(a: View, b: View, t: number): View {
+  if (t >= 1) return b;
+  // Turn the short way round.
+  const turn = ((((b.rotation - a.rotation + Math.PI) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) - Math.PI;
+  return {
+    layout: blendLayouts(a.layout, b.layout, t),
+    rotation: a.rotation + turn * t,
+    viewKm: Math.exp(Math.log(a.viewKm) + (Math.log(b.viewKm) - Math.log(a.viewKm)) * t),
+  };
+}
+
 type Drag =
   | { kind: "pan"; id: number; x: number; y: number; pan: Pt }
   | { kind: "pin"; id: number; grabX: number; grabY: number };
@@ -95,6 +117,14 @@ export function LivePreview({
   const onZoomRef = React.useRef(onZoom);
   onZoomRef.current = onZoom;
   const prevRef = React.useRef<{ input: MapPrintInput; data: MapPrintSceneData | null } | null>(null);
+  const target: View = {
+    layout: artworkLayout(input.format, input.layout),
+    rotation: input.rotation,
+    viewKm: input.viewKm,
+  };
+  const shownRef = React.useRef<View>(target);
+  const tweenRef = React.useRef<{ from: View; to: View; start: number; duration: number } | null>(null);
+  const tweenRaf = React.useRef(0);
   const [pixelW, setPixelW] = React.useState(0);
   const format = FORMATS[input.format];
   const formatRef = React.useRef(input.format);
@@ -104,32 +134,87 @@ export function LivePreview({
   const sizeW = pixelW || FALLBACK_W;
 
   // Paints the current frame from the latest props. Kept in a ref so the
-  // reveal animation can repaint without re-running the effects below.
+  // animations can repaint without re-running the effects below.
   const paintRef = React.useRef<() => void>(() => {});
   paintRef.current = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const shown = shownRef.current;
+    const L = shown.layout;
     const w = sizeW;
-    const h = Math.round((w * format.h) / format.w);
+    const h = Math.round((w * L.h) / L.w);
     canvas.width = w;
     canvas.height = h;
+    // The card follows the layout as it moves between shapes.
+    if (cardRef.current) cardRef.current.style.aspectRatio = `${L.w} / ${L.h}`;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, w, h);
-    ctx.scale(w / format.w, w / format.w);
+    ctx.scale(w / L.w, w / L.w);
     // Nothing drawn yet: still paint the theme, frame and title, with the map
     // held back so the loading ripples have somewhere to start.
     const showEmpty = !geometry || !data;
+    const tweening = tweenRef.current !== null;
+    // Mid-change, redo the projection for the in-between rotation, zoom and slot.
+    const drawn =
+      showEmpty
+        ? emptyGeometry(input)
+        : tweening
+          ? mapPrintScene.project(
+              data,
+              { ...L.slot, zoomScale: zoomScaleFor(data.zoom, shown.viewKm) },
+              shown.rotation,
+            )
+          : geometry;
     renderScaffold(
       ctx,
-      buildMapScaffoldInput(
-        input,
-        showEmpty ? emptyGeometry(input) : geometry,
-        pan,
-        showEmpty ? 0 : revealRef.current,
-      ),
+      buildMapScaffoldInput(input, drawn, pan, showEmpty ? 0 : revealRef.current, tweening ? L : undefined),
     );
   };
+
+  // Layout, format, rotation and zoom glide to their new values instead of jumping.
+  const { format: tFormat, layout: tLayout, rotation: tRotation, viewKm: tViewKm } = input;
+  React.useEffect(() => {
+    const to: View = {
+      layout: artworkLayout(tFormat, tLayout),
+      rotation: tRotation,
+      viewKm: tViewKm,
+    };
+    const from = shownRef.current;
+    const same =
+      from.layout.w === to.layout.w &&
+      from.layout.h === to.layout.h &&
+      from.layout.slot.cx === to.layout.slot.cx &&
+      from.layout.slot.cy === to.layout.slot.cy &&
+      from.layout.title.y === to.layout.title.y &&
+      from.rotation === to.rotation &&
+      from.viewKm === to.viewKm;
+    if (same) return;
+    cancelAnimationFrame(tweenRaf.current);
+    if (prefersReducedMotion() || !data) {
+      tweenRef.current = null;
+      shownRef.current = to;
+      return;
+    }
+    const big =
+      from.layout.w !== to.layout.w ||
+      from.layout.h !== to.layout.h ||
+      from.layout.title.y !== to.layout.title.y ||
+      Math.abs(from.rotation - to.rotation) > 0.35 ||
+      Math.abs(Math.log(from.viewKm / to.viewKm)) > 0.35;
+    tweenRef.current = { from, to, start: performance.now(), duration: big ? CHANGE_MS : NUDGE_MS };
+    const tick = (now: number) => {
+      const tw = tweenRef.current;
+      if (!tw) return;
+      const t = Math.min(1, (now - tw.start) / tw.duration);
+      shownRef.current = blendViews(tw.from, tw.to, easeInOutCubic(t));
+      if (t >= 1) tweenRef.current = null;
+      paintRef.current();
+      if (t < 1) tweenRaf.current = requestAnimationFrame(tick);
+    };
+    tweenRaf.current = requestAnimationFrame(tick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tFormat, tLayout, tRotation, tViewKm]);
 
   // Size the backing store to the displayed size in device pixels, so the
   // preview stays sharp on high-density screens instead of being upscaled.
@@ -165,7 +250,6 @@ export function LivePreview({
         dataChanged ||
         prev.input.shape !== input.shape ||
         prev.input.marker !== input.marker ||
-        prev.input.layout !== input.layout ||
         prev.input.labels !== input.labels ||
         prev.input.showCoordinates !== input.showCoordinates ||
         prev.input.places !== input.places
@@ -226,6 +310,7 @@ export function LivePreview({
     () => () => {
       cancelAnimationFrame(fadeRaf.current);
       cancelAnimationFrame(revealRaf.current);
+      cancelAnimationFrame(tweenRaf.current);
     },
     [],
   );
@@ -370,7 +455,7 @@ export function LivePreview({
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        style={{ aspectRatio: `${format.w} / ${format.h}`, transition: "aspect-ratio 0.5s ease-out" }}
+        style={{ aspectRatio: `${format.w} / ${format.h}` }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
