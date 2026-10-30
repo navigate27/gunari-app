@@ -5,7 +5,12 @@ import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { Facebook, Instagram, Share2 } from "lucide-react";
 import { NightSkyHero } from "@/components/landing/NightSkyHero";
+import { buttonStyles } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
+import { RedditIcon, XIcon } from "@/components/ui/icons";
 import { SITE_URL } from "@/lib/site";
+
+const MotionLink = motion.create(Link);
 
 export default function LandingPage() {
   return (
@@ -15,27 +20,13 @@ export default function LandingPage() {
         <NightSkyHero />
 
         <div className="relative z-10 flex min-h-[100dvh] flex-col px-6 py-10 sm:px-10">
-          <header className="flex items-center justify-between">
+          <header>
             <span className="font-display text-2xl tracking-[0.3em] text-mist">
               GUNARI
             </span>
-            <nav className="hidden sm:flex items-center gap-6 text-[11px] uppercase tracking-[0.2em] text-stone">
-              <span>Memory</span>
-              <span>Stars</span>
-              <span>Story</span>
-            </nav>
           </header>
 
           <section className="flex flex-1 flex-col items-center justify-center text-center">
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.4, ease: "easeOut" }}
-              className="mb-5 text-[11px] uppercase tracking-[0.4em] text-stone"
-            >
-              Memory · Sky · Story
-            </motion.p>
-
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -51,29 +42,31 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.4, ease: "easeOut", delay: 0.3 }}
-              className="mt-6 max-w-md text-sm text-stone leading-relaxed"
+              className="mt-6 max-w-md text-base text-stone leading-relaxed"
             >
               Recreate the night sky from your most unforgettable moments.
-              Choose a date, a place, a feeling — and let Gunari compose a
-              print worth keeping.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
-              className="mt-10 flex flex-col items-center gap-4"
+              className="mt-10"
             >
-              <Link href="/create">
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                  className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full border border-gold/40 bg-gradient-to-r from-gold via-[#E8D5A0] to-gold px-10 font-ui text-base uppercase tracking-wide text-ink shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_8px_30px_-8px_rgba(201,163,90,0.6)] transition-[border-color,box-shadow] duration-300 hover:border-gold/70 hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4),0_12px_40px_-6px_rgba(201,163,90,0.9)]"
-                >
-                  Create Your Gunari
-                </motion.button>
-              </Link>
+              <MotionLink
+                href="/create"
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                className={buttonStyles({
+                  variant: "accent",
+                  size: "lg",
+                  shape: "pill",
+                  className: "px-10",
+                })}
+              >
+                Create Your Gunari
+              </MotionLink>
             </motion.div>
           </section>
         </div>
@@ -82,13 +75,7 @@ export default function LandingPage() {
       {/* Explanation */}
       <section className="bg-ink px-6 py-24 sm:px-10">
         <div className="mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center"
-          >
+          <Reveal className="text-center">
             <p className="text-[11px] uppercase tracking-[0.4em] text-gold">
               The name
             </p>
@@ -97,107 +84,104 @@ export default function LandingPage() {
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-sm text-stone leading-relaxed">
               From gunita, the Tagalog word for memory, and Mayari, the moon
-              goddess of Philippine mythology — Gunari weaves two ideas into
+              goddess of Philippine mythology, Gunari weaves two ideas into
               one: the night you remember, under the moon that watched it
               happen.
             </p>
-          </motion.div>
+          </Reveal>
 
           <div className="mt-16 grid gap-10 sm:grid-cols-3">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            >
-              <h3 className="text-[11px] uppercase tracking-[0.3em] text-gold">
-                Memory
-              </h3>
-              <p className="mt-3 text-sm text-stone leading-relaxed">
-                Choose a date, a time, a place. The night that mattered —
-                preserved exactly as it was.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            >
-              <h3 className="text-[11px] uppercase tracking-[0.3em] text-gold">
-                Stars
-              </h3>
-              <p className="mt-3 text-sm text-stone leading-relaxed">
-                Real astronomical data. The stars, moon, and constellations are
-                rendered in their true positions — scientifically accurate,
-                beautifully composed.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            >
-              <h3 className="text-[11px] uppercase tracking-[0.3em] text-gold">
-                Story
-              </h3>
-              <p className="mt-3 text-sm text-stone leading-relaxed">
-                Add your title and a message. Download a print or share it to
-                your story. Every night tells a story.
-              </p>
-            </motion.div>
+            <Pillar title="Memory" delay={0.1}>
+              Choose a date, a time, a place. The night that mattered,
+              preserved exactly as it was.
+            </Pillar>
+            <Pillar title="Stars" delay={0.2}>
+              Real astronomical data. The stars, moon, and constellations are
+              rendered in their true positions, scientifically accurate and
+              beautifully composed.
+            </Pillar>
+            <Pillar title="Story" delay={0.3}>
+              Add your title and a message. Download a print or share it to
+              your story. Every night tells a story.
+            </Pillar>
           </div>
-
         </div>
       </section>
 
       {/* Share + footer */}
       <section className="bg-ink px-6 pb-12 pt-8 sm:px-10">
         <div className="mx-auto max-w-3xl">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center"
-          >
-            <p className="text-[11px] uppercase tracking-[0.4em] text-gold">
-              Pass it on
-            </p>
-            <h2 className="mt-4 font-display text-[clamp(1.6rem,4.5vw,2.6rem)] leading-tight text-mist text-balance">
+          <Reveal className="text-center">
+            <h2 className="font-display text-[clamp(1.6rem,4.5vw,2.6rem)] leading-tight text-mist text-balance">
               Send a night to remember.
             </h2>
             <p className="mx-auto mt-5 max-w-md text-sm text-stone leading-relaxed">
-              Know someone with a moment worth keeping? Share Gunari — and
-              let them frame the sky they were under.
+              Know someone with a moment worth keeping? Share Gunari and let
+              them frame the sky they were under.
             </p>
             <div className="mt-8 flex items-center justify-center gap-3">
-              <ShareSiteButton label="Share Gunari" onClick={onShareNative}>
+              <IconButton bordered label="Share Gunari" onClick={onShareNative}>
                 <Share2 size={16} />
-              </ShareSiteButton>
-              <ShareSiteButton label="Share on X" onClick={onShareX}>
+              </IconButton>
+              <IconButton bordered label="Share on X" onClick={onShareX}>
                 <XIcon size={16} />
-              </ShareSiteButton>
-              <ShareSiteButton label="Share on Facebook" onClick={onShareFacebook}>
+              </IconButton>
+              <IconButton bordered label="Share on Facebook" onClick={onShareFacebook}>
                 <Facebook size={16} />
-              </ShareSiteButton>
-              <ShareSiteButton label="Share on Instagram" onClick={onShareInstagram}>
+              </IconButton>
+              <IconButton bordered label="Share on Instagram" onClick={onShareInstagram}>
                 <Instagram size={16} />
-              </ShareSiteButton>
-              <ShareSiteButton label="Share on Reddit" onClick={onShareReddit}>
+              </IconButton>
+              <IconButton bordered label="Share on Reddit" onClick={onShareReddit}>
                 <RedditIcon size={16} />
-              </ShareSiteButton>
+              </IconButton>
             </div>
-          </motion.div>
-          <footer className="mt-16 text-center text-[10px] uppercase tracking-[0.3em] text-stone/70">
-            Gunari · v1.0
+          </Reveal>
+          <footer className="mt-16 text-center text-[10px] uppercase tracking-[0.3em] text-stone">
+            &copy; Gunari
           </footer>
         </div>
       </section>
     </main>
+  );
+}
+
+function Reveal({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, ease: "easeOut", delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Pillar({
+  title,
+  delay,
+  children,
+}: {
+  title: string;
+  delay: number;
+  children: ReactNode;
+}) {
+  return (
+    <Reveal delay={delay}>
+      <h3 className="font-display text-2xl text-mist">{title}</h3>
+      <p className="mt-3 text-sm text-stone leading-relaxed">{children}</p>
+    </Reveal>
   );
 }
 
@@ -246,65 +230,4 @@ function onShareInstagram() {
   }
   navigator.clipboard?.writeText(SITE_URL);
   window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
-}
-
-function ShareSiteButton({
-  label,
-  onClick,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      title={label}
-      className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/10 text-mist transition-colors duration-200 hover:border-gold/40 hover:text-gold"
-    >
-      {children}
-    </button>
-  );
-}
-
-function XIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-
-function RedditIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <ellipse cx="12" cy="14.5" rx="8" ry="5.5" />
-      <circle cx="4.3" cy="11.8" r="1.7" />
-      <circle cx="19.7" cy="11.8" r="1.7" />
-      <path d="M12 9 L13.4 3.8 L17.2 4.8" />
-      <circle cx="18.4" cy="5.2" r="1.4" />
-      <path d="M9.2 17.2c1.7 1.1 3.9 1.1 5.6 0" />
-      <circle cx="9" cy="13.6" r="0.6" fill="currentColor" />
-      <circle cx="15" cy="13.6" r="0.6" fill="currentColor" />
-    </svg>
-  );
 }

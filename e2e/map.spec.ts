@@ -19,10 +19,9 @@ test("Map Print flow: load, change theme, save", async ({ page }) => {
   await expect(page.getByRole("button", { name: /^Save$/ })).toBeEnabled({ timeout: 30000 });
   await expect(page.getByRole("button", { name: /Randomize/i })).toBeEnabled({ timeout: 5000 });
 
-  // Change theme to Midnight (click the radio). Theme changes do not re-fetch
-  // (only location/zoom are in the effect deps), so Save stays enabled. The
-  // radio input is visually hidden via `sr-only`, so force the click.
-  await page.getByRole("radio", { name: /Midnight/i }).click({ force: true });
+  // Change theme to Midnight. Theme changes do not re-fetch (only
+  // location/zoom are in the effect deps), so Save stays enabled.
+  await page.getByRole("button", { name: /Midnight/i }).click();
 
   // Click Save and expect a download.
   const downloadPromise = page.waitForEvent("download", { timeout: 10000 });
