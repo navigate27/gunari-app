@@ -29,6 +29,11 @@ describe("landing page", () => {
     expect(cta.querySelector("button")).toBeNull();
   });
 
+  it("links to the map print from the hero", () => {
+    render(<LandingPage />);
+    expect(screen.getByRole("link", { name: /print a map/i })).toHaveAttribute("href", "/map");
+  });
+
   it("offers every share action as a labelled button", () => {
     render(<LandingPage />);
     for (const label of [

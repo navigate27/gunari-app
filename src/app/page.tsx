@@ -67,6 +67,15 @@ export default function LandingPage() {
               >
                 Create Your Gunari
               </MotionLink>
+              <p className="mt-5 text-sm text-stone">
+                Or{" "}
+                <Link
+                  href="/map"
+                  className="text-mist underline underline-offset-4 hover:text-gold"
+                >
+                  print a map of a place you love
+                </Link>
+              </p>
             </motion.div>
           </section>
         </div>
