@@ -10,19 +10,23 @@ interface Rec {
   strokes: { color: string; width: number }[];
   translates: [number, number][];
   lineTos: number;
+  stops: string[];
+  texts: string[];
 }
 
 function recorder() {
-  const rec: Rec = { fills: [], strokes: [], translates: [], lineTos: 0 };
+  const rec: Rec = { fills: [], strokes: [], translates: [], lineTos: 0, stops: [], texts: [] };
   const ctx = {
     fillStyle: "", strokeStyle: "", lineWidth: 1, globalAlpha: 1,
     shadowColor: "", shadowBlur: 0, shadowOffsetY: 0, lineCap: "", lineJoin: "",
     font: "", textAlign: "", textBaseline: "",
     save() {}, restore() {}, beginPath() {}, closePath() {}, clip() {}, rect() {}, arc() {},
-    moveTo() {}, bezierCurveTo() {}, fillText() {}, scale() {},
+    moveTo() {}, bezierCurveTo() {}, scale() {},
+    fillText(t: string) { rec.texts.push(t); },
     lineTo() { rec.lineTos++; },
     translate(x: number, y: number) { rec.translates.push([x, y]); },
-    createLinearGradient: () => ({ addColorStop() {} }),
+    createLinearGradient: () => ({ addColorStop(_o: number, c: string) { rec.stops.push(c); } }),
+    fillRect() {},
     createRadialGradient: () => ({ addColorStop() {} }),
     fill() { rec.fills.push(String(this.fillStyle)); },
     stroke() { rec.strokes.push({ color: String(this.strokeStyle), width: this.lineWidth }); },
@@ -115,5 +119,47 @@ describe("renderMap pin position", () => {
     const [tx, ty] = rec.translates[rec.translates.length - 2];
     expect(tx).toBeCloseTo(nx * 1080, 6);
     expect(ty).toBeCloseTo(ny * 1920, 6);
+  });
+});
+
+describe("renderMap background", () => {
+  it("paints the map's own background from the map theme, not the card", () => {
+    const { ctx, rec } = recorder();
+    renderMap(ctx, geom, MAP_THEMES.nocturne, { ...input, style: "nocturne" }, viewport, 1080, 1920);
+    expect(rec.stops.slice(0, 2)).toEqual([MAP_THEMES.nocturne.background.top, MAP_THEMES.nocturne.background.bottom]);
+  });
+});
+
+describe("renderMap labels", () => {
+  const labelGeom: ProjectedMapGeometry = {
+    ...geom,
+    labels: [
+      { text: "Binondo", x: 0.5, y: 0.5, class: "place" },
+      { text: "Intramuros", x: 0.502, y: 0.501, class: "place" },
+      { text: "Ermita", x: 0.3, y: 0.3, class: "place" },
+      { text: "Nowhere", x: 0, y: 0, class: "road" },
+    ],
+  };
+
+  it("draws labels that fit, skips ones that collide, and skips unplaced ones", () => {
+    const { ctx, rec } = recorder();
+    renderMap(ctx, labelGeom, MAP_THEMES.atlas, { ...input, labels: true }, viewport, 1080, 1920);
+    expect(rec.texts).toEqual(["Binondo", "Ermita"]);
+  });
+});
+
+describe("renderMap stroke scale", () => {
+  const widthOfMotorway = (zoomScale: number) => {
+    const { ctx, rec } = recorder();
+    renderMap(ctx, { ...geom, zoomScale }, MAP_THEMES.atlas, input, viewport, 1080, 1920);
+    return rec.strokes.find((s) => s.color === MAP_THEMES.atlas.road.motorway.color)!.width;
+  };
+
+  it("thickens roads when zoomed in, thins them when zoomed out, within limits", () => {
+    const base = MAP_THEMES.atlas.road.motorway.width;
+    expect(widthOfMotorway(1)).toBeCloseTo(base, 6);
+    expect(widthOfMotorway(4)).toBeCloseTo(base * 2, 6);
+    expect(widthOfMotorway(100)).toBeCloseTo(base * 2.2, 6);
+    expect(widthOfMotorway(0.1)).toBeCloseTo(base * 0.85, 6);
   });
 });

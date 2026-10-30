@@ -54,10 +54,10 @@ describe("parseOsm", () => {
     expect(placeLabels[0].text).toBe("Manila");
   });
 
-  it("leaves label x/y at 0,0 (projection fills them later)", () => {
+  it("keeps a place label's own lng/lat in x/y so projection can position it", () => {
     const manila = geom.labels.find((l) => l.text === "Manila");
-    expect(manila?.x).toBe(0);
-    expect(manila?.y).toBe(0);
+    expect(manila?.x).toBeCloseTo(120.9842, 4);
+    expect(manila?.y).toBeCloseTo(14.5995, 4);
   });
 
   it("preserves raw lat/lng in road/polygon points (unprojected)", () => {

@@ -20,6 +20,7 @@ function mockCtx() {
       clip: () => calls.push("clip"),
       translate: (x: number, y: number) => calls.push(`translate:${x},${y}`),
       scale: () => {},
+      fillRect: () => calls.push("fillRect"),
       createRadialGradient: () => ({ addColorStop: () => {} }),
       shadowColor: "", shadowBlur: 0, shadowOffsetY: 0, lineCap: "", lineJoin: "",
       fill: () => calls.push("fill"),

@@ -71,7 +71,8 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
 
   for (const el of json.elements) {
     if (el.type === "node" && el.tags?.place && PLACE_CLASSES.includes(el.tags.place)) {
-      labels.push({ text: el.tags.name ?? "—", x: 0, y: 0, class: "place" });
+      // Keep the node's own lng/lat so projection can put the label where the place is.
+      labels.push({ text: el.tags.name ?? "—", x: el.lon, y: el.lat, class: "place" });
       continue;
     }
     if (el.type !== "way" || !el.geometry) continue;

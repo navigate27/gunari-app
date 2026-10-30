@@ -66,13 +66,15 @@ export function projectGeometry(
     name: p.name,
   }));
 
-  // Labels: road labels go at the road's midpoint; place labels at the
-  // place node's projected coords. (Place coords are stored in the parser
-  // as x=0, y=0 — the parser doesn't project. For v1 we approximate place
-  // positions as the bbox center; refine in a later task if needed.)
+  // Labels: road labels go at the road's midpoint; place labels at the place
+  // node's own position (the parser keeps its lng/lat in x/y). A label with no
+  // position (0, 0) falls back to the bbox centre.
   const labels: ProjectedLabel[] = geom.labels.map((l) => {
     if (l.class === "place") {
-      const [cx, cy] = place(projectPoint((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2));
+      const known = l.x !== 0 || l.y !== 0;
+      const [cx, cy] = place(
+        projectPoint(known ? l.x : (bbox[0] + bbox[2]) / 2, known ? l.y : (bbox[1] + bbox[3]) / 2)
+      );
       return { text: l.text, x: cx, y: cy, class: "place" };
     }
     // Road label: find the road with this name, take its midpoint.
@@ -102,15 +104,34 @@ export function projectGeometry(
     }
   }
 
-  // Drop points outside [-0.1, 1.1] overscan after rotation.
-  function inOverscan(p: [number, number]): boolean {
-    return p[0] >= -0.1 && p[0] <= 1.1 && p[1] >= -0.1 && p[1] <= 1.1;
+  // Drop lines that lie entirely outside the canvas (plus overscan). Whole
+  // lines only: removing single points would cut a road that merely leaves the
+  // canvas and comes back, or one whose few points are all far off-screen but
+  // whose segments still cross the slot.
+  function visible(pts: [number, number][]): boolean {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const [x, y] of pts) {
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+    return maxX >= -0.1 && minX <= 1.1 && maxY >= -0.1 && minY <= 1.1;
   }
 
-  for (const r of roads) r.points = r.points.filter(inOverscan);
-  for (let i = 0; i < waterways.length; i++) {
-    waterways[i] = waterways[i].filter(inOverscan);
-  }
+  const visibleRoads = roads.filter((r) => visible(r.points));
+  const visibleWaterways = waterways.filter(visible);
 
-  return { roads, water, waterways, parks, built, green, labels, bbox, rotation };
+  return {
+    roads: visibleRoads,
+    water,
+    waterways: visibleWaterways,
+    parks,
+    built,
+    green,
+    labels,
+    bbox,
+    rotation,
+    zoomScale: viewport.zoomScale ?? 1,
+  };
 }

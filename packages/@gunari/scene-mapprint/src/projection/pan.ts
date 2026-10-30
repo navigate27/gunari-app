@@ -1,5 +1,5 @@
 import { FORMATS, type SceneViewport, type ZoomId } from "@gunari/core";
-import { zoomKmSpan } from "./viewport";
+import { naturalViewKm } from "./viewport";
 
 const KM_PER_LAT_DEG = 110.574;
 const KM_PER_LNG_DEG_AT_EQUATOR = 111.32;
@@ -20,8 +20,9 @@ export function panLocation(
 ): { lat: number; lng: number } {
   const w = viewport.canvasW ?? FORMATS.story.w;
   const h = viewport.canvasH ?? FORMATS.story.h;
-  const side = 2 * viewport.r * Math.min(w, h) * Math.SQRT2;
-  const kmPerPx = zoomKmSpan(zoom) / side;
+  // The slot's diameter is 2r px and shows viewKm of ground.
+  const viewKm = naturalViewKm(zoom) / (viewport.zoomScale ?? 1);
+  const kmPerPx = viewKm / (2 * viewport.r * Math.min(w, h));
 
   const sx = panX * w;
   const sy = panY * h;

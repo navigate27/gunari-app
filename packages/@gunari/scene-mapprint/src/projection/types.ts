@@ -29,4 +29,6 @@ export interface ProjectedMapGeometry {
   labels: ProjectedLabel[];
   bbox: BBox;
   rotation: number;
+  /** Enlargement applied when projecting; needed to map pins and drags back to the ground. */
+  zoomScale?: number;
 }

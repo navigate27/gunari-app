@@ -52,4 +52,6 @@ export interface SceneViewport {
   panY?: number;
   /** Drawing progress 0..1 for the build-up animation. Omitted = fully drawn. */
   reveal?: number;
+  /** Enlarges (>1) or shrinks (<1) the map inside the slot. Omitted = 1. */
+  zoomScale?: number;
 }

@@ -11,5 +11,6 @@ export * from "./projection/frame";
 export * from "./shapes/shapes";
 export * from "./markers/markers";
 export * from "./styles/themes";
+export * from "./styles/cards";
 export * from "./render/render";
 export * from "./scene";

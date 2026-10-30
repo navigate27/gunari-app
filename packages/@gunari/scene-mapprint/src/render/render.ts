@@ -80,6 +80,8 @@ export function renderMap(
   const r = viewport.r * Math.min(canvasW, canvasH);
   const reveal = clamp01(viewport.reveal ?? 1);
   const animating = reveal < 1;
+  // Strokes thicken a little as the map is zoomed in, and thin when zoomed out.
+  const strokeScale = Math.min(2.2, Math.max(0.85, Math.sqrt(geom.zoomScale ?? 1)));
 
   function toPx(p: Pt): Pt {
     return [p[0] * canvasW, p[1] * canvasH];
@@ -125,6 +127,14 @@ export function renderMap(
   ctx.save();
   // Shape mask
   SHAPES[input.shape].apply(ctx, cx, cy, r);
+  // The map has its own background, separate from the card behind it. The
+  // gradient spans the whole canvas, so when the card uses the same colours
+  // the two are seamless.
+  const ground = ctx.createLinearGradient(0, 0, 0, canvasH);
+  ground.addColorStop(0, palette.background.top);
+  ground.addColorStop(1, palette.background.bottom);
+  ctx.fillStyle = ground;
+  ctx.fillRect(0, 0, canvasW, canvasH);
   // Pan moves the map under the fixed mask.
   ctx.translate((viewport.panX ?? 0) * canvasW, (viewport.panY ?? 0) * canvasH);
 
@@ -160,7 +170,7 @@ export function renderMap(
   ctx.strokeStyle = palette.waterway;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  ctx.lineWidth = palette.waterwayWidth ?? 2;
+  ctx.lineWidth = (palette.waterwayWidth ?? 2) * strokeScale;
   const waterProgress = animating ? smooth((reveal - 0.02) / 0.45) : 1;
   for (const w of geom.waterways) {
     const pts = w.map(toPx);
@@ -196,8 +206,8 @@ export function renderMap(
       });
     };
 
-    if (casing) strokeAll(casing.color, style.width + casing.extra);
-    strokeAll(style.color, style.width);
+    if (casing) strokeAll(casing.color, (style.width + casing.extra) * strokeScale);
+    strokeAll(style.color, style.width * strokeScale);
   }
 
   // 5. Labels (when input.labels)
@@ -208,8 +218,18 @@ export function renderMap(
     ctx.font = `400 ${size}px "Geist", sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+    // Draw each label only if it doesn't collide with one already placed.
+    const placed: { x: number; y: number; w: number; h: number }[] = [];
     for (const l of geom.labels) {
-      ctx.fillText(l.text, l.x * canvasW, l.y * canvasH);
+      if (l.x === 0 && l.y === 0) continue;
+      const x = l.x * canvasW;
+      const y = l.y * canvasH;
+      const w = l.text.length * size * 0.55;
+      const h = size * 1.2;
+      const clash = placed.some((p) => Math.abs(p.x - x) < (p.w + w) / 2 && Math.abs(p.y - y) < (p.h + h) / 2);
+      if (clash) continue;
+      placed.push({ x, y, w, h });
+      ctx.fillText(l.text, x, y);
     }
     ctx.globalAlpha = 1;
   }
@@ -221,7 +241,7 @@ export function renderMap(
   // otherwise the centre of the slot.
   const markerR = Math.min(canvasW, canvasH) * 0.04;
   const [px, py] = input.pin
-    ? projectLatLng(geom.bbox, viewport, geom.rotation, input.pin.lat, input.pin.lng)
+    ? projectLatLng(geom.bbox, { ...viewport, zoomScale: geom.zoomScale }, geom.rotation, input.pin.lat, input.pin.lng)
     : [viewport.cx, viewport.cy];
   const dropIn = animating ? clamp01((reveal - 0.82) / 0.18) : 1;
   MARKERS[input.marker].draw(ctx, px * canvasW, py * canvasH, markerR, palette, dropIn);

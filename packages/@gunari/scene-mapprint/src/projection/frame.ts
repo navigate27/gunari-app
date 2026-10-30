@@ -32,7 +32,7 @@ export function makeFrame(viewport: SceneViewport, rotation: number): Frame {
     h,
     cx: viewport.cx,
     cy: viewport.cy,
-    side: 2 * viewport.r * Math.min(w, h) * Math.SQRT2,
+    side: 2 * viewport.r * Math.min(w, h) * Math.SQRT2 * (viewport.zoomScale ?? 1),
     rotation,
     panX: viewport.panX ?? 0,
     panY: viewport.panY ?? 0,
