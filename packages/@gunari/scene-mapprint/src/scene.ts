@@ -28,6 +28,10 @@ const cache = new MapDataCache({
   storage: typeof indexedDB !== "undefined" ? new IndexedDBCacheStorage() : undefined,
 });
 
+function hasFeatures(g: MapGeometry): boolean {
+  return g.roads.length + g.water.length + g.waterways.length + g.parks.length > 0;
+}
+
 export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
   id: "mapprint",
 
@@ -45,15 +49,16 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> = {
     const { lat, lng } = input.location;
     const bbox = bboxForZoom(lat, lng, input.zoom);
     const cached = await cache.getWithPersistence(bbox);
-    if (cached) return { geometry: cached, bbox, zoom: input.zoom };
+    // An empty entry may be left over from a failed fetch, so refetch it.
+    if (cached && hasFeatures(cached)) return { geometry: cached, bbox, zoom: input.zoom };
 
     let osm: OsmResponse;
     try {
       osm = await fetchOsm(bbox, signal);
     } catch (err) {
       if (err instanceof OverpassError && err.message === "aborted") throw err;
+      // Not cached: a transient failure must not stick as a permanently blank map.
       const empty: MapGeometry = { bbox, roads: [], water: [], waterways: [], parks: [], labels: [] };
-      await cache.setWithPersistence(bbox, empty);
       return { geometry: empty, bbox, zoom: input.zoom };
     }
     const geometry = parseOsm(osm, bbox);
