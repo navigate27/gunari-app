@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Minus, Plus } from "lucide-react";
 import { renderScaffold, FORMATS } from "@gunari/core";
 import {
-  PIN_BODY,
+  MARKER_HIT,
   clampViewKm,
   projectLatLng,
   unprojectCanvas,
@@ -167,7 +167,8 @@ export function LivePreview({
         prev.input.marker !== input.marker ||
         prev.input.layout !== input.layout ||
         prev.input.labels !== input.labels ||
-        prev.input.showCoordinates !== input.showCoordinates
+        prev.input.showCoordinates !== input.showCoordinates ||
+        prev.input.places !== input.places
       ) {
         transition = "fade";
       }
@@ -268,9 +269,10 @@ export function LivePreview({
     const rect = e.currentTarget.getBoundingClientRect();
     const rCard = Math.min(format.w, format.h) * PIN_RADIUS * (rect.width / format.w);
     const tipPx = { x: tip.x * rect.width, y: tip.y * rect.height };
-    const body = { x: tipPx.x, y: tipPx.y + PIN_BODY.centerY * rCard };
+    const hit = MARKER_HIT[input.marker];
+    const body = { x: tipPx.x, y: tipPx.y + hit.centerY * rCard };
     const pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    return distToSegment(pointer, body, tipPx) <= PIN_BODY.radius * rCard + 8;
+    return distToSegment(pointer, body, tipPx) <= hit.radius * rCard + 8;
   };
 
   const canPan = Boolean(onPan && geometry);

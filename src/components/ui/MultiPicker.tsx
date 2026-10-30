@@ -56,13 +56,16 @@ export function MultiPicker<T extends string>({
               <span
                 className={cn(
                   "flex h-5 w-5 items-center justify-center rounded-full border transition-colors",
-                  active
-                    ? "border-gold/70 bg-gold/20"
-                    : "border-line-strong bg-transparent"
+                  !o.swatch &&
+                    (active ? "border-gold/70 bg-gold/20" : "border-line-strong bg-transparent")
                 )}
+                style={o.swatch ? { borderColor: o.swatch } : undefined}
               >
                 {active && (
-                  <span className="h-2 w-2 rounded-full bg-gold" />
+                  <span
+                    className={cn("h-2 w-2 rounded-full", !o.swatch && "bg-gold")}
+                    style={o.swatch ? { background: o.swatch } : undefined}
+                  />
                 )}
               </span>
               <span

@@ -85,4 +85,22 @@ describe("Customizer", () => {
     const km = update.mock.calls.find((c) => c[0] === "viewKm")![1] as number;
     expect(km).toBeCloseTo(0.25, 2);
   });
+
+  it("lets you choose which kinds of places to show", () => {
+    const update = vi.fn();
+    render(<Customizer input={{ ...baseInput, places: ["food"] }} update={update} updateLocation={vi.fn()} />);
+    const group = screen.getByRole("group", { name: "Places" });
+    expect(group).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /food & drink/i })).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(screen.getByRole("button", { name: /landmarks/i }));
+    expect(update).toHaveBeenCalledWith("places", ["food", "landmarks"]);
+  });
+
+  it("offers distinct pin shapes, not just inner symbols", () => {
+    render(<Customizer input={baseInput} update={vi.fn()} updateLocation={vi.fn()} />);
+    const marker = screen.getByRole("group", { name: /marker/i });
+    for (const label of ["Pin", "Ring", "Heart", "Star", "Home"]) {
+      expect(marker).toHaveTextContent(label);
+    }
+  });
 });

@@ -3,11 +3,12 @@
 import * as React from "react";
 import { LocationInput } from "@/components/create/LocationInput";
 import { Input, Label } from "@/components/ui/Input";
+import { MultiPicker } from "@/components/ui/MultiPicker";
 import { Picker, type PickerOption } from "@/components/ui/Picker";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Switch } from "@/components/ui/Switch";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
-import { FORMATS, FORMAT_ORDER, type FormatId, type SceneInput } from "@gunari/core";
+import { FORMATS, FORMAT_ORDER, type FormatId, type PlaceCategory, type SceneInput } from "@gunari/core";
 import type { CardStyleId } from "@gunari/scene-mapprint";
 import {
   CARD_LABELS,
@@ -45,15 +46,18 @@ const SHAPES: { value: SceneInput["shape"]; label: string }[] = [
   { value: "heart", label: "Heart" },
 ];
 const MARKERS: { value: SceneInput["marker"]; label: string }[] = [
-  { value: "solid", label: "Solid" },
+  { value: "solid", label: "Pin" },
   { value: "ring", label: "Ring" },
   { value: "heart", label: "Heart" },
   { value: "star", label: "Star" },
+  { value: "home", label: "Home" },
 ];
-const ZOOMS: { value: SceneInput["zoom"]; label: string }[] = [
-  { value: "neighborhood", label: "Neighborhood" },
-  { value: "district", label: "District" },
-  { value: "city", label: "City" },
+const PLACE_OPTIONS: PickerOption<PlaceCategory>[] = [
+  { value: "food", label: "Food & drink", swatch: "#e0703a" },
+  { value: "shops", label: "Shops", swatch: "#3f7fd9" },
+  { value: "landmarks", label: "Landmarks", swatch: "#d0443e" },
+  { value: "lodging", label: "Lodging", swatch: "#8a5cc8" },
+  { value: "community", label: "Community", swatch: "#2f9a6a" },
 ];
 const CARD_OPTIONS: PickerOption<CardStyleId>[] = CARD_ORDER.map((id) => {
   if (id === "match") return { value: id, label: CARD_LABELS[id] };
@@ -152,6 +156,21 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
       </section>
       <ZoomField value={input.viewKm} onChange={(v) => update("viewKm", v)} />
       <RotationField value={input.rotation} onChange={(v) => update("rotation", v)} />
+      <section>
+        <SectionTitle>Places</SectionTitle>
+        <MultiPicker
+          label="Places"
+          options={PLACE_OPTIONS}
+          value={[...(input.places ?? [])]}
+          onChange={(v) => update("places", v)}
+          columns={2}
+        />
+        <p className="mt-2 text-[11px] leading-relaxed text-stone">
+          {input.zoom === "city"
+            ? "Zoom in a little to see shops, food and landmarks by name."
+            : "Named shops, food, landmarks, hotels and schools, from OpenStreetMap."}
+        </p>
+      </section>
       <Switch label="Labels" value={input.labels} onChange={(v) => update("labels", v)} />
       <Switch
         label="Coordinates"

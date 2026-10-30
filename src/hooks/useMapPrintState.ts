@@ -65,6 +65,7 @@ const DEFAULT_INPUT: MapPrintInput = {
   format: "story",
   viewKm: naturalViewKm("district"),
   card: "match",
+  places: [],
 };
 
 const DEBOUNCE_MS = 250;
