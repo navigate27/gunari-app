@@ -18,7 +18,7 @@ const ENDPOINTS = [
   "https://overpass-api.de/api/interpreter",
   "https://overpass.komoot.io/api/interpreter",
   "https://overpass.openstreetmap.fr/api/interpreter",
-  "https://overpass.osm.ch/api/interpreter",
+  "https://overpass-api.de/api/interpreter",
 ];
 
 function buildQuery(bbox) {

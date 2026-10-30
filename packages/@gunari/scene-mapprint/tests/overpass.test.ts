@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { fetchOsm, OverpassError } from "../src/data/overpass";
+import { fetchOsm, OVERPASS_ENDPOINTS, OverpassError } from "../src/data/overpass";
 import type { BBox } from "../src/interpret/types";
 
 const bbox: BBox = [120.95, 14.58, 121.02, 14.63];
@@ -11,6 +11,14 @@ function okResponse(json: unknown) {
 function failResponse(status: number) {
   return { ok: false, status };
 }
+
+describe("OVERPASS_ENDPOINTS", () => {
+  it("only lists mirrors with worldwide coverage", () => {
+    // overpass.osm.ch serves Switzerland only: it answers 200 with no elements
+    // elsewhere and could win the race with an empty map.
+    expect(OVERPASS_ENDPOINTS.some((u) => u.includes("osm.ch"))).toBe(false);
+  });
+});
 
 describe("fetchOsm", () => {
   let mockFetch: ReturnType<typeof vi.fn>;

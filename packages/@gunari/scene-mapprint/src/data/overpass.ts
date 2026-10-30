@@ -5,7 +5,7 @@ import { buildOverpassQuery } from "./query";
 export const OVERPASS_ENDPOINTS = [
   "https://overpass.komoot.io/api/interpreter",
   "https://overpass.openstreetmap.fr/api/interpreter",
-  "https://overpass.osm.ch/api/interpreter",
+  "https://overpass-api.de/api/interpreter",
 ] as const;
 
 const CLIENT_TIMEOUT_MS = 10_000;
