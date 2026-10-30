@@ -131,6 +131,7 @@ export default function MapPage() {
                 onPan={setPan}
                 onPanEnd={commitPan}
                 onPinChange={(pin) => update("pin", pin)}
+                onZoom={(km) => update("viewKm", km)}
               />
             </div>
           </div>

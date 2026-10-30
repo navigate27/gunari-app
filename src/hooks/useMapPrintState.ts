@@ -2,7 +2,17 @@
 
 import * as React from "react";
 import { artworkLayout, type FormatId, type SceneInput, type SceneViewport } from "@gunari/core";
-import { mapPrintScene, panLocation, type MapPrintSceneData, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
+import {
+  type CardStyleId,
+  clampViewKm,
+  mapPrintScene,
+  naturalViewKm,
+  panLocation,
+  tierForViewKm,
+  zoomScaleFor,
+  type MapPrintSceneData,
+  type ProjectedMapGeometry,
+} from "@gunari/scene-mapprint";
 import { pickRandomPair } from "@/lib/content/pairs";
 
 export type MapPrintInput = SceneInput & {
@@ -10,7 +20,22 @@ export type MapPrintInput = SceneInput & {
   message?: string;
   showCoordinates: boolean;
   format: FormatId;
+  /** Diameter of the map slot in km. `zoom` is the data tier derived from it. */
+  viewKm: number;
+  /** Card background and text colours; "match" follows the map theme. */
+  card: CardStyleId;
 };
+
+/** The slot for the current format and layout, enlarged for the chosen zoom. */
+export function mapViewport(
+  input: Pick<MapPrintInput, "layout" | "format" | "viewKm">,
+  dataTier: SceneInput["zoom"],
+): SceneViewport {
+  return {
+    ...MAP_PREVIEW_VIEWPORT(input.layout, input.format),
+    zoomScale: zoomScaleFor(dataTier, input.viewKm),
+  };
+}
 
 export function MAP_PREVIEW_VIEWPORT(
   layout: SceneInput["layout"],
@@ -38,6 +63,8 @@ const DEFAULT_INPUT: MapPrintInput = {
   layout: "classic",
   showCoordinates: false,
   format: "story",
+  viewKm: naturalViewKm("district"),
+  card: "match",
 };
 
 const DEBOUNCE_MS = 250;
@@ -110,13 +137,20 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
   // Geometry derived from data + rotation + layout (recomputed on each render).
   const geometry: ProjectedMapGeometry | null = React.useMemo(() => {
     if (!data) return null;
-    const viewport = MAP_PREVIEW_VIEWPORT(input.layout, input.format);
+    // Scale by the data's own tier: during a reload the old tier is still on screen.
+    const viewport = mapViewport(input, data.zoom);
     return mapPrintScene.project(data, viewport, input.rotation);
-  }, [data, input.rotation, input.layout, input.format]);
+  }, [data, input.rotation, input.layout, input.format, input.viewKm]);
 
   const update = React.useCallback(
     <K extends keyof MapPrintInput>(key: K, value: MapPrintInput[K]) => {
-      setInput((prev) => ({ ...prev, [key]: value }));
+      setInput((prev) => {
+        if (key === "viewKm") {
+          const viewKm = clampViewKm(value as number);
+          return { ...prev, viewKm, zoom: tierForViewKm(viewKm) };
+        }
+        return { ...prev, [key]: value };
+      });
     },
     [],
   );
@@ -142,7 +176,7 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
     const next = panLocation(
       cur.location,
       cur.zoom,
-      MAP_PREVIEW_VIEWPORT(cur.layout, cur.format),
+      mapViewport(cur, cur.zoom),
       cur.rotation,
       x,
       y,
@@ -160,12 +194,14 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
       const markers: SceneInput["marker"][] = ["solid", "ring", "heart", "star"];
       const zooms: SceneInput["zoom"][] = ["neighborhood", "district", "city"];
       const layouts: SceneInput["layout"][] = ["classic", "poster"];
+      const zoom = pick(zooms.filter((z) => z !== prev.zoom));
       return {
         ...prev,
         style: pick(themes.filter((t) => t !== prev.style)),
         shape: pick(shapes.filter((s) => s !== prev.shape)),
         marker: pick(markers.filter((m) => m !== prev.marker)),
-        zoom: pick(zooms.filter((z) => z !== prev.zoom)),
+        zoom,
+        viewKm: naturalViewKm(zoom),
         rotation: Math.random() * Math.PI * 2,
         labels: !prev.labels,
         layout: pick(layouts.filter((l) => l !== prev.layout)),

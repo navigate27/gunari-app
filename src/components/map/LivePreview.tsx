@@ -2,17 +2,18 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Minus, Plus } from "lucide-react";
 import { renderScaffold, FORMATS } from "@gunari/core";
 import {
   PIN_BODY,
-  getMapTheme,
+  clampViewKm,
   projectLatLng,
   unprojectCanvas,
   type MapPrintSceneData,
   type ProjectedMapGeometry,
 } from "@gunari/scene-mapprint";
 import { MAP_PREVIEW_VIEWPORT, type MapPrintInput } from "@/hooks/useMapPrintState";
-import { buildMapScaffoldInput, emptyGeometry } from "@/lib/render/map-scaffold";
+import { buildMapScaffoldInput, cardPalette, emptyGeometry } from "@/lib/render/map-scaffold";
 import { diagonalClipPath, easeInOutCubic } from "@/lib/render/transitions";
 
 const FALLBACK_W = 540;
@@ -36,7 +37,11 @@ export interface LivePreviewProps {
   onPanEnd?: () => void;
   /** Called while the pin is dragged to a new spot. */
   onPinChange?: (pin: { lat: number; lng: number }) => void;
+  /** Called with the new slot diameter in km (buttons, scroll wheel, pinch). */
+  onZoom?: (viewKm: number) => void;
 }
+
+const ZOOM_STEP = 1.45;
 
 const NO_PAN: Pt = { x: 0, y: 0 };
 
@@ -60,6 +65,11 @@ type Drag =
   | { kind: "pan"; id: number; x: number; y: number; pan: Pt }
   | { kind: "pin"; id: number; grabX: number; grabY: number };
 
+interface Pinch {
+  startDist: number;
+  startKm: number;
+}
+
 export function LivePreview({
   input,
   data,
@@ -69,6 +79,7 @@ export function LivePreview({
   onPan,
   onPanEnd,
   onPinChange,
+  onZoom,
 }: LivePreviewProps) {
   const cardRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
@@ -77,6 +88,12 @@ export function LivePreview({
   const revealRaf = React.useRef(0);
   const revealRef = React.useRef(1);
   const dragRef = React.useRef<Drag | null>(null);
+  const pointersRef = React.useRef(new Map<number, Pt>());
+  const pinchRef = React.useRef<Pinch | null>(null);
+  const viewKmRef = React.useRef(input.viewKm);
+  viewKmRef.current = input.viewKm;
+  const onZoomRef = React.useRef(onZoom);
+  onZoomRef.current = onZoom;
   const prevRef = React.useRef<{ input: MapPrintInput; data: MapPrintSceneData | null } | null>(null);
   const [pixelW, setPixelW] = React.useState(0);
   const format = FORMATS[input.format];
@@ -143,7 +160,7 @@ export function LivePreview({
     // Snapshot the frame being replaced before the canvas is repainted.
     let transition: Transition | null = null;
     if (prev && overlay && prev.input.format === input.format && canvas.width === sizeW && !reduced) {
-      if (prev.input.style !== input.style) transition = "wipe";
+      if (prev.input.style !== input.style || prev.input.card !== input.card) transition = "wipe";
       else if (
         dataChanged ||
         prev.input.shape !== input.shape ||
@@ -212,18 +229,36 @@ export function LivePreview({
     [],
   );
 
+  // Scroll wheel / trackpad pinch zooms. A native listener so the page doesn't scroll too.
+  const hasMap = Boolean(geometry);
+  React.useEffect(() => {
+    const el = cardRef.current;
+    if (!el || !hasMap) return;
+    const onWheel = (e: WheelEvent) => {
+      const zoom = onZoomRef.current;
+      if (!zoom) return;
+      e.preventDefault();
+      const speed = e.ctrlKey ? 0.01 : 0.0015;
+      zoom(clampViewKm(viewKmRef.current * Math.exp(e.deltaY * speed)));
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [hasMap]);
+
+  // The slot as the map is currently drawn: zoomed and panned.
+  const drawnViewport = () => ({
+    ...MAP_PREVIEW_VIEWPORT(input.layout, input.format),
+    zoomScale: geometry?.zoomScale,
+    panX: pan.x,
+    panY: pan.y,
+  });
+
   // Where the pin's tip is, in canvas-normalized coordinates.
   const pinTip = (): Pt | null => {
     if (!geometry) return null;
     const slot = MAP_PREVIEW_VIEWPORT(input.layout, input.format);
     if (!input.pin) return { x: slot.cx, y: slot.cy };
-    const [x, y] = projectLatLng(
-      geometry.bbox,
-      { ...slot, panX: pan.x, panY: pan.y },
-      geometry.rotation,
-      input.pin.lat,
-      input.pin.lng,
-    );
+    const [x, y] = projectLatLng(geometry.bbox, drawnViewport(), geometry.rotation, input.pin.lat, input.pin.lng);
     return { x, y };
   };
 
@@ -242,6 +277,14 @@ export function LivePreview({
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!geometry) return;
+    pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointersRef.current.size === 2 && onZoom) {
+      // A second finger turns the gesture into a pinch zoom.
+      const [a, b] = [...pointersRef.current.values()];
+      pinchRef.current = { startDist: Math.hypot(a.x - b.x, a.y - b.y) || 1, startKm: input.viewKm };
+      dragRef.current = null;
+      return;
+    }
     if (onPinChange && hitsPin(e)) {
       const tip = pinTip()!;
       const rect = e.currentTarget.getBoundingClientRect();
@@ -260,6 +303,16 @@ export function LivePreview({
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (pointersRef.current.has(e.pointerId)) {
+      pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    }
+    const pinch = pinchRef.current;
+    if (pinch && pointersRef.current.size >= 2) {
+      const [a, b] = [...pointersRef.current.values()];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      onZoom?.(clampViewKm((pinch.startKm * pinch.startDist) / dist));
+      return;
+    }
     const d = dragRef.current;
     const rect = e.currentTarget.getBoundingClientRect();
     if (!d) {
@@ -288,12 +341,12 @@ export function LivePreview({
       x = slot.cx + (dx / dist) * (limit / format.w);
       y = slot.cy + (dy / dist) * (limit / format.h);
     }
-    onPinChange?.(
-      unprojectCanvas(geometry.bbox, { ...slot, panX: pan.x, panY: pan.y }, geometry.rotation, [x, y]),
-    );
+    onPinChange?.(unprojectCanvas(geometry.bbox, drawnViewport(), geometry.rotation, [x, y]));
   };
 
   const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    pointersRef.current.delete(e.pointerId);
+    if (pinchRef.current && pointersRef.current.size < 2) pinchRef.current = null;
     const d = dragRef.current;
     if (!d || d.id !== e.pointerId) return;
     dragRef.current = null;
@@ -302,7 +355,7 @@ export function LivePreview({
   };
 
   const slot = MAP_PREVIEW_VIEWPORT(input.layout, input.format);
-  const accent = getMapTheme(input.style).accent;
+  const accent = cardPalette(input).accent;
   const ringPct = ((slot.r * Math.min(format.w, format.h)) / format.w) * 200;
 
   return (
@@ -335,6 +388,20 @@ export function LivePreview({
           className="pointer-events-none absolute inset-0 h-full w-full select-none"
           style={{ opacity: 0 }}
         />
+
+        {onZoom && geometry && (
+          <div
+            className="absolute right-3 top-3 flex flex-col gap-2"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <ZoomButton label="Zoom in" onClick={() => onZoom(clampViewKm(input.viewKm / ZOOM_STEP))}>
+              <Plus size={16} />
+            </ZoomButton>
+            <ZoomButton label="Zoom out" onClick={() => onZoom(clampViewKm(input.viewKm * ZOOM_STEP))}>
+              <Minus size={16} />
+            </ZoomButton>
+          </div>
+        )}
 
         {/* Nothing on the map yet: ripples spread from where the pin will land. */}
         <AnimatePresence>
@@ -385,21 +452,42 @@ export function LivePreview({
           )}
         </AnimatePresence>
 
-        {/* Fetching a new area while one is already showing. */}
+        {/* Fetching a new area while one is already showing: a bright sweep along the
+            top edge plus a pill, so it reads on both light and dark cards. */}
         <AnimatePresence>
           {loading && geometry && (
             <motion.div
-              key="sweep"
+              key="updating"
               aria-hidden
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="pointer-events-none absolute inset-x-0 top-0 h-[3px] overflow-hidden"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="pointer-events-none absolute inset-x-0 top-0"
             >
-              <span
-                className="animate-sweep absolute inset-y-0 w-1/3"
-                style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
-              />
+              <div className="relative h-1 overflow-hidden bg-black/20">
+                <span
+                  className="animate-sweep absolute inset-y-0 w-1/2"
+                  style={{
+                    background: `linear-gradient(90deg, transparent, ${accent}, #ffffff, ${accent}, transparent)`,
+                    boxShadow: `0 0 12px ${accent}`,
+                  }}
+                />
+              </div>
+              <div className="mt-3 flex justify-center">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-ink/75 px-3 py-1.5 text-[10px] uppercase tracking-[0.25em] text-mist shadow-lg backdrop-blur-md">
+                  <span className="flex gap-1">
+                    {[0, 1, 2].map((i) => (
+                      <span
+                        key={i}
+                        className="animate-pulse-dot h-1.5 w-1.5 rounded-full"
+                        style={{ background: "#ffffff", animationDelay: `${i * 0.18}s` }}
+                      />
+                    ))}
+                  </span>
+                  Updating map
+                </span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -410,5 +498,27 @@ export function LivePreview({
         </p>
       )}
     </div>
+  );
+}
+
+function ZoomButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-ink/65 text-mist shadow-lg backdrop-blur-md transition-[transform,background-color] duration-150 hover:bg-ink/85 active:scale-90"
+    >
+      {children}
+    </button>
   );
 }

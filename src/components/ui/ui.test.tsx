@@ -5,6 +5,7 @@ import { Button, buttonStyles } from "./Button";
 import { IconButton } from "./IconButton";
 import { Picker } from "./Picker";
 import { MultiPicker } from "./MultiPicker";
+import { Switch } from "./Switch";
 
 afterEach(cleanup);
 
@@ -77,5 +78,24 @@ describe("MultiPicker", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Grid" }));
     expect(onChange).toHaveBeenCalledWith(["moon", "grid"]);
+  });
+});
+
+describe("Switch", () => {
+  it("reports its state and toggles from anywhere on the row", () => {
+    const onChange = vi.fn();
+    const { rerender } = render(<Switch label="Labels" value={false} onChange={onChange} />);
+    const sw = screen.getByRole("switch", { name: "Labels" });
+    expect(sw).toHaveAttribute("aria-checked", "false");
+    fireEvent.click(screen.getByText("Labels"));
+    expect(onChange).toHaveBeenCalledWith(true);
+    rerender(<Switch label="Labels" value={true} onChange={onChange} />);
+    expect(screen.getByRole("switch", { name: "Labels" })).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("anchors the thumb to the left of the track so it can't drift", () => {
+    render(<Switch label="Labels" value={false} onChange={() => {}} />);
+    const thumb = screen.getByRole("switch").querySelector("span > span")!;
+    expect(thumb.className).toContain("left-0.5");
   });
 });

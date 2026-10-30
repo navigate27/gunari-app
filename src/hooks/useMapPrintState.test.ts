@@ -90,4 +90,31 @@ describe("useMapPrintState", () => {
       result.current.input.layout !== "classic";
     expect(changed).toBe(true);
   });
+
+  it("zooming picks the data tier that still covers the view, and clamps the range", () => {
+    const { result } = renderHook(() => useMapPrintState());
+    act(() => result.current.update("viewKm", 0.3));
+    expect(result.current.input.zoom).toBe("neighborhood");
+    act(() => result.current.update("viewKm", 1));
+    expect(result.current.input.zoom).toBe("district");
+    act(() => result.current.update("viewKm", 5));
+    expect(result.current.input.zoom).toBe("city");
+    act(() => result.current.update("viewKm", 500));
+    expect(result.current.input.viewKm).toBeCloseTo(8.4, 6);
+    act(() => result.current.update("viewKm", 0.001));
+    expect(result.current.input.viewKm).toBeCloseTo(0.25, 6);
+  });
+
+  it("a new place puts the pin back at the centre", () => {
+    const { result } = renderHook(() => useMapPrintState());
+    act(() => result.current.update("pin", { lat: 14.6, lng: 120.98 }));
+    expect(result.current.input.pin).toEqual({ lat: 14.6, lng: 120.98 });
+    act(() => result.current.updateLocation({ lat: 1, lng: 2, label: "Elsewhere" }));
+    expect(result.current.input.pin).toBeUndefined();
+  });
+
+  it("starts with the card following the map theme", () => {
+    const { result } = renderHook(() => useMapPrintState());
+    expect(result.current.input.card).toBe("match");
+  });
 });

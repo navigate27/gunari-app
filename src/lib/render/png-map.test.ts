@@ -46,6 +46,8 @@ const input: MapPrintInput = {
   zoom: "district", rotation: 0, labels: false, layout: "classic",
   showCoordinates: false,
   format: "story",
+  viewKm: 1.4142,
+  card: "match",
 };
 
 const geometry = {

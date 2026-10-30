@@ -21,6 +21,8 @@ const baseInput: MapPrintInput = {
   layout: "classic",
   showCoordinates: false,
   format: "story",
+  viewKm: 1.4142,
+  card: "match",
 };
 
 describe("Customizer", () => {
@@ -35,7 +37,7 @@ describe("Customizer", () => {
     expect(screen.getByRole("group", { name: /theme/i })).toBeInTheDocument();
     expect(screen.getByRole("group", { name: /shape/i })).toBeInTheDocument();
     expect(screen.getByRole("group", { name: /marker/i })).toBeInTheDocument();
-    expect(screen.getByRole("group", { name: /zoom/i })).toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: /zoom/i })).toBeInTheDocument();
     expect(screen.getByRole("slider", { name: /rotation/i })).toBeInTheDocument();
     expect(screen.getByRole("switch", { name: /labels/i })).toBeInTheDocument();
     expect(screen.getByRole("group", { name: /layout/i })).toBeInTheDocument();
@@ -62,5 +64,25 @@ describe("Customizer", () => {
     render(<Customizer input={baseInput} update={update} updateLocation={vi.fn()} />);
     fireEvent.click(screen.getByRole("switch", { name: /coordinates/i }));
     expect(update).toHaveBeenCalledWith("showCoordinates", true);
+  });
+
+  it("keeps the card background separate from the map theme", () => {
+    const update = vi.fn();
+    render(<Customizer input={baseInput} update={update} updateLocation={vi.fn()} />);
+    expect(screen.getByRole("group", { name: /map theme/i })).toBeInTheDocument();
+    const card = screen.getByRole("group", { name: /card background/i });
+    expect(card).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /navy/i }));
+    expect(update).toHaveBeenCalledWith("card", "navy");
+    expect(update).not.toHaveBeenCalledWith("style", expect.anything());
+  });
+
+  it("zooms continuously and shows the view size", () => {
+    const update = vi.fn();
+    render(<Customizer input={{ ...baseInput, viewKm: 1.4 }} update={update} updateLocation={vi.fn()} />);
+    expect(screen.getByText("1.4 km")).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("slider", { name: /zoom/i }), { target: { value: "1000" } });
+    const km = update.mock.calls.find((c) => c[0] === "viewKm")![1] as number;
+    expect(km).toBeCloseTo(0.25, 2);
   });
 });

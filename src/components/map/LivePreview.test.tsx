@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from "vitest";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, screen } from "@testing-library/react";
 import { LivePreview } from "./LivePreview";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import type { MapPrintSceneData, ProjectedMapGeometry } from "@gunari/scene-mapprint";
@@ -46,6 +46,8 @@ const input: MapPrintInput = {
   zoom: "district", rotation: 0, labels: false, layout: "classic",
   showCoordinates: false,
   format: "story",
+  viewKm: 1.4142,
+  card: "match",
 };
 
 const data: MapPrintSceneData = {
@@ -194,5 +196,29 @@ describe("LivePreview", () => {
     fireEvent.pointerMove(card, { clientX: 40, clientY: 60, pointerId: 1 });
     expect(onPan).toHaveBeenCalled();
     expect(onPinChange).not.toHaveBeenCalled();
+  });
+
+  it("zooms from the +/- buttons and the scroll wheel", () => {
+    const onZoom = vi.fn();
+    const withBox = { ...mockGeometry, bbox: [120.97, 14.59, 120.99, 14.61], rotation: 0 } as unknown as ProjectedMapGeometry;
+    const { container } = render(
+      <LivePreview input={{ ...input, viewKm: 2 }} data={data} geometry={withBox} loading={false} onZoom={onZoom} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Zoom in" }));
+    expect(onZoom).toHaveBeenLastCalledWith(expect.closeTo(2 / 1.45, 6));
+    fireEvent.click(screen.getByRole("button", { name: "Zoom out" }));
+    expect(onZoom).toHaveBeenLastCalledWith(expect.closeTo(2 * 1.45, 6));
+
+    const card = container.querySelector("canvas")!.parentElement!;
+    fireEvent.wheel(card, { deltaY: -200 });
+    expect(onZoom.mock.calls.at(-1)![0]).toBeLessThan(2);
+    fireEvent.wheel(card, { deltaY: 200 });
+    expect(onZoom.mock.calls.at(-1)![0]).toBeGreaterThan(2);
+  });
+
+  it("shows an unmissable updating pill while a new area loads over an existing map", () => {
+    const withBox = { ...mockGeometry, bbox: [120.97, 14.59, 120.99, 14.61], rotation: 0 } as unknown as ProjectedMapGeometry;
+    render(<LivePreview input={input} data={data} geometry={withBox} loading={true} />);
+    expect(screen.getByText("Updating map")).toBeInTheDocument();
   });
 });

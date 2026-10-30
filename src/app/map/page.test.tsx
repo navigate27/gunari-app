@@ -10,7 +10,7 @@ vi.mock("@/hooks/useMapPrintState", async (importOriginal) => ({
       title: "T", message: undefined,
       shape: "square", style: "classic", marker: "solid",
       zoom: "district", rotation: 0, labels: false, layout: "classic",
-      showCoordinates: false, format: "story",
+      showCoordinates: false, format: "story", viewKm: 1.4142, card: "match",
     },
     update: vi.fn(),
     updateLocation: vi.fn(),
