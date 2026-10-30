@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { artworkLayout, type FormatId, type SceneInput, type SceneViewport } from "@gunari/core";
+import { artworkLayout, type ArtworkFrameId, type FormatId, type SceneInput, type SceneViewport } from "@gunari/core";
 import {
   type CardStyleId,
   clampViewKm,
@@ -24,6 +24,10 @@ export type MapPrintInput = SceneInput & {
   viewKm: number;
   /** Card background and text colours; "match" follows the map theme. */
   card: CardStyleId;
+  /** Frame around the card. */
+  frame: ArtworkFrameId;
+  /** Text shown under the map. Omitted = the searched place's name. */
+  addressLabel?: string;
 };
 
 /** The slot for the current format and layout, enlarged for the chosen zoom. */
@@ -65,6 +69,7 @@ const DEFAULT_INPUT: MapPrintInput = {
   format: "story",
   viewKm: naturalViewKm("district"),
   card: "match",
+  frame: "line",
   places: [],
 };
 
@@ -159,7 +164,7 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
   const updateLocation = React.useCallback(
     (location: Partial<MapPrintInput["location"]>) => {
       // A new place starts with the pin back at the centre.
-      setInput((prev) => ({ ...prev, location: { ...prev.location, ...location }, pin: undefined }));
+      setInput((prev) => ({ ...prev, location: { ...prev.location, ...location }, pin: undefined, addressLabel: undefined }));
     },
     [],
   );

@@ -48,6 +48,7 @@ const input: MapPrintInput = {
   format: "story",
   viewKm: 1.4142,
   card: "match",
+  frame: "line",
 };
 
 const geometry = {

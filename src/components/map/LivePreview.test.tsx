@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeAll, beforeEach, afterAll } from "vitest";
 import { render, cleanup, fireEvent, screen } from "@testing-library/react";
-import { LivePreview } from "./LivePreview";
+import { LivePreview, resetPinDrop } from "./LivePreview";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import type { MapPrintSceneData, ProjectedMapGeometry } from "@gunari/scene-mapprint";
 
@@ -38,6 +38,10 @@ afterEach(() => {
   cleanup();
 });
 
+beforeEach(() => {
+  resetPinDrop();
+});
+
 const input: MapPrintInput = {
   location: { lat: 14.5995, lng: 120.9842, label: "Manila" },
   title: "Test",
@@ -48,6 +52,7 @@ const input: MapPrintInput = {
   format: "story",
   viewKm: 1.4142,
   card: "match",
+  frame: "line",
 };
 
 const data: MapPrintSceneData = {
@@ -258,6 +263,37 @@ describe("LivePreview", () => {
     step(600);
     expect(card.style.aspectRatio.replace(/\s/g, "")).toBe("1080/1080");
     expect(mock.mock.calls.at(-1)![1].layoutSpec).toBeUndefined();
+
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it("drops the pin in once, then keeps it in place when the map is drawn again", async () => {
+    const { renderScaffold } = await import("@gunari/core");
+    const mock = renderScaffold as ReturnType<typeof vi.fn>;
+    let now = 1000;
+    const queue: FrameRequestCallback[] = [];
+    vi.spyOn(performance, "now").mockImplementation(() => now);
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => queue.push(cb));
+    vi.stubGlobal("cancelAnimationFrame", () => {});
+    const step = (ms: number) => {
+      now += ms;
+      queue.splice(0).forEach((cb) => cb(now));
+    };
+    const withBox = { ...mockGeometry, bbox: [120.97, 14.59, 120.99, 14.61], rotation: 0 } as unknown as ProjectedMapGeometry;
+
+    mock.mockClear();
+    const { rerender } = render(<LivePreview input={input} data={data} geometry={withBox} loading={false} />);
+    expect(mock.mock.calls[0][1].sceneViewport.pinDrop).toBe(true);
+    step(2500);
+
+    const nextData = { ...data };
+    mock.mockClear();
+    rerender(<LivePreview input={input} data={nextData} geometry={withBox} loading={false} />);
+    step(400);
+    const drawing = mock.mock.calls.filter((c) => c[1].sceneViewport.reveal !== undefined);
+    expect(drawing.length).toBeGreaterThan(0);
+    expect(drawing.every((c) => c[1].sceneViewport.pinDrop === false)).toBe(true);
 
     vi.restoreAllMocks();
     vi.unstubAllGlobals();

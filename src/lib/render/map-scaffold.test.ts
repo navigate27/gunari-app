@@ -9,6 +9,7 @@ const input: MapPrintInput = {
   shape: "square", style: "atlas", marker: "solid",
   zoom: "district", rotation: 0, labels: false, layout: "classic",
   showCoordinates: false, format: "story", viewKm: 1.4142, card: "match",
+  frame: "line",
 };
 
 describe("card vs map palette", () => {
@@ -26,5 +27,17 @@ describe("card vs map palette", () => {
   it("carries the geometry's zoom scale into the scene viewport", () => {
     const geometry = { ...emptyGeometry(input), zoomScale: 2.5 };
     expect(buildMapScaffoldInput(input, geometry).sceneViewport.zoomScale).toBe(2.5);
+  });
+
+  it("shows the address label instead of the place name when one is set", () => {
+    expect(buildMapScaffoldInput(input, emptyGeometry(input)).meta.location).toBe("Manila");
+    const custom = buildMapScaffoldInput({ ...input, addressLabel: "Our first apartment" }, emptyGeometry(input));
+    expect(custom.meta.location).toBe("Our first apartment");
+    const cleared = buildMapScaffoldInput({ ...input, addressLabel: "" }, emptyGeometry(input));
+    expect(cleared.meta.location).toBe("");
+  });
+
+  it("passes the chosen frame to the scaffold", () => {
+    expect(buildMapScaffoldInput({ ...input, frame: "stamp" }, emptyGeometry(input)).frame).toBe("stamp");
   });
 });

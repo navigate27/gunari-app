@@ -28,6 +28,13 @@ const NUDGE_MS = 140;
 const PIN_RADIUS = 0.04;
 
 type Transition = "wipe" | "fade";
+
+/** The marker drops in the first time a map is drawn, then stays put on later redraws. */
+let pinDropPlayed = false;
+/** For tests. */
+export function resetPinDrop(): void {
+  pinDropPlayed = false;
+}
 type Pt = { x: number; y: number };
 
 export interface LivePreviewProps {
@@ -168,7 +175,14 @@ export function LivePreview({
           : geometry;
     renderScaffold(
       ctx,
-      buildMapScaffoldInput(input, drawn, pan, showEmpty ? 0 : revealRef.current, tweening ? L : undefined),
+      buildMapScaffoldInput(
+        input,
+        drawn,
+        pan,
+        showEmpty ? 0 : revealRef.current,
+        tweening ? L : undefined,
+        !pinDropPlayed,
+      ),
     );
   };
 
@@ -252,7 +266,8 @@ export function LivePreview({
         prev.input.marker !== input.marker ||
         prev.input.labels !== input.labels ||
         prev.input.showCoordinates !== input.showCoordinates ||
-        prev.input.places !== input.places
+        prev.input.places !== input.places ||
+        prev.input.frame !== input.frame
       ) {
         transition = "fade";
       }
@@ -296,6 +311,7 @@ export function LivePreview({
         revealRef.current = t;
         paintRef.current();
         if (t < 1) revealRaf.current = requestAnimationFrame(tick);
+        else pinDropPlayed = true;
       };
       revealRaf.current = requestAnimationFrame(tick);
     } else if (!data || !geometry) {

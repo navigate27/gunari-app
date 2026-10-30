@@ -31,11 +31,14 @@ export function buildMapScaffoldInput(
   reveal?: number,
   /** A layout partway between two, for frames during a format or layout change. */
   layoutSpec?: ArtworkLayout,
+  /** False to skip the marker's drop-in while the map draws (it plays once per visit). */
+  pinDrop?: boolean,
 ): ScaffoldInput {
   const layout = layoutSpec ?? artworkLayout(input.format, input.layout);
   const mapPalette = getMapTheme(input.style);
   return {
     format: input.format,
+    frame: input.frame,
     layoutSpec,
     layout: input.layout,
     title: input.title,
@@ -43,7 +46,7 @@ export function buildMapScaffoldInput(
     meta: {
       date: "",
       time: "",
-      location: input.location.label,
+      location: input.addressLabel ?? input.location.label,
       coordinates: input.showCoordinates
         ? formatLatLng(input.pin?.lat ?? input.location.lat, input.pin?.lng ?? input.location.lng)
         : undefined,
@@ -59,6 +62,7 @@ export function buildMapScaffoldInput(
       panX: pan.x,
       panY: pan.y,
       reveal: reveal !== undefined && reveal < 1 ? reveal : undefined,
+      pinDrop,
     },
   };
 }

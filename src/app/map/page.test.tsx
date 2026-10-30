@@ -11,7 +11,7 @@ vi.mock("@/hooks/useMapPrintState", async (importOriginal) => ({
       title: "T", message: undefined,
       shape: "square", style: "classic", marker: "solid",
       zoom: "district", rotation: 0, labels: false, layout: "classic",
-      showCoordinates: false, format: "story", viewKm: 1.4142, card: "match",
+      showCoordinates: false, format: "story", viewKm: 1.4142, card: "match", frame: "line",
     },
     update: vi.fn(),
     updateLocation: vi.fn(),
@@ -59,6 +59,13 @@ describe("/map page", () => {
     expect(
       screen.getByRole("link", { name: /OpenStreetMap contributors/i }),
     ).toHaveAttribute("href", "https://www.openstreetmap.org/copyright");
+  });
+
+  it("offers the same social share buttons as the Star Chart", () => {
+    render(<Page />);
+    for (const name of ["Share", "Facebook", "Instagram", "X", "Reddit"]) {
+      expect(screen.getByRole("button", { name })).toBeInTheDocument();
+    }
   });
 
   it("on a phone, shows the editor first and the preview in a second tab", async () => {

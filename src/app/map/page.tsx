@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Download, Share2, Shuffle } from "lucide-react";
+import { Download, Facebook, Instagram, Share2, Shuffle } from "lucide-react";
 import confetti from "canvas-confetti";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { MobileTabs } from "@/components/ui/MobileTabs";
+import { RedditIcon, XIcon } from "@/components/ui/icons";
 import { Customizer } from "@/components/map/Customizer";
 import { LivePreview } from "@/components/map/LivePreview";
 import { useMapPrintState } from "@/hooks/useMapPrintState";
@@ -116,6 +117,7 @@ export default function MapPage() {
     }
   };
 
+  const shareDisabled = generating || !geometry || loading;
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const preview = (
@@ -184,8 +186,20 @@ export default function MapPage() {
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <IconButton label="Share" onClick={onShare} disabled={generating || !geometry || loading}>
+          <IconButton label="Share" onClick={onShare} disabled={shareDisabled}>
             <Share2 size={16} />
+          </IconButton>
+          <IconButton label="Facebook" onClick={onShare} disabled={shareDisabled}>
+            <Facebook size={16} />
+          </IconButton>
+          <IconButton label="Instagram" onClick={onShare} disabled={shareDisabled}>
+            <Instagram size={16} />
+          </IconButton>
+          <IconButton label="X" onClick={onShare} disabled={shareDisabled}>
+            <XIcon size={16} />
+          </IconButton>
+          <IconButton label="Reddit" onClick={onShare} disabled={shareDisabled}>
+            <RedditIcon size={16} />
           </IconButton>
         </div>
         <p className="text-center text-[10px] uppercase tracking-[0.25em] text-stone">

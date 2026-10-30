@@ -23,6 +23,7 @@ const baseInput: MapPrintInput = {
   format: "story",
   viewKm: 1.4142,
   card: "match",
+  frame: "line",
 };
 
 describe("Customizer", () => {
@@ -117,5 +118,31 @@ describe("Customizer", () => {
       return color;
     };
     expect(swatch("classic")).not.toBe(swatch("nocturne"));
+  });
+
+  it("lets the address label differ from the searched place", () => {
+    const update = vi.fn();
+    const { rerender } = render(<Customizer input={baseInput} update={update} updateLocation={vi.fn()} />);
+    const field = screen.getByLabelText(/address label/i) as HTMLInputElement;
+    expect(field.value).toBe("Manila");
+    expect(screen.queryByRole("button", { name: /use the place name/i })).toBeNull();
+    fireEvent.change(field, { target: { value: "Where we met" } });
+    expect(update).toHaveBeenCalledWith("addressLabel", "Where we met");
+
+    rerender(<Customizer input={{ ...baseInput, addressLabel: "Where we met" }} update={update} updateLocation={vi.fn()} />);
+    expect((screen.getByLabelText(/address label/i) as HTMLInputElement).value).toBe("Where we met");
+    fireEvent.click(screen.getByRole("button", { name: /use the place name/i }));
+    expect(update).toHaveBeenCalledWith("addressLabel", undefined);
+  });
+
+  it("offers frames", () => {
+    const update = vi.fn();
+    render(<Customizer input={baseInput} update={update} updateLocation={vi.fn()} />);
+    const group = screen.getByRole("group", { name: "Frame" });
+    for (const label of ["None", "Line", "Mat", "Rounded", "Brackets", "Stamp"]) {
+      expect(group).toHaveTextContent(label);
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Stamp" }));
+    expect(update).toHaveBeenCalledWith("frame", "stamp");
   });
 });

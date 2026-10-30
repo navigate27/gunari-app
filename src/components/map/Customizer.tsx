@@ -8,7 +8,16 @@ import { Picker, type PickerOption } from "@/components/ui/Picker";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Switch } from "@/components/ui/Switch";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
-import { FORMATS, FORMAT_ORDER, type FormatId, type PlaceCategory, type SceneInput } from "@gunari/core";
+import {
+  FORMATS,
+  FORMAT_ORDER,
+  FRAME_LABELS,
+  FRAME_ORDER,
+  type ArtworkFrameId,
+  type FormatId,
+  type PlaceCategory,
+  type SceneInput,
+} from "@gunari/core";
 import type { CardStyleId } from "@gunari/scene-mapprint";
 import {
   CARD_LABELS,
@@ -69,6 +78,11 @@ const CARD_OPTIONS: PickerOption<CardStyleId>[] = CARD_ORDER.map((id) => {
     swatch: `linear-gradient(135deg, ${background.top} 0 55%, ${accent} 55% 100%)`,
   };
 });
+const FRAME_OPTIONS: PickerOption<ArtworkFrameId>[] = FRAME_ORDER.map((id) => ({
+  value: id,
+  label: FRAME_LABELS[id],
+  tone: id === "none" ? "off" : "default",
+}));
 const FORMAT_OPTIONS: { value: FormatId; label: string }[] = FORMAT_ORDER.map((id) => ({
   value: id,
   label: FORMATS[id].label,
@@ -95,6 +109,24 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
     <div className="space-y-8">
       <section className="space-y-4">
         <LocationInput value={input.location} onChange={updateLocation} />
+        <div>
+          <TextField
+            label="Address label"
+            hint="shown under the map"
+            value={input.addressLabel ?? input.location.label}
+            maxLength={80}
+            onChange={(v) => update("addressLabel", v)}
+          />
+          {input.addressLabel !== undefined && input.addressLabel !== input.location.label && (
+            <button
+              type="button"
+              onClick={() => update("addressLabel", undefined)}
+              className="mt-2 cursor-pointer text-[11px] uppercase tracking-[0.2em] text-stone transition-colors hover:text-mist"
+            >
+              Use the place name
+            </button>
+          )}
+        </div>
         <TextField
           label="Title"
           value={input.title}
@@ -120,6 +152,16 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
           value={input.style}
           onChange={(v) => update("style", v)}
           columns={2}
+        />
+      </section>
+      <section>
+        <SectionTitle>Frame</SectionTitle>
+        <Picker
+          label="Frame"
+          options={FRAME_OPTIONS}
+          value={input.frame}
+          onChange={(v) => update("frame", v)}
+          columns={3}
         />
       </section>
       <section>
