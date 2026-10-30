@@ -50,6 +50,10 @@ const ROAD_CLASSES: RoadClass[] = [
   "motorway", "trunk", "primary", "secondary", "tertiary", "residential", "path",
 ];
 
+const BUILT_LANDUSE = ["residential", "commercial", "retail", "industrial", "construction", "garages"];
+const GREEN_LANDUSE = ["forest", "grass", "meadow", "recreation_ground", "village_green", "cemetery", "farmland", "orchard"];
+const GREEN_NATURAL = ["wood", "scrub", "grassland", "wetland", "heath"];
+
 const PLACE_CLASSES = ["city", "town", "village", "hamlet", "suburb", "neighbourhood"];
 
 /**
@@ -61,6 +65,8 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
   const water: Polygon[] = [];
   const waterways: [number, number][][] = [];
   const parks: Polygon[] = [];
+  const built: Polygon[] = [];
+  const green: Polygon[] = [];
   const labels: Label[] = [];
 
   for (const el of json.elements) {
@@ -94,10 +100,21 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
       parks.push({ points: pts, name: tags.name });
       continue;
     }
+    if (tags.landuse && BUILT_LANDUSE.includes(tags.landuse)) {
+      built.push({ points: pts });
+      continue;
+    }
+    if (
+      (tags.landuse && GREEN_LANDUSE.includes(tags.landuse)) ||
+      (tags.natural && GREEN_NATURAL.includes(tags.natural))
+    ) {
+      green.push({ points: pts });
+      continue;
+    }
   }
 
   // Sort roads by class so the renderer draws motorways last (on top).
   roads.sort((a, b) => ROAD_CLASSES.indexOf(a.class) - ROAD_CLASSES.indexOf(b.class));
 
-  return { bbox, roads, water, waterways, parks, labels };
+  return { bbox, roads, water, waterways, parks, built, green, labels };
 }

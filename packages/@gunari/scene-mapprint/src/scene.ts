@@ -29,7 +29,10 @@ const cache = new MapDataCache({
 });
 
 function hasFeatures(g: MapGeometry): boolean {
-  return g.roads.length + g.water.length + g.waterways.length + g.parks.length > 0;
+  // Entries saved before the built-up/green layers existed have no `built`;
+  // treat them as stale so they are fetched again with the new layers.
+  if (g.built === undefined) return false;
+  return g.roads.length + g.water.length + g.waterways.length + g.parks.length + g.built.length > 0;
 }
 
 export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
@@ -40,7 +43,7 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
 
   capabilities: {
     shapes: ["square", "circle", "heart"],
-    styles: ["classic", "midnight", "blueprint", "paper", "twilight"],
+    styles: ["classic", "midnight", "blueprint", "paper", "twilight", "atlas", "ink", "mist", "nocturne", "lagoon", "chalk"],
     markers: ["solid", "ring", "heart", "star"],
     zooms: ["neighborhood", "district", "city"],
     layouts: ["classic", "poster"],
@@ -67,7 +70,7 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
     } catch (err) {
       if (err instanceof OverpassError && err.message === "aborted") throw err;
       // Not cached: a transient failure must not stick as a permanently blank map.
-      const empty: MapGeometry = { bbox, roads: [], water: [], waterways: [], parks: [], labels: [] };
+      const empty: MapGeometry = { bbox, roads: [], water: [], waterways: [], parks: [], built: [], green: [], labels: [] };
       return { geometry: empty, bbox, zoom: input.zoom };
     }
     const geometry = parseOsm(osm, bbox);

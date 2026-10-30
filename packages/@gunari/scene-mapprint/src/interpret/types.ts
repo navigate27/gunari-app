@@ -37,5 +37,9 @@ export interface MapGeometry {
   water: Polygon[];
   waterways: [number, number][][];
   parks: Polygon[];
+  /** Built-up land (residential, commercial, industrial). Absent in entries cached before this layer existed. */
+  built?: Polygon[];
+  /** Woods, grass, farmland and other green land that isn't a park. */
+  green?: Polygon[];
   labels: Label[];
 }

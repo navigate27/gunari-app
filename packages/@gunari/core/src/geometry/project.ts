@@ -13,6 +13,14 @@ export function webMercator(lat: number, lng: number): { x: number; y: number } 
   return { x, y };
 }
 
+/** Inverse of {@link webMercator}: Web Mercator meters back to (lat, lng) degrees. */
+export function inverseWebMercator(x: number, y: number): { lat: number; lng: number } {
+  return {
+    lng: x / R / DEG,
+    lat: (2 * Math.atan(Math.exp(y / R)) - Math.PI / 2) / DEG,
+  };
+}
+
 /**
  * Normalize projected meters to [0, 1] against a bbox.
  * Returns [x, y] where (0,0) is the minLng/minLat corner and (1,1) is

@@ -11,7 +11,7 @@ describe("mapPrintScene", () => {
   it("advertises the full v1 capabilities", () => {
     const caps = mapPrintScene.capabilities as SceneCapabilities;
     expect(caps.shapes).toEqual(["square", "circle", "heart"]);
-    expect(caps.styles).toEqual(["classic", "midnight", "blueprint", "paper", "twilight"]);
+    expect(caps.styles).toEqual(["classic", "midnight", "blueprint", "paper", "twilight", "atlas", "ink", "mist", "nocturne", "lagoon", "chalk"]);
     expect(caps.markers).toEqual(["solid", "ring", "heart", "star"]);
     expect(caps.zooms).toEqual(["neighborhood", "district", "city"]);
     expect(caps.layouts).toEqual(["classic", "poster"]);
@@ -78,7 +78,7 @@ describe("mapPrintScene", () => {
       globalAlpha: 1, lineWidth: 1, lineCap: "" as CanvasLineCap, lineJoin: "" as CanvasLineJoin,
       createLinearGradient: () => ({ addColorStop: () => {} }),
       beginPath: () => {}, moveTo: () => {}, lineTo: () => {}, closePath: () => {},
-      fill: () => {}, stroke: () => {}, clip: () => {}, rect: () => {}, arc: () => {}, translate: () => {},
+      fill: () => {}, stroke: () => {}, clip: () => {}, rect: () => {}, arc: () => {}, translate: () => {}, scale: () => {}, createRadialGradient: () => ({ addColorStop: () => {} }),
       bezierCurveTo: () => {}, textAlign: "" as CanvasTextAlign, textBaseline: "" as CanvasTextBaseline,
       font: "", fillText: () => {},
     } as unknown as CanvasRenderingContext2D;

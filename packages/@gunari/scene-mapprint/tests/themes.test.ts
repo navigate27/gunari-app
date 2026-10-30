@@ -2,10 +2,13 @@ import { describe, it, expect } from "vitest";
 import { MAP_THEMES, getMapTheme } from "../src/styles/themes";
 import type { MapStyleId } from "@gunari/core";
 
-const EXPECTED_IDS: MapStyleId[] = ["classic", "midnight", "blueprint", "paper", "twilight"];
+const EXPECTED_IDS: MapStyleId[] = [
+  "classic", "midnight", "blueprint", "paper", "twilight",
+  "atlas", "ink", "mist", "nocturne", "lagoon", "chalk",
+];
 
 describe("MAP_THEMES", () => {
-  it("has all five theme ids", () => {
+  it("has every theme id", () => {
     expect(Object.keys(MAP_THEMES).sort()).toEqual([...EXPECTED_IDS].sort());
   });
 
@@ -41,6 +44,20 @@ describe("MAP_THEMES", () => {
     expect(MAP_THEMES.midnight.light).toBe(false);
     expect(MAP_THEMES.blueprint.light).toBe(false);
     expect(MAP_THEMES.twilight.light).toBe(false);
+    for (const id of ["atlas", "ink", "mist", "lagoon", "chalk"] as const) expect(MAP_THEMES[id].light).toBe(true);
+    expect(MAP_THEMES.nocturne.light).toBe(false);
+  });
+
+  it("the land-use themes define built-up and green fills, and casings are wider outlines", () => {
+    for (const id of ["atlas", "mist", "nocturne", "lagoon", "chalk"] as const) {
+      expect(MAP_THEMES[id].built).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(MAP_THEMES[id].green).toMatch(/^#[0-9a-f]{6}$/i);
+    }
+    for (const id of EXPECTED_IDS) {
+      for (const c of Object.values(MAP_THEMES[id].casing ?? {})) {
+        expect(c.extra).toBeGreaterThan(0);
+      }
+    }
   });
 
   it("getMapTheme returns the matching palette", () => {

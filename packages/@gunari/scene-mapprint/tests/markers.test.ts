@@ -11,7 +11,11 @@ function mockCtx() {
     beginPath: vi.fn(), moveTo: vi.fn(), lineTo: vi.fn(),
     arc: vi.fn(), bezierCurveTo: vi.fn(), closePath: vi.fn(),
     fill: vi.fn(), stroke: vi.fn(),
+    translate: vi.fn(), scale: vi.fn(),
+    createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
+    createRadialGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
     fillStyle: "", strokeStyle: "", lineWidth: 1, globalAlpha: 1,
+    shadowColor: "", shadowBlur: 0, shadowOffsetY: 0, lineCap: "",
   } as unknown as CanvasRenderingContext2D & {
     save: ReturnType<typeof vi.fn>;
     fill: ReturnType<typeof vi.fn>;
@@ -28,6 +32,25 @@ describe("drawPin (shared silhouette)", () => {
     expect(ctx.bezierCurveTo).toHaveBeenCalled();
     expect(ctx.closePath).toHaveBeenCalled();
     expect(ctx.fill).toHaveBeenCalled();
+  });
+});
+
+describe("drawPin anchoring and drop-in", () => {
+  it("puts the tip on (x, y) once landed", () => {
+    const ctx = mockCtx();
+    drawPin(ctx, 50, 80, 10, palette, 1);
+    expect(ctx.translate).toHaveBeenCalledWith(50, 80);
+  });
+
+  it("draws nothing at progress 0 and starts above the target while falling", () => {
+    const none = mockCtx();
+    drawPin(none, 50, 80, 10, palette, 0);
+    expect(none.fill).not.toHaveBeenCalled();
+
+    const falling = mockCtx();
+    drawPin(falling, 50, 80, 10, palette, 0.2);
+    const bodyCall = (falling.translate as unknown as ReturnType<typeof vi.fn>).mock.calls[1];
+    expect(bodyCall[1]).toBeLessThan(80);
   });
 });
 

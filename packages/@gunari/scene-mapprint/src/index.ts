@@ -7,6 +7,7 @@ export * from "./projection/viewport";
 export * from "./projection/pan";
 export * from "./projection/types";
 export * from "./projection/project";
+export * from "./projection/frame";
 export * from "./shapes/shapes";
 export * from "./markers/markers";
 export * from "./styles/themes";

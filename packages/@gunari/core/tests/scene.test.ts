@@ -8,7 +8,10 @@ describe("Scene contract types", () => {
     expectTypeOf<ShapeId>().toEqualTypeOf<"square" | "circle" | "heart">();
   });
   it("MapStyleId is the expected union", () => {
-    expectTypeOf<MapStyleId>().toEqualTypeOf<"classic" | "midnight" | "blueprint" | "paper" | "twilight">();
+    expectTypeOf<MapStyleId>().toEqualTypeOf<
+      | "classic" | "midnight" | "blueprint" | "paper" | "twilight"
+      | "atlas" | "ink" | "mist" | "nocturne" | "lagoon" | "chalk"
+    >();
   });
   it("MarkerStyleId is the expected union", () => {
     expectTypeOf<MarkerStyleId>().toEqualTypeOf<"solid" | "ring" | "heart" | "star">();

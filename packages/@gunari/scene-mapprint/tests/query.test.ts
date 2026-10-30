@@ -39,4 +39,11 @@ describe("buildOverpassQuery", () => {
     const q = buildOverpassQuery(bbox);
     expect(q.trim().endsWith("out geom;")).toBe(true);
   });
+
+  it("asks for built-up and green land", () => {
+    const q = buildOverpassQuery(bbox);
+    expect(q).toContain("residential|commercial");
+    expect(q).toContain("forest|grass");
+    expect(q).toContain("wood|scrub");
+  });
 });

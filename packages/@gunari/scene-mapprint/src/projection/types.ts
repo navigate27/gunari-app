@@ -24,6 +24,8 @@ export interface ProjectedMapGeometry {
   water: ProjectedPolygon[];
   waterways: [number, number][][];
   parks: ProjectedPolygon[];
+  built?: ProjectedPolygon[];
+  green?: ProjectedPolygon[];
   labels: ProjectedLabel[];
   bbox: BBox;
   rotation: number;

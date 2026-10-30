@@ -1,5 +1,7 @@
 export type ShapeId = "square" | "circle" | "heart";
-export type MapStyleId = "classic" | "midnight" | "blueprint" | "paper" | "twilight";
+export type MapStyleId =
+  | "classic" | "midnight" | "blueprint" | "paper" | "twilight"
+  | "atlas" | "ink" | "mist" | "nocturne" | "lagoon" | "chalk";
 export type MarkerStyleId = "solid" | "ring" | "heart" | "star";
 export type ZoomId = "neighborhood" | "district" | "city";
 export type LayoutId = "classic" | "poster";
@@ -19,6 +21,8 @@ export interface SceneInput {
   rotation: number;
   labels: boolean;
   layout: LayoutId;
+  /** Where the pin sits. Omitted = at the map centre. */
+  pin?: { lat: number; lng: number };
 }
 
 export interface SceneCapabilities {
@@ -46,4 +50,6 @@ export interface SceneViewport {
    */
   panX?: number;
   panY?: number;
+  /** Drawing progress 0..1 for the build-up animation. Omitted = fully drawn. */
+  reveal?: number;
 }

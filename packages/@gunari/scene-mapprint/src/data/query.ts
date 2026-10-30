@@ -5,6 +5,7 @@ import type { BBox } from "../interpret/types";
  * - roads (filtered to the supported class set)
  * - water polygons (natural=water) and waterways (waterway=*)
  * - parks (leisure=park, leisure=garden, boundary=protected_area)
+ * - built-up land (landuse=residential/commercial/...) and green land (forest, grass, wood, ...)
  * - place labels (place=city/town/village/hamlet/suburb/neighbourhood)
  *
  * Buildings, businesses, transit, traffic, and POIs are deliberately excluded.
@@ -21,6 +22,9 @@ export function buildOverpassQuery(bbox: BBox): string {
   way["leisure"="park"](${bboxStr});
   way["leisure"="garden"](${bboxStr});
   way["boundary"="protected_area"](${bboxStr});
+  way["landuse"~"^(residential|commercial|retail|industrial|construction|garages)$"](${bboxStr});
+  way["landuse"~"^(forest|grass|meadow|recreation_ground|village_green|cemetery|farmland|orchard)$"](${bboxStr});
+  way["natural"~"^(wood|scrub|grassland|wetland|heath)$"](${bboxStr});
   way["place"~"^(city|town|village|hamlet|suburb|neighbourhood)$"](${bboxStr});
   node["place"~"^(city|town|village|hamlet|suburb|neighbourhood)$"](${bboxStr});
 );

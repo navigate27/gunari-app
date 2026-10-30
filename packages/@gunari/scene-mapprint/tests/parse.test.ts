@@ -65,3 +65,40 @@ describe("parseOsm", () => {
     expect(skyway?.points[0]).toEqual([120.98, 14.60]);
   });
 });
+
+describe("parseOsm land use", () => {
+  const way = (id: number, tags: Record<string, string>) => ({
+    type: "way" as const,
+    id,
+    tags,
+    geometry: [
+      { lat: 14.6, lon: 120.98 },
+      { lat: 14.601, lon: 120.98 },
+      { lat: 14.601, lon: 120.981 },
+    ],
+  });
+
+  it("sorts landuse and natural ways into built-up and green layers", () => {
+    const out = parseOsm(
+      {
+        elements: [
+          way(1, { landuse: "residential" }),
+          way(2, { landuse: "industrial" }),
+          way(3, { landuse: "forest" }),
+          way(4, { natural: "wood" }),
+          way(5, { natural: "wetland" }),
+          way(6, { landuse: "quarry" }),
+        ],
+      },
+      [120.97, 14.59, 120.99, 14.61],
+    );
+    expect(out.built).toHaveLength(2);
+    expect(out.green).toHaveLength(3);
+  });
+
+  it("keeps parks out of the green layer", () => {
+    const out = parseOsm({ elements: [way(1, { leisure: "park" })] }, [120.97, 14.59, 120.99, 14.61]);
+    expect(out.parks).toHaveLength(1);
+    expect(out.green).toHaveLength(0);
+  });
+});

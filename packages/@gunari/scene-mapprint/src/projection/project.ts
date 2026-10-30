@@ -1,6 +1,7 @@
 import type { MapGeometry } from "../interpret/types";
 import type { SceneViewport } from "@gunari/core";
-import { webMercator, normalizeToViewport, simplifyLine, FORMATS } from "@gunari/core";
+import { webMercator, normalizeToViewport, simplifyLine } from "@gunari/core";
+import { makeFrame, place as placeOn, rotateAround } from "./frame";
 import type { ProjectedMapGeometry, ProjectedRoad, ProjectedPolygon, ProjectedLabel } from "./types";
 
 /**
@@ -19,31 +20,9 @@ export function projectGeometry(
   tolerance: number
 ): ProjectedMapGeometry {
   const bbox = geom.bbox;
-  const canvasW = viewport.canvasW ?? FORMATS.story.w;
-  const canvasH = viewport.canvasH ?? FORMATS.story.h;
-  const side = 2 * viewport.r * Math.min(canvasW, canvasH) * Math.SQRT2;
-
-  /** bbox-normalized [0,1] point → canvas-normalized point. */
-  function place([nx, ny]: [number, number]): [number, number] {
-    return [
-      viewport.cx + ((nx - 0.5) * side) / canvasW,
-      viewport.cy + ((ny - 0.5) * side) / canvasH,
-    ];
-  }
-
-  /** Rotate in pixel space so non-square canvases don't shear the map. */
-  function rotate(pts: [number, number][]): [number, number][] {
-    const cos = Math.cos(rotation);
-    const sin = Math.sin(rotation);
-    return pts.map(([x, y]) => {
-      const dx = (x - viewport.cx) * canvasW;
-      const dy = (y - viewport.cy) * canvasH;
-      return [
-        viewport.cx + (dx * cos - dy * sin) / canvasW,
-        viewport.cy + (dx * sin + dy * cos) / canvasH,
-      ];
-    });
-  }
+  const frame = makeFrame(viewport, rotation);
+  const place = (p: [number, number]) => placeOn(frame, p);
+  const rotate = (pts: [number, number][]) => rotateAround(frame, pts, rotation);
 
   function projectPoint(lng: number, lat: number): [number, number] {
     const { x, y } = webMercator(lat, lng);
@@ -71,6 +50,15 @@ export function projectGeometry(
   const waterways: [number, number][][] = geom.waterways.map((w) =>
     simplifyLine(projectLine(w), tolerance).map(place)
   );
+
+  const polys = (list: MapGeometry["parks"] | undefined): ProjectedPolygon[] =>
+    (list ?? []).map((p) => ({
+      points: simplifyLine(projectLine(p.points), tolerance).map(place),
+      holes: p.holes?.map((h) => simplifyLine(projectLine(h), tolerance).map(place)),
+      name: p.name,
+    }));
+  const built = polys(geom.built);
+  const green = polys(geom.green);
 
   const parks: ProjectedPolygon[] = geom.parks.map((p) => ({
     points: simplifyLine(projectLine(p.points), tolerance).map(place),
@@ -105,7 +93,7 @@ export function projectGeometry(
       if (w.holes) w.holes = w.holes.map(rotate);
     }
     for (let i = 0; i < waterways.length; i++) waterways[i] = rotate(waterways[i]);
-    for (const p of parks) {
+    for (const p of [...parks, ...built, ...green]) {
       p.points = rotate(p.points);
       if (p.holes) p.holes = p.holes.map(rotate);
     }
@@ -124,5 +112,5 @@ export function projectGeometry(
     waterways[i] = waterways[i].filter(inOverscan);
   }
 
-  return { roads, water, waterways, parks, labels, bbox, rotation };
+  return { roads, water, waterways, parks, built, green, labels, bbox, rotation };
 }

@@ -27,7 +27,7 @@ const baseInput: SceneInput = {
 };
 
 describe("golden: render.manila-district", () => {
-  for (const themeId of ["classic", "midnight", "blueprint", "paper", "twilight"] as const) {
+  for (const themeId of ["classic", "midnight", "blueprint", "paper", "twilight", "atlas", "ink", "mist", "nocturne", "lagoon", "chalk"] as const) {
     it(`renders ${themeId} theme matching the golden image`, async () => {
       const tolerance = 0.02; // 2% byte diff tolerance for sub-pixel rendering variance
       const geom = projectGeometry(manilaDistrict, viewport, 0, 0.001);
@@ -110,6 +110,24 @@ describe("golden: render.formats", () => {
       const { match, diff } = await diffImages(png, expected, 0.02);
       if (!match) await writeGolden(`manila-district-format-${format}.ACTUAL`, png);
       expect(match, `golden diff for ${format} = ${diff}`).toBe(true);
+    });
+  }
+});
+
+describe("golden: render.reveal", () => {
+  for (const [name, reveal] of [["early", 0.2], ["mid", 0.5], ["late", 0.9]] as const) {
+    it(`renders the drawing animation at ${name} (${reveal}) matching the golden image`, async () => {
+      const slot = { ...viewport, reveal };
+      const geom = projectGeometry(manilaDistrict, viewport, 0, 0.001);
+      const input: SceneInput = { ...baseInput, style: "atlas" };
+      const png = await renderToPng((ctx) => {
+        renderMap(ctx, geom, MAP_THEMES.atlas, input, slot, W, H);
+      }, W, H);
+      if (UPDATE) { await writeGolden(`manila-district-reveal-${name}`, png); return; }
+      const expected = await readGolden(`manila-district-reveal-${name}`);
+      const { match, diff } = await diffImages(png, expected, 0.02);
+      if (!match) await writeGolden(`manila-district-reveal-${name}.ACTUAL`, png);
+      expect(match, `golden diff for reveal ${name} = ${diff}`).toBe(true);
     });
   }
 });
