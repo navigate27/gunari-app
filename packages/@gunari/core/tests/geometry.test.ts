@@ -129,4 +129,18 @@ describe("applyShapeMask", () => {
     expect(ctx.closePath).toHaveBeenCalled();
     expect(ctx.clip).toHaveBeenCalled();
   });
+  it("heart: is symmetric, spans the full diameter and stays inside the circle's box", () => {
+    const ctx = mockCtx();
+    applyShapeMask(ctx, "heart", 100, 200, 50);
+    const calls = (ctx.bezierCurveTo as unknown as ReturnType<typeof vi.fn>).mock.calls;
+    expect(calls).toHaveLength(6);
+    const xs = calls.flatMap((c) => [c[0], c[2], c[4]] as number[]);
+    const ys = calls.flatMap((c) => [c[1], c[3], c[5]] as number[]);
+    expect(Math.min(...xs)).toBeCloseTo(50, 5);
+    expect(Math.max(...xs)).toBeCloseTo(150, 5);
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(150);
+    expect(Math.max(...ys)).toBeLessThanOrEqual(250);
+    // Mirror image: every x has a counterpart reflected around the centre line.
+    for (const x of xs) expect(xs.some((m) => Math.abs(m - (200 - x)) < 1e-9)).toBe(true);
+  });
 });
