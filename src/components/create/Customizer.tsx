@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "motion/react";
 import { Input, Label, Textarea } from "@/components/ui/Input";
 import { Picker, type PickerOption } from "@/components/ui/Picker";
 import { MultiPicker } from "@/components/ui/MultiPicker";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { LocationInput } from "./LocationInput";
 import { THEMES, THEME_ORDER } from "@/lib/render/themes";
 import { FRAMES } from "@/lib/render/frames";
@@ -111,7 +111,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
           />
         </div>
         <div>
-          <Label>Message · optional</Label>
+          <Label>Message (optional)</Label>
           <Textarea
             value={input.message ?? ""}
             maxLength={140}
@@ -121,12 +121,13 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         </div>
       </section>
 
-      <div className="h-px bg-white/5" />
+      <div className="h-px bg-line" />
 
       {/* Theme */}
       <section>
         <SectionTitle>Theme</SectionTitle>
         <Picker
+          label="Theme"
           options={themeOptions}
           value={input.theme}
           onChange={(v) => update("theme", v)}
@@ -138,6 +139,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
       <section>
         <SectionTitle>Frame</SectionTitle>
         <Picker
+          label="Frame"
           options={frameOptions}
           value={input.frame}
           onChange={(v) => update("frame", v)}
@@ -149,6 +151,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
       <section>
         <SectionTitle>Compass</SectionTitle>
         <Picker
+          label="Compass"
           options={compassOptions}
           value={input.compass}
           onChange={(v) => update("compass", v)}
@@ -167,7 +170,8 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
             step={0.1}
             value={input.magnitude}
             onChange={(e) => update("magnitude", parseFloat(e.target.value))}
-            className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-white/10 accent-gold"
+            aria-label="Star density"
+            className="flex-1"
           />
           <span className="w-10 text-right font-ui text-sm tabular-nums text-mist">
             {Math.round(10 + ((input.magnitude - 3) / 4) * 90)}%
@@ -179,6 +183,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
       <section>
         <SectionTitle>Star Chart</SectionTitle>
         <Picker
+          label="Star Chart"
           options={starChartOptions}
           value={input.starChart}
           onChange={(v) => update("starChart", v)}
@@ -190,6 +195,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
       <section>
         <SectionTitle>Layout</SectionTitle>
         <Picker
+          label="Layout"
           options={layoutOptions}
           value={input.layout}
           onChange={(v) => update("layout", v)}
@@ -201,6 +207,7 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
       <section>
         <SectionTitle>Elements</SectionTitle>
         <MultiPicker
+          label="Elements"
           options={elementOptions}
           value={input.elements}
           onChange={(v) => update("elements", v)}
@@ -208,16 +215,5 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
         />
       </section>
     </motion.div>
-  );
-}
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-3 flex items-center gap-3">
-      <h3 className="text-[11px] uppercase tracking-[0.25em] text-mist">
-        {children}
-      </h3>
-      <span className="h-px flex-1 bg-white/5" />
-    </div>
   );
 }

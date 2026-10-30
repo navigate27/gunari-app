@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Download, Facebook, Instagram, Share2, Shuffle, Sparkles } from "lucide-react";
+import { Download, Facebook, Instagram, Share2, Shuffle, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
+import { RedditIcon, XIcon } from "@/components/ui/icons";
 import { Customizer } from "@/components/create/Customizer";
 import { LivePreview } from "@/components/create/LivePreview";
 import { useGunariState } from "@/hooks/useGunariState";
@@ -28,7 +30,7 @@ export default function CreatePage() {
 
   const COOLDOWN_MSGS = [
     "Whoa, partner. The cosmos needs a breath.",
-    "Easy, tiger — the stars are still reassembling.",
+    "Easy, tiger. The stars are still reassembling.",
     "Patience, stargazer. Even the universe takes a beat.",
     "Hold your horses. The sky isn't going anywhere.",
     "That's enough excitement for now. Take a knee.",
@@ -126,7 +128,7 @@ export default function CreatePage() {
         blob,
         `gunari-${input.date}-${slug(input.title || "untitled")}.png`
       );
-      setFlash("Saved — add it to your story");
+      setFlash("Saved. Add it to your story.");
       setTimeout(() => setFlash(null), 1800);
     } finally {
       setGenerating(false);
@@ -171,10 +173,11 @@ export default function CreatePage() {
                 <div className="relative flex-1">
                   <Button
                     ref={randomizeBtnRef}
+                    variant="accent"
                     size="md"
                     onClick={onRandomize}
                     disabled={!sky}
-                    className="w-full bg-gradient-to-r from-gold via-[#E8D5A0] to-gold text-ink shadow-[0_0_20px_-4px_rgba(201,163,90,0.5)] hover:shadow-[0_0_28px_-2px_rgba(201,163,90,0.7)]"
+                    className="w-full"
                   >
                     <motion.span
                       animate={spinning ? { rotate: 360 } : { rotate: 0 }}
@@ -220,7 +223,7 @@ export default function CreatePage() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.9 }}
                         transition={{ type: "spring", stiffness: 260, damping: 16 }}
-                        className="absolute top-full left-1/2 mt-3 w-72 -translate-x-1/2 rounded-2xl border border-gold/40 bg-ink/95 px-5 py-4 text-center shadow-[0_20px_60px_-20px_rgba(201,163,90,0.6)] backdrop-blur-md"
+                        className="absolute top-full left-1/2 mt-3 w-72 -translate-x-1/2 rounded-panel border border-gold/40 bg-ink/95 px-5 py-4 text-center shadow-[0_20px_60px_-20px_rgba(201,163,90,0.6)] backdrop-blur-md"
                       >
                         <div className="mb-1.5 flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-[0.3em] text-gold">
                           <Sparkles size={12} />
@@ -235,41 +238,41 @@ export default function CreatePage() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <ShareIconButton
+                <IconButton
                   label="Share"
                   onClick={onShare}
                   disabled={generating || !sky}
                 >
                   <Share2 size={16} />
-                </ShareIconButton>
-                <ShareIconButton
+                </IconButton>
+                <IconButton
                   label="Facebook"
                   onClick={onShare}
                   disabled={generating || !sky}
                 >
                   <Facebook size={16} />
-                </ShareIconButton>
-                <ShareIconButton
+                </IconButton>
+                <IconButton
                   label="Instagram"
                   onClick={onShare}
                   disabled={generating || !sky}
                 >
                   <Instagram size={16} />
-                </ShareIconButton>
-                <ShareIconButton
+                </IconButton>
+                <IconButton
                   label="X"
                   onClick={onShare}
                   disabled={generating || !sky}
                 >
                   <XIcon size={16} />
-                </ShareIconButton>
-                <ShareIconButton
+                </IconButton>
+                <IconButton
                   label="Reddit"
                   onClick={onShare}
                   disabled={generating || !sky}
                 >
                   <RedditIcon size={16} />
-                </ShareIconButton>
+                </IconButton>
               </div>
               <p className="text-center text-[10px] uppercase tracking-[0.25em] text-stone">
                 Save your sky. Add it to your story.
@@ -292,19 +295,7 @@ export default function CreatePage() {
   return (
     <main className="min-h-[100dvh] bg-ink">
       <div className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
-        {/* Top bar */}
-        <header className="mb-6 flex items-center justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-stone hover:text-mist transition-colors"
-          >
-            <ArrowLeft size={14} /> Back
-          </Link>
-          <span className="font-display text-xl tracking-[0.3em] text-mist">
-            GUNARI
-          </span>
-          <div className="w-16" />
-        </header>
+        <AppHeader />
 
         {isDesktop ? (
           <div className="grid gap-10 grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
@@ -390,68 +381,4 @@ function slug(s: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 40) || "gunari";
-}
-
-function ShareIconButton({
-  label,
-  onClick,
-  disabled,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className="flex h-11 flex-1 cursor-pointer items-center justify-center rounded-md text-mist transition-colors duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      {children}
-    </button>
-  );
-}
-
-function XIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-
-function RedditIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <ellipse cx="12" cy="14.5" rx="8" ry="5.5" />
-      <circle cx="4.3" cy="11.8" r="1.7" />
-      <circle cx="19.7" cy="11.8" r="1.7" />
-      <path d="M12 9 L13.4 3.8 L17.2 4.8" />
-      <circle cx="18.4" cy="5.2" r="1.4" />
-      <path d="M9.2 17.2c1.7 1.1 3.9 1.1 5.6 0" />
-      <circle cx="9" cy="13.6" r="0.6" fill="currentColor" />
-      <circle cx="15" cy="13.6" r="0.6" fill="currentColor" />
-    </svg>
-  );
 }

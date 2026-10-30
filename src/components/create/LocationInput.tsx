@@ -14,6 +14,7 @@ interface LocationInputProps {
 }
 
 export function LocationInput({ value, onChange }: LocationInputProps) {
+  const inputId = React.useId();
   const [query, setQuery] = React.useState(value.label);
   const [results, setResults] = React.useState<PlaceResult[]>([]);
   const [open, setOpen] = React.useState(false);
@@ -116,7 +117,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
 
   return (
     <div className="space-y-2">
-      <Label>Location</Label>
+      <Label htmlFor={inputId}>Location</Label>
 
       <div className="relative">
         <Search
@@ -124,6 +125,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
           className="absolute left-4 top-1/2 -translate-y-1/2 text-stone"
         />
         <Input
+          id={inputId}
           value={query}
           onChange={(e) => {
             userTouchedRef.current = true;
@@ -132,7 +134,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
           onFocus={() => results.length && setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           onKeyDown={onKey}
-          placeholder="Search a place — city, address, landmark"
+          placeholder="Search a place: city, address, landmark"
           className="pl-11 pr-10"
           autoComplete="off"
           spellCheck={false}
@@ -160,7 +162,7 @@ export function LocationInput({ value, onChange }: LocationInputProps) {
 
         {open && results.length > 0 && (
           <ul
-            className="absolute z-30 mt-2 w-full overflow-hidden rounded-md border border-white/10 bg-ink-soft/95 backdrop-blur shadow-xl"
+            className="absolute z-30 mt-2 w-full overflow-hidden rounded-control border border-line bg-ink-soft/95 backdrop-blur shadow-xl"
             role="listbox"
           >
             {results.map((r, i) => (

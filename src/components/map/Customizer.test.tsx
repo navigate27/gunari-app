@@ -43,7 +43,7 @@ describe("Customizer", () => {
     const update = vi.fn();
     const updateLocation = vi.fn();
     render(<Customizer input={baseInput} update={update} updateLocation={updateLocation} />);
-    fireEvent.click(screen.getByRole("radio", { name: /circle/i }));
+    fireEvent.click(screen.getByRole("button", { name: /circle/i }));
     expect(update).toHaveBeenCalledWith("shape", "circle");
   });
 

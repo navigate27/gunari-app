@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Download, Share2, Shuffle } from "lucide-react";
+import { Download, Share2, Shuffle } from "lucide-react";
 import confetti from "canvas-confetti";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
 import { Customizer } from "@/components/map/Customizer";
 import { LivePreview } from "@/components/map/LivePreview";
 import { useMapPrintState } from "@/hooks/useMapPrintState";
@@ -26,7 +27,7 @@ export default function MapPage() {
 
   const COOLDOWN_MSGS = [
     "Whoa, partner. The map needs a breath.",
-    "Easy, tiger — the streets are still reassembling.",
+    "Easy, tiger. The streets are still reassembling.",
     "Patience, cartographer. Even the map takes a beat.",
     "Hold your horses. The map isn't going anywhere.",
     "That's enough excitement for now. Take a knee.",
@@ -90,7 +91,7 @@ export default function MapPage() {
     setGenerating(true);
     try {
       await downloadMapPng(input, geometry, filename);
-      setFlash("Saved — add it to your story");
+      setFlash("Saved. Add it to your story.");
       setTimeout(() => setFlash(null), 1800);
     } finally {
       setGenerating(false);
@@ -116,16 +117,7 @@ export default function MapPage() {
   return (
     <main className="min-h-[100dvh] bg-ink">
       <div className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
-        <header className="mb-6 flex items-center justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-stone hover:text-mist transition-colors"
-          >
-            <ArrowLeft size={14} /> Back
-          </Link>
-          <span className="font-display text-xl tracking-[0.3em] text-mist">GUNARI</span>
-          <div className="w-16" />
-        </header>
+        <AppHeader />
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
           <div className="order-1 lg:order-1">
@@ -145,10 +137,11 @@ export default function MapPage() {
                 <div className="relative flex-1">
                   <Button
                     ref={randomizeBtnRef}
+                    variant="accent"
                     size="md"
                     onClick={onRandomize}
                     disabled={!geometry}
-                    className="w-full bg-gradient-to-r from-gold via-[#E8D5A0] to-gold text-ink shadow-[0_0_20px_-4px_rgba(201,163,90,0.5)] hover:shadow-[0_0_28px_-2px_rgba(201,163,90,0.7)]"
+                    className="w-full"
                   >
                     <motion.span
                       animate={spinning ? { rotate: 360 } : { rotate: 0 }}
@@ -184,9 +177,9 @@ export default function MapPage() {
                 </Button>
               </div>
               <div className="flex items-center gap-2">
-                <ShareIconButton label="Share" onClick={onShare} disabled={generating || !geometry}>
+                <IconButton label="Share" onClick={onShare} disabled={generating || !geometry}>
                   <Share2 size={16} />
-                </ShareIconButton>
+                </IconButton>
               </div>
               <p className="text-center text-[10px] uppercase tracking-[0.25em] text-stone">
                 Save your map. Add it to your story.
@@ -227,30 +220,5 @@ function slug(s: string): string {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
       .slice(0, 40) || "gunari"
-  );
-}
-
-function ShareIconButton({
-  label,
-  onClick,
-  disabled,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className="flex h-11 flex-1 cursor-pointer items-center justify-center rounded-md text-mist transition-colors duration-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      {children}
-    </button>
   );
 }

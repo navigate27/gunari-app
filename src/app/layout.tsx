@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { Providers } from "@/components/Providers";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -67,7 +68,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${geist.variable}`}>
       <body>
-        {children}
+        <Providers>{children}</Providers>
         <Analytics />
         <script
           type="application/ld+json"

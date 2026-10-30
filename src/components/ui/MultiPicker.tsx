@@ -10,6 +10,8 @@ interface MultiPickerProps<T extends string> {
   onChange: (v: T[]) => void;
   columns?: number;
   className?: string;
+  /** Accessible name for the group. */
+  label?: string;
 }
 
 export function MultiPicker<T extends string>({
@@ -18,6 +20,7 @@ export function MultiPicker<T extends string>({
   onChange,
   columns = 2,
   className,
+  label,
 }: MultiPickerProps<T>) {
   const toggle = (v: T) => {
     if (value.includes(v)) {
@@ -29,6 +32,8 @@ export function MultiPicker<T extends string>({
 
   return (
     <div
+      role="group"
+      aria-label={label}
       className={cn("grid gap-2", className)}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
@@ -38,12 +43,13 @@ export function MultiPicker<T extends string>({
           <button
             key={o.value}
             type="button"
+            aria-pressed={active}
             onClick={() => toggle(o.value)}
             className={cn(
-              "relative h-14 rounded-md border px-3 text-left cursor-pointer transition-all duration-200",
+              "relative h-14 rounded-control border px-3 text-left cursor-pointer transition-[border-color,background-color] duration-200",
               active
-                ? "border-gold/70 bg-white/[0.06]"
-                : "border-white/10 bg-white/[0.02] hover:border-white/25"
+                ? "border-gold/70 bg-surface-raised"
+                : "border-line bg-surface hover:border-line-strong"
             )}
           >
             <div className="flex items-center gap-2 h-full">
@@ -52,7 +58,7 @@ export function MultiPicker<T extends string>({
                   "flex h-5 w-5 items-center justify-center rounded-full border transition-colors",
                   active
                     ? "border-gold/70 bg-gold/20"
-                    : "border-white/20 bg-transparent"
+                    : "border-line-strong bg-transparent"
                 )}
               >
                 {active && (

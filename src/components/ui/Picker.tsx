@@ -19,6 +19,8 @@ interface PickerProps<T extends string> {
   onChange: (v: T) => void;
   columns?: number;
   className?: string;
+  /** Accessible name for the group. */
+  label?: string;
 }
 
 export function Picker<T extends string>({
@@ -27,9 +29,12 @@ export function Picker<T extends string>({
   onChange,
   columns = 2,
   className,
+  label,
 }: PickerProps<T>) {
   return (
     <div
+      role="group"
+      aria-label={label}
       className={cn("grid gap-2", className)}
       style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
     >
@@ -40,33 +45,32 @@ export function Picker<T extends string>({
           <button
             key={o.value}
             type="button"
+            aria-pressed={active}
             onClick={() => onChange(o.value)}
             className={cn(
-              "relative h-14 rounded-md border px-3 text-left cursor-pointer transition-all duration-200",
+              "relative h-14 rounded-control border px-3 text-left cursor-pointer transition-[border-color,background-color] duration-200",
               active
-                ? off
-                  ? "border-gold/70 bg-white/[0.06]"
-                  : "border-gold/70 bg-white/[0.06]"
+                ? "border-gold/70 bg-surface-raised"
                 : off
-                ? "border-dashed border-white/15 bg-white/[0.015] hover:border-white/35"
-                : "border-white/10 bg-white/[0.02] hover:border-white/25"
+                ? "border-dashed border-line bg-surface hover:border-line-strong"
+                : "border-line bg-surface hover:border-line-strong"
             )}
           >
             <div className="flex items-center gap-2 h-full">
               {off ? (
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-white/25 text-stone">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-line-strong text-stone">
                   <Ban size={13} />
                 </span>
               ) : o.swatch ? (
                 <span
-                  className="block h-6 w-6 rounded-full border border-white/15"
+                  className="block h-6 w-6 rounded-full border border-line"
                   style={{ background: o.swatch }}
                 />
               ) : null}
               <span
                 className={cn(
                   "font-ui text-xs tracking-wide uppercase truncate",
-                  active ? "text-mist" : off ? "text-stone/80" : "text-stone"
+                  active ? "text-mist" : "text-stone"
                 )}
               >
                 {o.label}
