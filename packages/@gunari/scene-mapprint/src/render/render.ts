@@ -301,6 +301,6 @@ export function renderMap(
   const [px, py] = input.pin
     ? projectLatLng(geom.bbox, { ...viewport, zoomScale: geom.zoomScale }, geom.rotation, input.pin.lat, input.pin.lng)
     : [viewport.cx, viewport.cy];
-  const dropIn = animating ? clamp01((reveal - 0.82) / 0.18) : 1;
+  const dropIn = animating && viewport.pinDrop !== false ? clamp01((reveal - 0.82) / 0.18) : 1;
   MARKERS[input.marker].draw(ctx, px * canvasW, py * canvasH, markerR, palette, dropIn);
 }

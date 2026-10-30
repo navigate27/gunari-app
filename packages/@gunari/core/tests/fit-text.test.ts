@@ -109,3 +109,11 @@ describe("blendLayouts", () => {
     expect(render.mock.calls[0].slice(-2)).toEqual([spec.w, spec.h]);
   });
 });
+
+describe("location line", () => {
+  it("is left out when the address label is cleared", () => {
+    const { ctx, drawn } = ctxWithMetrics();
+    renderScaffold(ctx, { ...base("Hi"), meta: { date: "", time: "", location: "" } });
+    expect(drawn.map((d) => d.text)).toEqual(["Hi", "GUNARI"]);
+  });
+});

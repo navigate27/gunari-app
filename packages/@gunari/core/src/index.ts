@@ -9,4 +9,5 @@ export * from "./geometry/project";
 export * from "./geometry/mask";
 export * from "./export/png";
 export * from "./artwork/formats";
+export * from "./artwork/card-frames";
 export * from "./artwork/scaffold";

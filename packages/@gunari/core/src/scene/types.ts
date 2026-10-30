@@ -57,6 +57,8 @@ export interface SceneViewport {
   panY?: number;
   /** Drawing progress 0..1 for the build-up animation. Omitted = fully drawn. */
   reveal?: number;
+  /** Set false to show the marker at once during the drawing animation instead of dropping it in. */
+  pinDrop?: boolean;
   /** Enlarges (>1) or shrinks (<1) the map inside the slot. Omitted = 1. */
   zoomScale?: number;
 }

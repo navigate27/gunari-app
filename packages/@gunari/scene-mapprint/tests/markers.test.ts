@@ -69,3 +69,28 @@ describe("MARKERS registry", () => {
     }
   });
 });
+
+describe("star marker silhouette", () => {
+  it("draws the star and its stem with the same winding so they never cancel into a hole", () => {
+    const subpaths: [number, number][][] = [];
+    let current: [number, number][] = [];
+    const ctx = {
+      ...mockCtx(),
+      beginPath: () => { current = []; subpaths.length = 0; },
+      moveTo: (x: number, y: number) => { current = [[x, y]]; },
+      lineTo: (x: number, y: number) => { current.push([x, y]); },
+      closePath: () => { subpaths.push(current); },
+    } as unknown as CanvasRenderingContext2D;
+    // Trace only: the first beginPath/closePath pairs belong to the silhouette.
+    MARKERS.star.draw(ctx, 0, 0, 10, palette, 1);
+    const area = (pts: [number, number][]) =>
+      pts.reduce((sum, [x, y], i) => {
+        const [nx, ny] = pts[(i + 1) % pts.length];
+        return sum + (x * ny - nx * y);
+      }, 0) / 2;
+    const polys = subpaths.filter((p) => p.length >= 3);
+    expect(polys.length).toBeGreaterThanOrEqual(2);
+    const signs = polys.slice(0, 2).map((p) => Math.sign(area(p)));
+    expect(signs[0]).toBe(signs[1]);
+  });
+});

@@ -98,6 +98,13 @@ describe("renderMap reveal animation", () => {
     expect(full).toEqual(at(undefined));
   });
 
+  it("shows the pin whole during the reveal when pinDrop is off", () => {
+    const { ctx, rec } = recorder();
+    renderMap(ctx, geom, MAP_THEMES.atlas, input, { ...viewport, reveal: 0.3, pinDrop: false }, 1080, 1920);
+    const dropped = at(0.3);
+    expect(rec.fills.length).toBeGreaterThan(dropped.fills.length);
+  });
+
   it("drops the pin in only at the end", () => {
     expect(at(0.5).fills.length).toBeLessThan(at(1).fills.length);
   });

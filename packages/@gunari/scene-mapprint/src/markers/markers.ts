@@ -136,10 +136,11 @@ const star: Shape = {
       else ctx.lineTo(px, py);
     }
     ctx.closePath();
-    // The stem down to the spot.
+    // The stem down to the spot. Same winding as the star (clockwise on screen):
+    // with the opposite winding the two overlap and cancel, cutting a hole in the star.
     ctx.moveTo(-0.2 * r, -0.95 * r);
-    ctx.lineTo(0, 0);
     ctx.lineTo(0.2 * r, -0.95 * r);
+    ctx.lineTo(0, 0);
     ctx.closePath();
   },
   hit: { centerY: -1.3, radius: 1.0 },

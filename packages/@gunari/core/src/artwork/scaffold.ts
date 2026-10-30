@@ -1,6 +1,7 @@
 import type { SceneInput, SceneViewport } from "../scene/types";
 import type { LayoutId } from "../scene/types";
 import type { ThemePalette } from "../theme/theme";
+import { drawCardFrame, type ArtworkFrameId } from "./card-frames";
 import { artworkLayout, type ArtworkLayout, type FormatId } from "./formats";
 
 export const ARTWORK_W = 1080;
@@ -30,6 +31,8 @@ export interface ScaffoldMeta {
 export interface ScaffoldInput {
   /** Output size. Defaults to the 1080x1920 story format. */
   format?: FormatId;
+  /** The frame around the card. Defaults to the thin line. */
+  frame?: ArtworkFrameId;
   /** An explicit layout, for frames partway through a format or layout change. Overrides format and layout. */
   layoutSpec?: ArtworkLayout;
   layout: LayoutId;
@@ -55,7 +58,7 @@ export function renderScaffold(ctx: CanvasRenderingContext2D, input: ScaffoldInp
   const p = input.palette;
 
   drawBackground(ctx, W, H, p);
-  drawFrame(ctx, L.inner, p);
+  drawCardFrame(ctx, L, p, input.frame ?? "line");
 
   input.scene.render(
     ctx,
@@ -79,15 +82,6 @@ function drawBackground(ctx: CanvasRenderingContext2D, W: number, H: number, p: 
   g.addColorStop(1, p.background.bottom);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
-}
-
-function drawFrame(ctx: CanvasRenderingContext2D, inner: ArtworkLayout["inner"], p: ThemePalette): void {
-  ctx.save();
-  ctx.strokeStyle = p.accent;
-  ctx.globalAlpha = 0.4;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(inner.x, inner.y, inner.w, inner.h);
-  ctx.restore();
 }
 
 /** Width of `text` at `size`, with a rough fallback where text can't be measured. */
@@ -201,7 +195,9 @@ function drawMetadata(ctx: CanvasRenderingContext2D, L: ArtworkLayout, p: ThemeP
   const text = hasDateTime
     ? `${formatMetaDate(input.meta.date, input.meta.time)}  ·  ${input.meta.location.toUpperCase()}`
     : input.meta.location.toUpperCase();
-  drawFitted(ctx, text, (sz) => `400 ${Math.round(sz)}px "Geist", sans-serif`, size, L.meta, 1);
+  if (text.trim()) {
+    drawFitted(ctx, text, (sz) => `400 ${Math.round(sz)}px "Geist", sans-serif`, size, L.meta, 1);
+  }
   if (input.meta.coordinates?.trim()) {
     ctx.globalAlpha = 0.8;
     ctx.font = `400 ${Math.round(L.base * 0.022)}px "Geist", sans-serif`;
