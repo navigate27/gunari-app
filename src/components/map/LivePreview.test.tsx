@@ -77,7 +77,9 @@ describe("LivePreview", () => {
     const call = (renderScaffold as ReturnType<typeof vi.fn>).mock.calls[0];
     const scaffoldInput = call[1];
     expect(scaffoldInput.sceneInput).toEqual(input);
-    expect(scaffoldInput.sceneViewport).toEqual({ cx: 0.5, cy: 0.5, r: 0.4, canvasW: 1080, canvasH: 1920, panX: 0, panY: 0 });
+    expect(scaffoldInput.sceneViewport).toMatchObject({ cx: 0.5, cy: 0.5, r: 0.4, canvasW: 1080, canvasH: 1920, panX: 0, panY: 0 });
+    // A freshly loaded map starts its drawing animation from nothing.
+    expect(scaffoldInput.sceneViewport.reveal).toBe(0);
     expect(scaffoldInput.title).toBe("Test");
     expect(scaffoldInput.meta.location).toBe("Manila");
     expect(scaffoldInput.meta.date).toBe("");
@@ -131,5 +133,66 @@ describe("LivePreview", () => {
     fireEvent.pointerDown(card, { clientX: 0, clientY: 0, pointerId: 1 });
     fireEvent.pointerMove(card, { clientX: 50, clientY: 50, pointerId: 1 });
     expect(onPan).not.toHaveBeenCalled();
+  });
+
+  it("shows the drawing skeleton while the first map loads", () => {
+    const { getByText } = render(
+      <LivePreview input={input} data={null} geometry={null} loading={true} />,
+    );
+    expect(getByText("Drawing the map")).toBeInTheDocument();
+  });
+
+  it("drags the pin instead of the map when the pointer starts on the pin", () => {
+    const onPan = vi.fn();
+    const onPinChange = vi.fn();
+    const geometryWithBox = {
+      ...mockGeometry,
+      bbox: [120.97, 14.59, 120.99, 14.61],
+      rotation: 0,
+    } as unknown as ProjectedMapGeometry;
+    const { container } = render(
+      <LivePreview
+        input={input}
+        data={data}
+        geometry={geometryWithBox}
+        loading={false}
+        onPan={onPan}
+        onPinChange={onPinChange}
+      />,
+    );
+    const card = container.querySelector("canvas")!.parentElement!;
+    card.getBoundingClientRect = () =>
+      ({ width: 200, height: 356, left: 0, top: 0, right: 200, bottom: 356, x: 0, y: 0, toJSON() {} }) as DOMRect;
+    // The pin's tip is at the slot centre (100, 178); its body sits just above.
+    fireEvent.pointerDown(card, { clientX: 100, clientY: 168, pointerId: 1 });
+    fireEvent.pointerMove(card, { clientX: 110, clientY: 188, pointerId: 1 });
+    expect(onPinChange).toHaveBeenCalled();
+    const pin = onPinChange.mock.calls[0][0];
+    expect(pin.lat).toBeLessThan(input.location.lat + 0.01);
+    expect(Number.isFinite(pin.lat) && Number.isFinite(pin.lng)).toBe(true);
+    expect(pin.lng).toBeGreaterThan(120.98);
+    expect(onPan).not.toHaveBeenCalled();
+  });
+
+  it("pans the map when the pointer starts away from the pin", () => {
+    const onPan = vi.fn();
+    const onPinChange = vi.fn();
+    const { container } = render(
+      <LivePreview
+        input={input}
+        data={data}
+        geometry={mockGeometry}
+        loading={false}
+        onPan={onPan}
+        onPinChange={onPinChange}
+      />,
+    );
+    const card = container.querySelector("canvas")!.parentElement!;
+    card.getBoundingClientRect = () =>
+      ({ width: 200, height: 356, left: 0, top: 0, right: 200, bottom: 356, x: 0, y: 0, toJSON() {} }) as DOMRect;
+    fireEvent.pointerDown(card, { clientX: 20, clientY: 40, pointerId: 1 });
+    fireEvent.pointerMove(card, { clientX: 40, clientY: 60, pointerId: 1 });
+    expect(onPan).toHaveBeenCalled();
+    expect(onPinChange).not.toHaveBeenCalled();
   });
 });

@@ -1,12 +1,23 @@
 import type { ScaffoldInput, SceneRenderFn } from "@gunari/core";
-import { mapPrintScene, getMapTheme, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
+import { bboxForZoom, mapPrintScene, getMapTheme, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
 import { MAP_PREVIEW_VIEWPORT, type MapPrintInput } from "@/hooks/useMapPrintState";
 import { formatLatLng } from "@/lib/utils";
+
+/** A map with nothing drawn yet, so the frame, title and theme can show while data loads. */
+export function emptyGeometry(input: MapPrintInput): ProjectedMapGeometry {
+  const { lat, lng } = input.location;
+  return {
+    roads: [], water: [], waterways: [], parks: [], built: [], green: [], labels: [],
+    bbox: bboxForZoom(lat, lng, input.zoom),
+    rotation: input.rotation,
+  };
+}
 
 export function buildMapScaffoldInput(
   input: MapPrintInput,
   geometry: ProjectedMapGeometry,
   pan: { x: number; y: number } = { x: 0, y: 0 },
+  reveal?: number,
 ): ScaffoldInput {
   const palette = getMapTheme(input.style);
   return {
@@ -19,7 +30,7 @@ export function buildMapScaffoldInput(
       time: "",
       location: input.location.label,
       coordinates: input.showCoordinates
-        ? formatLatLng(input.location.lat, input.location.lng)
+        ? formatLatLng(input.pin?.lat ?? input.location.lat, input.pin?.lng ?? input.location.lng)
         : undefined,
     },
     palette,
@@ -27,6 +38,6 @@ export function buildMapScaffoldInput(
     sceneGeometry: geometry,
     scenePalette: palette,
     sceneInput: input,
-    sceneViewport: { ...MAP_PREVIEW_VIEWPORT(input.layout, input.format), panX: pan.x, panY: pan.y },
+    sceneViewport: { ...MAP_PREVIEW_VIEWPORT(input.layout, input.format), panX: pan.x, panY: pan.y, reveal: reveal !== undefined && reveal < 1 ? reveal : undefined },
   };
 }

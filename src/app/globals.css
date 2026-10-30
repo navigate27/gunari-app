@@ -95,9 +95,73 @@
     animation: gunari-twinkle 4s ease-in-out infinite;
   }
 
+  /* Map loading: ripples spreading from the pin, a pulsing centre dot,
+     a shimmering label and a sweep along the card edge. */
+  @keyframes gunari-ripple {
+    0% {
+      transform: translate(-50%, -50%) scale(0.12);
+      opacity: 0.75;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+  }
+
+  .animate-ripple {
+    animation: gunari-ripple 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+
+  @keyframes gunari-pulse-dot {
+    0%,
+    100% {
+      opacity: 0.45;
+      scale: 0.8;
+    }
+    50% {
+      opacity: 1;
+      scale: 1.15;
+    }
+  }
+
+  .animate-pulse-dot {
+    animation: gunari-pulse-dot 1.4s ease-in-out infinite;
+  }
+
+  @keyframes gunari-shimmer-text {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .animate-shimmer-text {
+    animation: gunari-shimmer-text 1.8s ease-in-out infinite;
+  }
+
+  @keyframes gunari-sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(300%);
+    }
+  }
+
+  .animate-sweep {
+    animation: gunari-sweep 1.2s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-drift,
-    .animate-twinkle {
+    .animate-twinkle,
+    .animate-ripple,
+    .animate-pulse-dot,
+    .animate-shimmer-text,
+    .animate-sweep {
       animation: none;
     }
   }

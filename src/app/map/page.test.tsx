@@ -2,7 +2,8 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
-vi.mock("@/hooks/useMapPrintState", () => ({
+vi.mock("@/hooks/useMapPrintState", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/hooks/useMapPrintState")>()),
   useMapPrintState: () => ({
     input: {
       location: { lat: 14.5995, lng: 120.9842, label: "Manila" },

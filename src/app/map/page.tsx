@@ -126,10 +126,11 @@ export default function MapPage() {
                 input={input}
                 data={data}
                 geometry={geometry}
-                loading={loading && !data}
+                loading={loading}
                 pan={pan}
                 onPan={setPan}
                 onPanEnd={commitPan}
+                onPinChange={(pin) => update("pin", pin)}
               />
             </div>
           </div>

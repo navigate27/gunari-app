@@ -123,7 +123,8 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
 
   const updateLocation = React.useCallback(
     (location: Partial<MapPrintInput["location"]>) => {
-      setInput((prev) => ({ ...prev, location: { ...prev.location, ...location } }));
+      // A new place starts with the pin back at the centre.
+      setInput((prev) => ({ ...prev, location: { ...prev.location, ...location }, pin: undefined }));
     },
     [],
   );
@@ -151,7 +152,10 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
 
   const randomize = React.useCallback(() => {
     setInput((prev) => {
-      const themes: SceneInput["style"][] = ["classic", "midnight", "blueprint", "paper", "twilight"];
+      const themes: SceneInput["style"][] = [
+        "classic", "midnight", "blueprint", "paper", "twilight",
+        "atlas", "ink", "mist", "nocturne", "lagoon", "chalk",
+      ];
       const shapes: SceneInput["shape"][] = ["square", "circle", "heart"];
       const markers: SceneInput["marker"][] = ["solid", "ring", "heart", "star"];
       const zooms: SceneInput["zoom"][] = ["neighborhood", "district", "city"];

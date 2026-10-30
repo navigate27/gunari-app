@@ -16,10 +16,20 @@ const THEME_IDS: { value: SceneInput["style"]; label: string }[] = [
   { value: "blueprint", label: "Blueprint" },
   { value: "paper", label: "Paper" },
   { value: "twilight", label: "Twilight" },
+  { value: "atlas", label: "Atlas" },
+  { value: "ink", label: "Ink" },
+  { value: "mist", label: "Mist" },
+  { value: "nocturne", label: "Nocturne" },
+  { value: "lagoon", label: "Lagoon" },
+  { value: "chalk", label: "Chalk" },
 ];
+// Each swatch previews the style: background, main road colour, then water.
 const THEMES: PickerOption<SceneInput["style"]>[] = THEME_IDS.map((t) => {
-  const { background } = getMapTheme(t.value);
-  return { ...t, swatch: `linear-gradient(180deg, ${background.top}, ${background.bottom})` };
+  const p = getMapTheme(t.value);
+  return {
+    ...t,
+    swatch: `linear-gradient(135deg, ${p.background.top} 0 42%, ${p.road.primary.color} 42% 62%, ${p.water} 62% 100%)`,
+  };
 });
 const SHAPES: { value: SceneInput["shape"]; label: string }[] = [
   { value: "square", label: "Square" },
@@ -103,6 +113,15 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
           onChange={(v) => update("marker", v)}
           columns={2}
         />
+        {input.pin && (
+          <button
+            type="button"
+            onClick={() => update("pin", undefined)}
+            className="mt-3 cursor-pointer text-[11px] uppercase tracking-[0.2em] text-stone transition-colors hover:text-mist"
+          >
+            Move pin back to the centre
+          </button>
+        )}
       </section>
       <section>
         <SectionTitle>Zoom</SectionTitle>
