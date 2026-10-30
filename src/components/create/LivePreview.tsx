@@ -52,7 +52,7 @@ export function LivePreview({ input, sky, loading }: LivePreviewProps) {
   const dragY = useMotionValue(0);
   const rotateY = useTransform(dragX, [-50, 50], [-14, 14]);
   const rotateZ = useTransform(dragX, [-50, 50], [-2, 2]);
-  const rotateX = useTransform(dragY, [-50, 50], [14, -14]);
+  const rotateX = useTransform(dragY, [-50, 50], [7, -7]);
 
   const dragRef = React.useRef<{
     startX: number;
