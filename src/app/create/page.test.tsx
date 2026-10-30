@@ -1,11 +1,13 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, it, expect, vi } from "vitest";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
+const state = vi.hoisted(() => ({ input: { title: "before" } }));
 
 vi.mock("@/hooks/useGunariState", () => ({
   useGunariState: () => ({
-    input: {},
+    input: state.input,
     update: vi.fn(),
     updateLocation: vi.fn(),
     randomize: vi.fn(),
@@ -17,7 +19,9 @@ vi.mock("@/components/create/Customizer", () => ({
   Customizer: () => <div>customizer-stub</div>,
 }));
 vi.mock("@/components/create/LivePreview", () => ({
-  LivePreview: () => <div>preview-stub</div>,
+  LivePreview: ({ input }: { input: { title: string } }) => (
+    <div>preview-stub:{input.title}</div>
+  ),
 }));
 vi.mock("@/lib/render/png", () => ({
   exportToPng: vi.fn(),
@@ -25,6 +29,8 @@ vi.mock("@/lib/render/png", () => ({
   downloadBlob: vi.fn(),
 }));
 vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
+
+afterEach(cleanup);
 
 describe("/create page mobile tabs", () => {
   it("shows the editor first and switches to the preview tab", async () => {
@@ -34,18 +40,35 @@ describe("/create page mobile tabs", () => {
       "true"
     );
     expect(screen.getByText("customizer-stub")).toBeInTheDocument();
-    expect(screen.queryByText("preview-stub")).not.toBeInTheDocument();
+    expect(screen.queryByText(/preview-stub/)).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("tab", { name: "Preview" }));
 
     await waitFor(() =>
-      expect(screen.getByText("preview-stub")).toBeInTheDocument()
+      expect(screen.getByText(/preview-stub/)).toBeInTheDocument()
     );
     expect(screen.getByRole("tab", { name: "Preview" })).toHaveAttribute(
       "aria-selected",
       "true"
     );
     expect(screen.queryByText("customizer-stub")).not.toBeInTheDocument();
+  });
+
+  it("applies edits to the preview only after the Preview tab is shown", async () => {
+    state.input = { title: "before" };
+    const { rerender } = render(<Page />);
+
+    state.input = { title: "after" };
+    rerender(<Page />);
+
+    await userEvent.click(screen.getByRole("tab", { name: "Preview" }));
+
+    await waitFor(() =>
+      expect(screen.getByText("preview-stub:before")).toBeInTheDocument()
+    );
+    await waitFor(() =>
+      expect(screen.getByText("preview-stub:after")).toBeInTheDocument()
+    );
   });
 });
 

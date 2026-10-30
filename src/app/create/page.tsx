@@ -143,8 +143,20 @@ export default function CreatePage() {
     setTab(next);
   };
 
+  // On mobile the preview unmounts while editing. Hold it on the input it last
+  // showed and release the edits once the Preview tab has finished entering, so
+  // the card's change animations play in view instead of off-screen.
+  const [previewInput, setPreviewInput] = React.useState(input);
+  React.useEffect(() => {
+    if (isDesktop) setPreviewInput(input);
+  }, [isDesktop, input]);
+
   const preview = (
-    <LivePreview input={input} sky={sky} loading={catalogLoading} />
+    <LivePreview
+      input={isDesktop ? input : previewInput}
+      sky={sky}
+      loading={catalogLoading}
+    />
   );
 
   const editor = (
@@ -344,6 +356,9 @@ export default function CreatePage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.25, ease: "easeOut" }}
+                onAnimationComplete={(def) => {
+                  if (def === "center" && tab === "preview") setPreviewInput(input);
+                }}
               >
                 {tab === "preview" ? preview : editor}
               </motion.div>
