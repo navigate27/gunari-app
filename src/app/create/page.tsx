@@ -317,7 +317,7 @@ export default function CreatePage() {
                   aria-selected={tab === t.id}
                   aria-controls={`panel-${t.id}`}
                   onClick={() => selectTab(t.id)}
-                  className={`relative flex-1 cursor-pointer py-3 text-[11px] uppercase tracking-[0.25em] transition-colors duration-200 ${
+                  className={`relative flex-1 cursor-pointer py-5 text-xs uppercase tracking-[0.25em] transition-colors duration-200 ${
                     tab === t.id ? "text-gold" : "text-stone hover:text-mist"
                   }`}
                 >
