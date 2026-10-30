@@ -45,6 +45,7 @@ const input: MapPrintInput = {
   shape: "square", style: "classic", marker: "solid",
   zoom: "district", rotation: 0, labels: false, layout: "classic",
   showCoordinates: false,
+  format: "story",
 };
 
 const geometry = {

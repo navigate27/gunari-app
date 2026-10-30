@@ -49,21 +49,35 @@ describe("projectGeometry", () => {
     labels: [{ text: "Manila", x: 0, y: 0, class: "place" }],
   };
 
-  // With the y-flip (`return [nx, 1 - ny]`) the min-lng/min-lat corner
-  // (geographic south-west) maps to canvas [0, 1] (bottom-left in canvas-
-  // down y), and the max corner maps to [1, 0] (top-right). North is up.
-  it("maps the bbox min corner to roughly [0, 1] (y-flipped)", () => {
+  const px = (p: [number, number], v: SceneViewport = viewport): [number, number] => [
+    p[0] * (v.canvasW ?? 1080),
+    p[1] * (v.canvasH ?? 1920),
+  ];
+
+  // The bbox lands on a square centred on the slot, side = 2r * min(W, H) * sqrt(2)
+  // so it still covers the slot when rotated. North is up (y flipped).
+  it("places the bbox on a square centred on the slot (min corner bottom-left)", () => {
     const out = projectGeometry(geom, viewport, 0, 0.001);
-    const motorway = out.roads[0];
-    expect(motorway.points[0][0]).toBeCloseTo(0, 1);
-    expect(motorway.points[0][1]).toBeCloseTo(1, 1);
+    const half = 0.4 * 1080 * Math.SQRT2;
+    const [x, y] = px(out.roads[0].points[0]);
+    expect(x).toBeCloseTo(540 - half, 0);
+    expect(y).toBeCloseTo(960 + half, 0);
   });
 
-  it("maps the bbox max corner to roughly [1, 0] (y-flipped)", () => {
+  it("places the bbox max corner top-right", () => {
     const out = projectGeometry(geom, viewport, 0, 0.001);
-    const motorway = out.roads[0];
-    expect(motorway.points[1][0]).toBeCloseTo(1, 1);
-    expect(motorway.points[1][1]).toBeCloseTo(0, 1);
+    const half = 0.4 * 1080 * Math.SQRT2;
+    const [x, y] = px(out.roads[0].points[1]);
+    expect(x).toBeCloseTo(540 + half, 0);
+    expect(y).toBeCloseTo(960 - half, 0);
+  });
+
+  it("scales both axes equally on a landscape canvas so the map is not stretched", () => {
+    const wide: SceneViewport = { cx: 0.27, cy: 0.5, r: 0.36, canvasW: 1920, canvasH: 1080 };
+    const out = projectGeometry(geom, wide, 0, 0.001);
+    const [x0, y0] = px(out.roads[0].points[0], wide);
+    const [x1, y1] = px(out.roads[0].points[1], wide);
+    expect(x1 - x0).toBeCloseTo(y0 - y1, 0);
   });
 
   it("preserves road names and classes", () => {
@@ -72,14 +86,20 @@ describe("projectGeometry", () => {
     expect(out.roads[0].name).toBe("Skyway");
   });
 
-  it("rotates points around the viewport center", () => {
-    const out90 = projectGeometry(geom, viewport, Math.PI / 2, 0.001);
-    // The motorway's first point is the bbox min corner → projected [0, 1]
-    // (canvas bottom-left). A +90° rotation (counterclockwise in math,
-    // clockwise visually in canvas-down) around (0.5, 0.5) moves [0, 1]
-    // to [0, 0] (canvas top-left).
-    expect(out90.roads[0].points[0][0]).toBeCloseTo(0, 1);
-    expect(out90.roads[0].points[0][1]).toBeCloseTo(0, 1);
+  it("rotates points around the slot centre without changing their pixel distance from it", () => {
+    const wide: SceneViewport = { cx: 0.27, cy: 0.5, r: 0.36, canvasW: 1920, canvasH: 1080 };
+    const flat = projectGeometry(geom, wide, 0, 0.001).roads[0].points[0];
+    const turned = projectGeometry(geom, wide, Math.PI / 2, 0.001).roads[0].points[0];
+    const dist = (p: [number, number]) => {
+      const [x, y] = px(p, wide);
+      return Math.hypot(x - 0.27 * 1920, y - 0.5 * 1080);
+    };
+    expect(dist(turned)).toBeCloseTo(dist(flat), 3);
+    const [fx, fy] = px(flat, wide);
+    const [tx, ty] = px(turned, wide);
+    // +90°: (dx, dy) -> (-dy, dx)
+    expect(tx - 0.27 * 1920).toBeCloseTo(-(fy - 540), 3);
+    expect(ty - 540).toBeCloseTo(fx - 0.27 * 1920, 3);
   });
 
   it("returns labels with projected x/y", () => {

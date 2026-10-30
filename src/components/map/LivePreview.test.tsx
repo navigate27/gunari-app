@@ -45,6 +45,7 @@ const input: MapPrintInput = {
   shape: "square", style: "classic", marker: "solid",
   zoom: "district", rotation: 0, labels: false, layout: "classic",
   showCoordinates: false,
+  format: "story",
 };
 
 const data: MapPrintSceneData = {
@@ -76,7 +77,7 @@ describe("LivePreview", () => {
     const call = (renderScaffold as ReturnType<typeof vi.fn>).mock.calls[0];
     const scaffoldInput = call[1];
     expect(scaffoldInput.sceneInput).toEqual(input);
-    expect(scaffoldInput.sceneViewport).toEqual({ cx: 0.5, cy: 0.5, r: 0.4 });
+    expect(scaffoldInput.sceneViewport).toEqual({ cx: 0.5, cy: 0.5, r: 0.4, canvasW: 1080, canvasH: 1920 });
     expect(scaffoldInput.title).toBe("Test");
     expect(scaffoldInput.meta.location).toBe("Manila");
     expect(scaffoldInput.meta.date).toBe("");

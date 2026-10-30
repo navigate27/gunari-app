@@ -203,4 +203,27 @@ describe("renderScaffold", () => {
     // Should draw "MANILA, PH" (location only, uppercased)
     expect(calls.some((c) => c === "fillText:MANILA, PH")).toBe(true);
   });
+
+  it("renders at the size of the chosen format", () => {
+    const { ctx, calls } = makeMockCtx();
+    const fakeSceneRender = vi.fn();
+    renderScaffold(ctx, {
+      format: "landscape",
+      layout: "classic",
+      title: "Manila",
+      meta: { date: "", time: "", location: "Manila, PH" },
+      palette,
+      scene: { render: fakeSceneRender as never },
+      sceneGeometry: {} as never,
+      scenePalette: palette,
+      sceneInput: {
+        location: { lat: 14.5995, lng: 120.9842, label: "Manila" },
+        shape: "square", style: "classic", marker: "solid",
+        zoom: "district", rotation: 0, labels: false, layout: "classic",
+      },
+      sceneViewport: { cx: 0.27, cy: 0.5, r: 0.36 },
+    });
+    expect(calls).toContain("fillRect(0,0,1920,1080)");
+    expect(fakeSceneRender.mock.calls[0].slice(-2)).toEqual([1920, 1080]);
+  });
 });

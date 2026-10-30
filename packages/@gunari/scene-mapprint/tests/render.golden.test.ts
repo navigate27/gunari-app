@@ -7,7 +7,7 @@ import { parseOsm, type OsmResponse } from "../src/interpret/parse";
 import { projectGeometry } from "../src/projection/project";
 import { renderMap } from "../src/render/render";
 import { MAP_THEMES } from "../src/styles/themes";
-import type { SceneInput, SceneViewport } from "@gunari/core";
+import { FORMATS, artworkLayout, type SceneInput, type SceneViewport } from "@gunari/core";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPDATE = process.env.UPDATE_GOLDEN === "1";
@@ -92,6 +92,24 @@ describe("golden: render.manila-district", () => {
       const expected = await readGolden(`manila-district-rot-${angle}`);
       const { match, diff } = await diffImages(png, expected, tolerance);
       expect(match, `golden rotation diff for ${angle}° = ${diff}`).toBe(true);
+    });
+  }
+});
+describe("golden: render.formats", () => {
+  for (const format of ["square", "landscape"] as const) {
+    it(`renders the ${format} format slot matching the golden image`, async () => {
+      const { w, h } = FORMATS[format];
+      const fw = w / 2, fh = h / 2;
+      const slot = artworkLayout(format, "classic").slot;
+      const geom = projectGeometry(manilaDistrict, slot, 0, 0.001);
+      const png = await renderToPng((ctx) => {
+        renderMap(ctx, geom, MAP_THEMES.classic, baseInput, slot, fw, fh);
+      }, fw, fh);
+      if (UPDATE) { await writeGolden(`manila-district-format-${format}`, png); return; }
+      const expected = await readGolden(`manila-district-format-${format}`);
+      const { match, diff } = await diffImages(png, expected, 0.02);
+      if (!match) await writeGolden(`manila-district-format-${format}.ACTUAL`, png);
+      expect(match, `golden diff for ${format} = ${diff}`).toBe(true);
     });
   }
 });

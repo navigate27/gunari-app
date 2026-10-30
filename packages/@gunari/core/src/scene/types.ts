@@ -32,7 +32,12 @@ export interface SceneCapabilities {
 }
 
 export interface SceneViewport {
+  /** Slot center, as a fraction of the canvas width / height. */
   cx: number;
   cy: number;
+  /** Slot radius, as a fraction of the shorter canvas side. */
   r: number;
+  /** Canvas size the fractions refer to. Defaults to the 1080x1920 story canvas. */
+  canvasW?: number;
+  canvasH?: number;
 }

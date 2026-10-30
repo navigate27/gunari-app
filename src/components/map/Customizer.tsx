@@ -7,7 +7,7 @@ import { Input, Label } from "@/components/ui/Input";
 import { Picker, type PickerOption } from "@/components/ui/Picker";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
-import type { SceneInput } from "@gunari/core";
+import { FORMATS, FORMAT_ORDER, type FormatId, type SceneInput } from "@gunari/core";
 import { getMapTheme } from "@gunari/scene-mapprint";
 
 const THEME_IDS: { value: SceneInput["style"]; label: string }[] = [
@@ -37,6 +37,10 @@ const ZOOMS: { value: SceneInput["zoom"]; label: string }[] = [
   { value: "district", label: "District" },
   { value: "city", label: "City" },
 ];
+const FORMAT_OPTIONS: { value: FormatId; label: string }[] = FORMAT_ORDER.map((id) => ({
+  value: id,
+  label: FORMATS[id].label,
+}));
 const LAYOUTS: { value: SceneInput["layout"]; label: string }[] = [
   { value: "classic", label: "Classic" },
   { value: "poster", label: "Poster" },
@@ -125,6 +129,16 @@ export function Customizer({ input, update, updateLocation }: CustomizerProps) {
           value={input.layout}
           onChange={(v) => update("layout", v)}
           columns={2}
+        />
+      </section>
+      <section>
+        <SectionTitle>Format</SectionTitle>
+        <Picker
+          label="Format"
+          options={FORMAT_OPTIONS}
+          value={input.format}
+          onChange={(v) => update("format", v)}
+          columns={3}
         />
       </section>
     </div>

@@ -9,6 +9,7 @@ vi.mock("@/hooks/useMapPrintState", () => ({
       title: "T", message: undefined,
       shape: "square", style: "classic", marker: "solid",
       zoom: "district", rotation: 0, labels: false, layout: "classic",
+      showCoordinates: false, format: "story",
     },
     update: vi.fn(),
     updateLocation: vi.fn(),

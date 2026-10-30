@@ -20,6 +20,7 @@ const baseInput: MapPrintInput = {
   labels: false,
   layout: "classic",
   showCoordinates: false,
+  format: "story",
 };
 
 describe("Customizer", () => {

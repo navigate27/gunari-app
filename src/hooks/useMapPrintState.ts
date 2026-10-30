@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import type { SceneInput, SceneViewport } from "@gunari/core";
+import { artworkLayout, type FormatId, type SceneInput, type SceneViewport } from "@gunari/core";
 import { mapPrintScene, type MapPrintSceneData, type ProjectedMapGeometry } from "@gunari/scene-mapprint";
 import { pickRandomPair } from "@/lib/content/pairs";
 
@@ -9,10 +9,14 @@ export type MapPrintInput = SceneInput & {
   title: string;
   message?: string;
   showCoordinates: boolean;
+  format: FormatId;
 };
 
-export function MAP_PREVIEW_VIEWPORT(layout: SceneInput["layout"]): SceneViewport {
-  return { cx: 0.5, cy: 0.5, r: layout === "poster" ? 0.42 : 0.4 };
+export function MAP_PREVIEW_VIEWPORT(
+  layout: SceneInput["layout"],
+  format: FormatId = "story",
+): SceneViewport {
+  return artworkLayout(format, layout).slot;
 }
 
 const RANDOM_PAIR = pickRandomPair();
@@ -33,6 +37,7 @@ const DEFAULT_INPUT: MapPrintInput = {
   labels: false,
   layout: "classic",
   showCoordinates: false,
+  format: "story",
 };
 
 const DEBOUNCE_MS = 250;
@@ -87,9 +92,9 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
   // Geometry derived from data + rotation + layout (recomputed on each render).
   const geometry: ProjectedMapGeometry | null = React.useMemo(() => {
     if (!data) return null;
-    const viewport = MAP_PREVIEW_VIEWPORT(input.layout);
+    const viewport = MAP_PREVIEW_VIEWPORT(input.layout, input.format);
     return mapPrintScene.project(data, viewport, input.rotation);
-  }, [data, input.rotation, input.layout]);
+  }, [data, input.rotation, input.layout, input.format]);
 
   const update = React.useCallback(
     <K extends keyof MapPrintInput>(key: K, value: MapPrintInput[K]) => {

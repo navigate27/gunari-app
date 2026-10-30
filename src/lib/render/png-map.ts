@@ -1,6 +1,6 @@
 "use client";
 
-import { renderScaffold, ARTWORK_W, ARTWORK_H } from "@gunari/core";
+import { renderScaffold, FORMATS } from "@gunari/core";
 import type { ProjectedMapGeometry } from "@gunari/scene-mapprint";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import { buildMapScaffoldInput } from "./map-scaffold";
@@ -13,8 +13,8 @@ export interface ExportMapPngInput {
 
 export async function exportMapPng({ input, geometry }: ExportMapPngInput): Promise<Blob> {
   const canvas = document.createElement("canvas");
-  canvas.width = ARTWORK_W;
-  canvas.height = ARTWORK_H;
+  canvas.width = FORMATS[input.format].w;
+  canvas.height = FORMATS[input.format].h;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas 2D context unavailable");
   renderScaffold(ctx, buildMapScaffoldInput(input, geometry));

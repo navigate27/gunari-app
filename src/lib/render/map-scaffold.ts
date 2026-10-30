@@ -9,6 +9,7 @@ export function buildMapScaffoldInput(
 ): ScaffoldInput {
   const palette = getMapTheme(input.style);
   return {
+    format: input.format,
     layout: input.layout,
     title: input.title,
     message: input.message,
@@ -25,6 +26,6 @@ export function buildMapScaffoldInput(
     sceneGeometry: geometry,
     scenePalette: palette,
     sceneInput: input,
-    sceneViewport: MAP_PREVIEW_VIEWPORT(input.layout),
+    sceneViewport: MAP_PREVIEW_VIEWPORT(input.layout, input.format),
   };
 }

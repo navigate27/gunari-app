@@ -1,13 +1,16 @@
 import type { MapGeometry } from "../interpret/types";
 import type { SceneViewport } from "@gunari/core";
-import { webMercator, normalizeToViewport, simplifyLine, rotatePoints } from "@gunari/core";
+import { webMercator, normalizeToViewport, simplifyLine, FORMATS } from "@gunari/core";
 import type { ProjectedMapGeometry, ProjectedRoad, ProjectedPolygon, ProjectedLabel } from "./types";
 
 /**
  * Project a MapGeometry (raw lng/lat) to a ProjectedMapGeometry (canvas-
  * normalized [0, 1] coords), simplified, rotated around the viewport center.
  *
- * Stages: Web Mercator → normalize to bbox → simplify per line → rotate.
+ * Stages: Web Mercator → normalize to bbox → simplify per line → place on the
+ * canvas → rotate. The bbox lands on a square (same scale on both axes, so the
+ * map is never stretched) centered on the slot and sized to still cover the
+ * slot when rotated by any angle.
  */
 export function projectGeometry(
   geom: MapGeometry,
@@ -16,6 +19,31 @@ export function projectGeometry(
   tolerance: number
 ): ProjectedMapGeometry {
   const bbox = geom.bbox;
+  const canvasW = viewport.canvasW ?? FORMATS.story.w;
+  const canvasH = viewport.canvasH ?? FORMATS.story.h;
+  const side = 2 * viewport.r * Math.min(canvasW, canvasH) * Math.SQRT2;
+
+  /** bbox-normalized [0,1] point → canvas-normalized point. */
+  function place([nx, ny]: [number, number]): [number, number] {
+    return [
+      viewport.cx + ((nx - 0.5) * side) / canvasW,
+      viewport.cy + ((ny - 0.5) * side) / canvasH,
+    ];
+  }
+
+  /** Rotate in pixel space so non-square canvases don't shear the map. */
+  function rotate(pts: [number, number][]): [number, number][] {
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
+    return pts.map(([x, y]) => {
+      const dx = (x - viewport.cx) * canvasW;
+      const dy = (y - viewport.cy) * canvasH;
+      return [
+        viewport.cx + (dx * cos - dy * sin) / canvasW,
+        viewport.cy + (dx * sin + dy * cos) / canvasH,
+      ];
+    });
+  }
 
   function projectPoint(lng: number, lat: number): [number, number] {
     const { x, y } = webMercator(lat, lng);
@@ -31,22 +59,22 @@ export function projectGeometry(
   const roads: ProjectedRoad[] = geom.roads.map((r) => {
     const projected = projectLine(r.points);
     const simplified = simplifyLine(projected, tolerance);
-    return { class: r.class, points: simplified, name: r.name };
+    return { class: r.class, points: simplified.map(place), name: r.name };
   });
 
   const water: ProjectedPolygon[] = geom.water.map((p) => ({
-    points: simplifyLine(projectLine(p.points), tolerance),
-    holes: p.holes?.map((h) => simplifyLine(projectLine(h), tolerance)),
+    points: simplifyLine(projectLine(p.points), tolerance).map(place),
+    holes: p.holes?.map((h) => simplifyLine(projectLine(h), tolerance).map(place)),
     name: p.name,
   }));
 
   const waterways: [number, number][][] = geom.waterways.map((w) =>
-    simplifyLine(projectLine(w), tolerance)
+    simplifyLine(projectLine(w), tolerance).map(place)
   );
 
   const parks: ProjectedPolygon[] = geom.parks.map((p) => ({
-    points: simplifyLine(projectLine(p.points), tolerance),
-    holes: p.holes?.map((h) => simplifyLine(projectLine(h), tolerance)),
+    points: simplifyLine(projectLine(p.points), tolerance).map(place),
+    holes: p.holes?.map((h) => simplifyLine(projectLine(h), tolerance).map(place)),
     name: p.name,
   }));
 
@@ -56,14 +84,14 @@ export function projectGeometry(
   // positions as the bbox center; refine in a later task if needed.)
   const labels: ProjectedLabel[] = geom.labels.map((l) => {
     if (l.class === "place") {
-      const [cx, cy] = projectPoint((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2);
+      const [cx, cy] = place(projectPoint((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2));
       return { text: l.text, x: cx, y: cy, class: "place" };
     }
     // Road label: find the road with this name, take its midpoint.
     const road = geom.roads.find((r) => r.name === l.text);
     if (road && road.points.length > 0) {
       const mid = road.points[Math.floor(road.points.length / 2)];
-      const [x, y] = projectPoint(mid[0], mid[1]);
+      const [x, y] = place(projectPoint(mid[0], mid[1]));
       return { text: l.text, x, y, class: "road" };
     }
     return { ...l };
@@ -71,20 +99,18 @@ export function projectGeometry(
 
   // Rotation: rotate every projected point around the viewport center.
   if (rotation !== 0) {
-    for (const r of roads) r.points = rotatePoints(r.points, viewport.cx, viewport.cy, rotation);
+    for (const r of roads) r.points = rotate(r.points);
     for (const w of water) {
-      w.points = rotatePoints(w.points, viewport.cx, viewport.cy, rotation);
-      if (w.holes) w.holes = w.holes.map((h) => rotatePoints(h, viewport.cx, viewport.cy, rotation));
+      w.points = rotate(w.points);
+      if (w.holes) w.holes = w.holes.map(rotate);
     }
-    for (let i = 0; i < waterways.length; i++) {
-      waterways[i] = rotatePoints(waterways[i], viewport.cx, viewport.cy, rotation);
-    }
+    for (let i = 0; i < waterways.length; i++) waterways[i] = rotate(waterways[i]);
     for (const p of parks) {
-      p.points = rotatePoints(p.points, viewport.cx, viewport.cy, rotation);
-      if (p.holes) p.holes = p.holes.map((h) => rotatePoints(h, viewport.cx, viewport.cy, rotation));
+      p.points = rotate(p.points);
+      if (p.holes) p.holes = p.holes.map(rotate);
     }
     for (const l of labels) {
-      [l.x, l.y] = rotatePoints([[l.x, l.y]], viewport.cx, viewport.cy, rotation)[0];
+      [l.x, l.y] = rotate([[l.x, l.y]])[0];
     }
   }
 

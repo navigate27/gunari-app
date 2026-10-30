@@ -109,7 +109,7 @@ export function renderMap(
   // 5. Labels (when input.labels)
   if (input.labels) {
     ctx.fillStyle = palette.labelColor;
-    const size = Math.max(10, canvasW * 0.018);
+    const size = Math.max(10, Math.min(canvasW, canvasH) * 0.018);
     ctx.font = `400 ${size}px "Geist", sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";

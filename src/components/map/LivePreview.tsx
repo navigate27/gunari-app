@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { renderScaffold, ARTWORK_W, ARTWORK_H } from "@gunari/core";
+import { renderScaffold, FORMATS } from "@gunari/core";
 import type { MapPrintSceneData, ProjectedMapGeometry } from "@gunari/scene-mapprint";
 import type { MapPrintInput } from "@/hooks/useMapPrintState";
 import { buildMapScaffoldInput } from "@/lib/render/map-scaffold";
 import { diagonalClipPath, easeInOutCubic } from "@/lib/render/transitions";
 
 const FALLBACK_W = 540;
+const MAX_CARD_W = { story: 504, square: 540, landscape: 720 } as const;
 const THEME_WIPE_MS = 800;
 const CHANGE_FADE_MS = 400;
 
@@ -36,6 +37,9 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
   const animRef = React.useRef(0);
   const prevRef = React.useRef<{ input: MapPrintInput; data: MapPrintSceneData | null } | null>(null);
   const [pixelW, setPixelW] = React.useState(0);
+  const format = FORMATS[input.format];
+  const formatRef = React.useRef(input.format);
+  formatRef.current = input.format;
 
   // Size the backing store to the displayed size in device pixels, so the
   // preview stays sharp on high-density screens instead of being upscaled.
@@ -44,7 +48,7 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
     if (!el) return;
     const measure = () => {
       const dpr = window.devicePixelRatio || 1;
-      setPixelW(Math.min(ARTWORK_W, Math.round(el.clientWidth * dpr)));
+      setPixelW(Math.min(FORMATS[formatRef.current].w, Math.round(el.clientWidth * dpr)));
     };
     measure();
     if (typeof ResizeObserver === "undefined") return;
@@ -58,12 +62,12 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
     const overlay = overlayRef.current;
     if (!canvas) return;
     const w = pixelW || FALLBACK_W;
-    const h = Math.round((w * ARTWORK_H) / ARTWORK_W);
+    const h = Math.round((w * format.h) / format.w);
 
     // Snapshot the frame being replaced before the canvas is repainted.
     const prev = prevRef.current;
     let transition: Transition | null = null;
-    if (prev && overlay && canvas.width === w && !prefersReducedMotion()) {
+    if (prev && overlay && prev.input.format === input.format && canvas.width === w && !prefersReducedMotion()) {
       if (prev.input.style !== input.style) transition = "wipe";
       else if (
         prev.data !== data ||
@@ -110,25 +114,29 @@ export function LivePreview({ input, data, geometry, loading }: LivePreviewProps
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, w, h);
-    ctx.scale(w / ARTWORK_W, w / ARTWORK_W);
+    ctx.scale(w / format.w, w / format.w);
     if (!geometry || !data) {
       ctx.fillStyle = "#1a1b1f";
-      ctx.fillRect(0, 0, ARTWORK_W, ARTWORK_H);
+      ctx.fillRect(0, 0, format.w, format.h);
       return;
     }
     renderScaffold(ctx, buildMapScaffoldInput(input, geometry));
-  }, [input, data, geometry, pixelW]);
+  }, [input, data, geometry, pixelW, format]);
 
   React.useEffect(() => () => cancelAnimationFrame(animRef.current), []);
 
   return (
-    <div className="relative mx-auto w-full max-w-[504px]">
+    <div
+      className="relative mx-auto w-full transition-[max-width] duration-500 ease-out"
+      style={{ maxWidth: MAX_CARD_W[input.format] }}
+    >
       <motion.div
         ref={cardRef}
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative aspect-[9/16] overflow-hidden rounded-[20px] border border-line shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]"
+        style={{ aspectRatio: `${format.w} / ${format.h}`, transition: "aspect-ratio 0.5s ease-out" }}
+        className="relative overflow-hidden rounded-[20px] border border-line shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)]"
       >
         <canvas
           ref={canvasRef}
