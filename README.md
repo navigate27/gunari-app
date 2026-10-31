@@ -16,7 +16,7 @@ Built as a client-side-only MVP: no database, no auth, no backend. All astronomy
 - **Astronomy:** Astronomy Engine + a filtered Hipparcos star catalog
 - **Rendering:** HTML5 Canvas API (pixel-perfect PNG export at 1080×1920)
 - **Location:** Photon geocoding (OpenStreetMap data, no API key)
-- **Map data:** OpenStreetMap via public Overpass servers (Map Print), fetched through a cached `/api/osm` route
+- **Map data:** OpenStreetMap as Protomaps PMTiles vector tiles (Map Print), with a cached Overpass route (`/api/osm`) as the fallback
 - **Hosting:** Vercel
 
 ## Getting started
@@ -30,7 +30,7 @@ App runs at http://localhost:7842.
 
 ## Environment variables
 
-No environment variables are required. Location search uses Photon and Map Print uses Overpass, both public OpenStreetMap services that need no key. Photon is called from the browser; Overpass is called through the app's `/api/osm` route, which caches results (in memory, plus CDN headers) so repeat views don't hit the shared servers, and the browser falls back to Overpass directly if the route is unavailable.
+No environment variables are required in development. Location search uses Photon and Map Print uses Overpass, both public OpenStreetMap services that need no key. Photon is called from the browser; Overpass is called through the app's `/api/osm` route, which caches results (in memory, plus CDN headers) so repeat views don't hit the shared servers, and the browser falls back to Overpass directly if the route is unavailable.
 
 Optionally set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) so share links and the sitemap use your own domain.
 
@@ -92,3 +92,16 @@ tech-stack          # locked tech stack
 ## Philosophy
 
 Gunari is not about stars. It is about memories. The stars simply help people revisit the moments that shaped their lives.
+
+### Map Print tiles (Protomaps)
+
+Map Print reads pre-built vector tiles from a PMTiles file over HTTP range requests, so panning and zooming only fetch a few small tiles. If no tile source is set, or the tiles fail or come back empty, it falls back to the cached Overpass route above.
+
+- `NEXT_PUBLIC_PMTILES_URL` is the URL of the PMTiles archive. In development it defaults to Protomaps' public demo file; the demo file is not for production, so set this before deploying.
+- To host your own, cut a region out of a daily build (get one from <https://maps.protomaps.com/builds/>) and upload it to storage that allows range requests and CORS (Cloudflare R2 is the usual choice; allow `GET` and `HEAD`, the `range` and `if-match` request headers, and expose `etag`):
+
+```bash
+pmtiles extract https://build.protomaps.com/YYYYMMDD.pmtiles region.pmtiles --bbox=MIN_LON,MIN_LAT,MAX_LON,MAX_LAT --maxzoom=15
+```
+
+The data is OpenStreetMap (ODbL), so keep the attribution on the page.

@@ -163,13 +163,20 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
     }
   }
 
-  // Sort roads by class so the renderer draws motorways last (on top).
-  roads.sort((a, b) => ROAD_CLASSES.indexOf(a.class) - ROAD_CLASSES.indexOf(b.class));
+  sortRoadsByClass(roads);
+  return { bbox, roads, water, waterways, parks, built, green, labels, pois: selectPois(pois) };
+}
 
-  // One place per name and kind, capped per kind, rarer kinds first.
+/** Draw order: motorways last, so they end up on top. */
+export function sortRoadsByClass(roads: Road[]): void {
+  roads.sort((a, b) => ROAD_CLASSES.indexOf(a.class) - ROAD_CLASSES.indexOf(b.class));
+}
+
+/** One place per name and kind, capped per kind, rarer kinds first. */
+export function selectPois(pois: Poi[]): Poi[] {
   const seen = new Set<string>();
   const perKind = new Map<PlaceCategory, number>();
-  const kept = pois
+  return [...pois]
     .sort((a, b) => POI_PRIORITY.indexOf(a.category) - POI_PRIORITY.indexOf(b.category))
     .filter((p) => {
       const key = `${p.category}:${p.name}`;
@@ -180,6 +187,4 @@ export function parseOsm(json: OsmResponse, bbox: BBox): MapGeometry {
       perKind.set(p.category, n + 1);
       return true;
     });
-
-  return { bbox, roads, water, waterways, parks, built, green, labels, pois: kept };
 }

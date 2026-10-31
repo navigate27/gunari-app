@@ -3,6 +3,7 @@ export * from "./interpret/parse";
 export * from "./data/query";
 export * from "./data/overpass";
 export * from "./data/load-osm";
+export * from "./data/tiles";
 export * from "./data/cache";
 export * from "./projection/viewport";
 export * from "./projection/pan";

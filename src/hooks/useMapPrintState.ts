@@ -14,6 +14,7 @@ import {
   type ProjectedMapGeometry,
 } from "@gunari/scene-mapprint";
 import { pickRandomPair } from "@/lib/content/pairs";
+import "@/lib/map-tiles";
 
 export type MapPrintInput = SceneInput & {
   title: string;

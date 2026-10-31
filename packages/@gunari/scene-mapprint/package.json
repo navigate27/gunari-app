@@ -12,7 +12,10 @@
   "dependencies": {
     "@gunari/core": "*",
     "simplify-geometry": "^0.0.2",
-    "@turf/bbox-clip": "^7.0.0"
+    "@turf/bbox-clip": "^7.0.0",
+    "pmtiles": "^4.5.0",
+    "@mapbox/vector-tile": "^3.0.0",
+    "pbf": "^5.1.2"
   },
   "devDependencies": {
     "typescript": "^5.7.0",

@@ -3,7 +3,8 @@ import type { BBox, MapGeometry } from "./interpret/types";
 import type { ProjectedMapGeometry } from "./projection/types";
 import { OverpassError } from "./data/overpass";
 import { loadOsm } from "./data/load-osm";
-import { parseOsm, type OsmResponse } from "./interpret/parse";
+import { getTilesSource, loadTileGeometry } from "./data/tiles";
+import { parseOsm } from "./interpret/parse";
 import { bboxForZoom } from "./projection/viewport";
 import { projectGeometry } from "./projection/project";
 import { renderMap } from "./render/render";
@@ -36,6 +37,24 @@ function hasFeatures(g: MapGeometry): boolean {
   return g.roads.length + g.water.length + g.waterways.length + g.parks.length + g.built.length > 0;
 }
 
+/** Pre-built tiles when a source is set (fast), Overpass otherwise or when the tiles come up empty. */
+async function fetchGeometry(
+  bbox: BBox,
+  zoom: SceneInput["zoom"],
+  signal: AbortSignal,
+  options: { pois: boolean }
+): Promise<MapGeometry> {
+  if (getTilesSource()) {
+    try {
+      const tiled = await loadTileGeometry(bbox, zoom, signal, options);
+      if (hasFeatures(tiled)) return tiled;
+    } catch (err) {
+      if (err instanceof OverpassError && err.message === "aborted") throw err;
+    }
+  }
+  return parseOsm(await loadOsm(bbox, signal, options), bbox);
+}
+
 export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
   /** Synchronous lookup of already-loaded data, so cached views show without waiting. */
   peek(input: SceneInput): MapPrintSceneData | null;
@@ -65,17 +84,16 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
     // An empty entry may be left over from a failed fetch, so refetch it.
     if (cached && hasFeatures(cached)) return { geometry: cached, bbox, zoom: input.zoom };
 
-    let osm: OsmResponse;
+    let geometry: MapGeometry;
     try {
       // Named places only make sense up close; the city view would be flooded.
-      osm = await loadOsm(bbox, signal, { pois: input.zoom !== "city" });
+      geometry = await fetchGeometry(bbox, input.zoom, signal, { pois: input.zoom !== "city" });
     } catch (err) {
       if (err instanceof OverpassError && err.message === "aborted") throw err;
       // Not cached: a transient failure must not stick as a permanently blank map.
       const empty: MapGeometry = { bbox, roads: [], water: [], waterways: [], parks: [], built: [], green: [], pois: [], labels: [] };
       return { geometry: empty, bbox, zoom: input.zoom };
     }
-    const geometry = parseOsm(osm, bbox);
     await cache.setWithPersistence(bbox, geometry);
     return { geometry, bbox, zoom: input.zoom };
   },
