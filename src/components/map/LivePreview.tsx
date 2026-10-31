@@ -254,6 +254,10 @@ export function LivePreview({
 
     const prev = prevRef.current;
     const dataChanged = !!prev && prev.data !== data;
+    const movedPlace =
+      !prev ||
+      prev.input.location.lat !== input.location.lat ||
+      prev.input.location.lng !== input.location.lng;
     prevRef.current = { input, data };
 
     // Snapshot the frame being replaced before the canvas is repainted.
@@ -300,9 +304,10 @@ export function LivePreview({
       }
     }
 
-    // New map data: draw it in, roads tracing out from the centre and the
-    // pin dropping last.
-    if (data && geometry && (dataChanged || (!prev && !skeleton)) && !reduced) {
+    // A new place draws itself in, roads tracing out from the centre and the
+    // pin dropping last. Fresh data for the same place (zooming across a detail
+    // level) just fades over the old frame.
+    if (data && geometry && ((dataChanged && movedPlace) || (!prev && !skeleton)) && !reduced) {
       cancelAnimationFrame(revealRaf.current);
       revealRef.current = 0;
       const start = performance.now();

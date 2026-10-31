@@ -291,6 +291,12 @@ describe("LivePreview", () => {
     mock.mockClear();
     rerender(<LivePreview input={input} data={nextData} geometry={withBox} loading={false} />);
     step(400);
+    expect(mock.mock.calls.filter((c) => c[1].sceneViewport.reveal !== undefined)).toHaveLength(0);
+
+    const elsewhere = { ...input, location: { ...input.location, lat: input.location.lat + 1 } };
+    mock.mockClear();
+    rerender(<LivePreview input={elsewhere} data={{ ...data }} geometry={withBox} loading={false} />);
+    step(400);
     const drawing = mock.mock.calls.filter((c) => c[1].sceneViewport.reveal !== undefined);
     expect(drawing.length).toBeGreaterThan(0);
     expect(drawing.every((c) => c[1].sceneViewport.pinDrop === false)).toBe(true);
