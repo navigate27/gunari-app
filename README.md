@@ -16,7 +16,7 @@ Built as a client-side-only MVP: no database, no auth, no backend. All astronomy
 - **Astronomy:** Astronomy Engine + a filtered Hipparcos star catalog
 - **Rendering:** HTML5 Canvas API (pixel-perfect PNG export at 1080×1920)
 - **Location:** Photon geocoding (OpenStreetMap data, no API key)
-- **Map data:** OpenStreetMap via public Overpass servers (Map Print)
+- **Map data:** OpenStreetMap via public Overpass servers (Map Print), fetched through a cached `/api/osm` route
 - **Hosting:** Vercel
 
 ## Getting started
@@ -30,7 +30,7 @@ App runs at http://localhost:7842.
 
 ## Environment variables
 
-No environment variables are required. Location search uses Photon and Map Print uses Overpass, both public OpenStreetMap services that need no key and are called from the browser.
+No environment variables are required. Location search uses Photon and Map Print uses Overpass, both public OpenStreetMap services that need no key. Photon is called from the browser; Overpass is called through the app's `/api/osm` route, which caches results (in memory, plus CDN headers) so repeat views don't hit the shared servers, and the browser falls back to Overpass directly if the route is unavailable.
 
 Optionally set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) so share links and the sitemap use your own domain.
 

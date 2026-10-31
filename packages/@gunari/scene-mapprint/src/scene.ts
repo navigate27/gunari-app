@@ -1,7 +1,8 @@
 import type { Scene, SceneCapabilities, SceneInput } from "@gunari/core";
 import type { BBox, MapGeometry } from "./interpret/types";
 import type { ProjectedMapGeometry } from "./projection/types";
-import { fetchOsm, OverpassError } from "./data/overpass";
+import { OverpassError } from "./data/overpass";
+import { loadOsm } from "./data/load-osm";
 import { parseOsm, type OsmResponse } from "./interpret/parse";
 import { bboxForZoom } from "./projection/viewport";
 import { projectGeometry } from "./projection/project";
@@ -67,7 +68,7 @@ export const mapPrintScene: Scene<MapPrintSceneData, ProjectedMapGeometry> & {
     let osm: OsmResponse;
     try {
       // Named places only make sense up close; the city view would be flooded.
-      osm = await fetchOsm(bbox, signal, undefined, { pois: input.zoom !== "city" });
+      osm = await loadOsm(bbox, signal, { pois: input.zoom !== "city" });
     } catch (err) {
       if (err instanceof OverpassError && err.message === "aborted") throw err;
       // Not cached: a transient failure must not stick as a permanently blank map.
