@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { VectorTile } from "@mapbox/vector-tile";
 import { PbfReader } from "pbf";
 import { addTile, emptyParts, finishTiles, tilesForBBox, type TileLike } from "../src/data/tiles";
@@ -142,5 +142,31 @@ describe("finishTiles", () => {
 describe("tile decoding libraries", () => {
   it("read an empty tile without throwing", () => {
     expect(new VectorTile(new PbfReader(new Uint8Array(0))).layers).toEqual({});
+  });
+});
+
+describe("loadTileGeometry with a tile template", () => {
+  it("fetches each covering tile from the template and treats missing tiles as empty", async () => {
+    const { loadTileGeometry } = await import("../src/data/tiles");
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(new Uint8Array(0)))
+      .mockResolvedValue(new Response(null, { status: 404 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const bbox: [number, number, number, number] = [120.97, 14.59, 121.0, 14.62];
+    const out = await loadTileGeometry(bbox, "district", new AbortController().signal, {}, "https://t.example/{z}/{x}/{y}.mvt?key=k");
+    vi.unstubAllGlobals();
+    expect(fetchMock.mock.calls.length).toBe(tilesForBBox(bbox, 15).length);
+    expect(fetchMock.mock.calls[0][0]).toMatch(/^https:\/\/t\.example\/15\/\d+\/\d+\.mvt\?key=k$/);
+    expect(out.roads).toEqual([]);
+  });
+
+  it("reports a failing tile server so the scene can fall back", async () => {
+    const { loadTileGeometry } = await import("../src/data/tiles");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 403 })));
+    await expect(
+      loadTileGeometry([120.9, 14.5, 120.901, 14.501], "neighborhood", new AbortController().signal, {}, "https://t.example/{z}/{x}/{y}.mvt")
+    ).rejects.toThrow(/tiles failed/);
+    vi.unstubAllGlobals();
   });
 });

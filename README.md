@@ -16,7 +16,7 @@ Built as a client-side-only MVP: no database, no auth, no backend. All astronomy
 - **Astronomy:** Astronomy Engine + a filtered Hipparcos star catalog
 - **Rendering:** HTML5 Canvas API (pixel-perfect PNG export at 1080×1920)
 - **Location:** Photon geocoding (OpenStreetMap data, no API key)
-- **Map data:** OpenStreetMap as Protomaps PMTiles vector tiles (Map Print), with a cached Overpass route (`/api/osm`) as the fallback
+- **Map data:** OpenStreetMap via Overpass (cached `/api/osm` route), or Protomaps vector tiles when `NEXT_PUBLIC_PMTILES_URL` is set (Map Print)
 - **Hosting:** Vercel
 
 ## Getting started
@@ -38,16 +38,18 @@ Map data is © OpenStreetMap contributors, credited on the `/map` page.
 
 ### Map Print tiles (Protomaps)
 
-Map Print reads pre-built vector tiles from a PMTiles file over HTTP range requests, so panning and zooming only fetch a few small tiles. If no tile source is set, or the tiles fail or come back empty, it falls back to the cached Overpass route above.
+Map Print can read pre-built vector tiles, so panning and zooming only fetch a few small tiles. With no tile source set, or when the tiles fail or come back empty, it uses the cached Overpass route above.
 
-- `NEXT_PUBLIC_PMTILES_URL` is the URL of the PMTiles archive. In development it defaults to Protomaps' public demo file; the demo file is not for production, so set this before deploying.
-- To host your own, cut a region out of a daily build (get one from <https://maps.protomaps.com/builds/>) and upload it to storage that allows range requests and CORS (Cloudflare R2 is the usual choice; allow `GET` and `HEAD`, the `range` and `if-match` request headers, and expose `etag`):
+Set `NEXT_PUBLIC_PMTILES_URL` to one of:
+
+- A **tile template** such as `https://api.protomaps.com/tiles/v4/{z}/{x}/{y}.mvt?key=YOUR_KEY` (the Protomaps API; get a key at <https://protomaps.com>).
+- A **PMTiles archive** you host, read with range requests. Cut a region from a daily build (<https://maps.protomaps.com/builds/>) and upload it to storage that allows CORS (Cloudflare R2 is the usual choice; allow `GET` and `HEAD`, the `range` and `if-match` request headers, and expose `etag`):
 
 ```bash
 pmtiles extract https://build.protomaps.com/YYYYMMDD.pmtiles region.pmtiles --bbox=MIN_LON,MIN_LAT,MAX_LON,MAX_LAT --maxzoom=15
 ```
 
-The data is OpenStreetMap (ODbL), so keep the attribution on the page.
+Protomaps' public demo file (`demo-bucket.protomaps.com/v4.pmtiles`) is unreliable and has no CORS headers, so don't use it. The data is OpenStreetMap (ODbL), so keep the attribution on the page.
 
 ## Star catalogs
 

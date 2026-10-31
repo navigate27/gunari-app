@@ -8,7 +8,10 @@ import { OverpassError } from "./overpass";
 
 let tilesUrl: string | null = null;
 
-/** Point the map at a Protomaps PMTiles archive, or pass null to use Overpass only. */
+/**
+ * Point the map at vector tiles: a PMTiles archive URL, or a template containing {z}/{x}/{y}
+ * (for example the Protomaps API). Pass null to use Overpass only.
+ */
 export function setTilesSource(url: string | null | undefined): void {
   tilesUrl = url || null;
 }
@@ -193,6 +196,14 @@ export function finishTiles(bbox: BBox, parts: TileParts): MapGeometry {
   return { bbox, ...parts, labels, pois: selectPois(parts.pois) };
 }
 
+async function readTile(url: string, z: number, x: number, y: number, signal: AbortSignal): Promise<ArrayBuffer | undefined> {
+  if (!url.includes("{z}")) return (await archive(url).getZxy(z, x, y, signal))?.data;
+  const res = await fetch(url.replace("{z}", String(z)).replace("{x}", String(x)).replace("{y}", String(y)), { signal });
+  if (res.status === 404 || res.status === 204) return undefined;
+  if (!res.ok) throw new Error(`tile ${z}/${x}/${y} returned ${res.status}`);
+  return res.arrayBuffer();
+}
+
 /** Read every tile that covers the bbox from a PMTiles archive and build the map geometry. */
 export async function loadTileGeometry(
   bbox: BBox,
@@ -204,15 +215,14 @@ export async function loadTileGeometry(
   if (!url) throw new OverpassError("no tile source");
   if (signal.aborted) throw new OverpassError("aborted");
   const z = TILE_ZOOM[zoom];
-  const source = archive(url);
   try {
     const tiles = await Promise.all(
-      tilesForBBox(bbox, z).map(async ({ x, y }) => ({ x, y, res: await source.getZxy(z, x, y, signal) }))
+      tilesForBBox(bbox, z).map(async ({ x, y }) => ({ x, y, data: await readTile(url, z, x, y, signal) }))
     );
     const parts = emptyParts();
     for (const t of tiles) {
-      if (!t.res) continue;
-      const tile = new VectorTile(new PbfReader(new Uint8Array(t.res.data)));
+      if (!t.data) continue;
+      const tile = new VectorTile(new PbfReader(new Uint8Array(t.data)));
       addTile(parts, tile as unknown as TileLike, z, t.x, t.y, Boolean(options.pois));
     }
     return finishTiles(bbox, parts);
