@@ -23,6 +23,7 @@ vi.mock("@/hooks/useMapPrintState", async (importOriginal) => ({
     geometry: null,
     loading: false,
     error: null,
+    retry: vi.fn(),
   }),
 }));
 vi.mock("@/lib/render/png-map", () => ({

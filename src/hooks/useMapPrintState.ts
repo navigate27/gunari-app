@@ -84,6 +84,7 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
   const [data, setData] = React.useState<MapPrintSceneData | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const [attempt, setAttempt] = React.useState(0);
 
   const [pan, setPanState] = React.useState({ x: 0, y: 0 });
   const panRef = React.useRef(pan);
@@ -138,7 +139,7 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
       abortRef.current?.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input.location.lat, input.location.lng, input.zoom]);
+  }, [input.location.lat, input.location.lng, input.zoom, attempt]);
 
   // Geometry derived from data + rotation + layout (recomputed on each render).
   const geometry: ProjectedMapGeometry | null = React.useMemo(() => {
@@ -227,5 +228,6 @@ export function useMapPrintState(initial?: Partial<MapPrintInput>) {
     geometry,
     loading,
     error,
+    retry: () => setAttempt((n) => n + 1),
   };
 }

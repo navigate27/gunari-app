@@ -76,12 +76,33 @@ describe("fetchOsm", () => {
     expect(result).toEqual({ elements: [] });
   });
 
-  it("throws OverpassError when all endpoints fail", async () => {
+  it("throws OverpassError when all endpoints fail, after one retry round", async () => {
+    vi.useFakeTimers();
     mockFetch.mockResolvedValue(failResponse(500));
-    await expect(
-      fetchOsm(bbox, new AbortController().signal)
-    ).rejects.toBeInstanceOf(OverpassError);
-    expect(mockFetch).toHaveBeenCalledTimes(3);
+    const promise = fetchOsm(bbox, new AbortController().signal);
+    promise.catch(() => {});
+    await vi.advanceTimersByTimeAsync(2000);
+    await expect(promise).rejects.toBeInstanceOf(OverpassError);
+    expect(mockFetch).toHaveBeenCalledTimes(6);
+  });
+
+  it("retries once and returns the data when the second round succeeds", async () => {
+    vi.useFakeTimers();
+    mockFetch.mockResolvedValueOnce(failResponse(429));
+    mockFetch.mockResolvedValueOnce(failResponse(429));
+    mockFetch.mockResolvedValueOnce(failResponse(429));
+    mockFetch.mockResolvedValue(okResponse({ elements: [{ id: 9 }] }));
+    const promise = fetchOsm(bbox, new AbortController().signal);
+    await vi.advanceTimersByTimeAsync(2000);
+    await expect(promise).resolves.toEqual({ elements: [{ id: 9 }] });
+  });
+
+  it("does not let a 200 that says Overpass ran out of time win the race", async () => {
+    mockFetch.mockResolvedValueOnce(okResponse({ elements: [], remark: "runtime error: Query timed out" }));
+    mockFetch.mockResolvedValueOnce(okResponse({ elements: [{ id: 2 }] }));
+    mockFetch.mockResolvedValueOnce(okResponse({ elements: [{ id: 3 }] }));
+    const result = await fetchOsm(bbox, new AbortController().signal);
+    expect(result.elements).toEqual([{ id: 2 }]);
   });
 
   it("throws an error whose message contains 'abort' when the caller signal is already aborted", async () => {
@@ -137,8 +158,8 @@ describe("fetchOsm", () => {
     promise.catch(() => {});
     // Advance past the per-endpoint 10s timeout — all 3 controllers abort,
     // all fetches reject, Promise.any rejects, fetchOsm throws OverpassError.
-    await vi.advanceTimersByTimeAsync(10_000);
+    await vi.advanceTimersByTimeAsync(10_000 + 1500 + 10_000);
     await expect(promise).rejects.toBeInstanceOf(OverpassError);
-    expect(mockFetch).toHaveBeenCalledTimes(3);
+    expect(mockFetch).toHaveBeenCalledTimes(6);
   });
 });

@@ -9,6 +9,7 @@ export const OVERPASS_ENDPOINTS = [
 ] as const;
 
 const CLIENT_TIMEOUT_MS = 10_000;
+const RETRY_DELAY_MS = 1500;
 
 export class OverpassError extends Error {
   constructor(message: string, readonly statusCode?: number) {
@@ -25,6 +26,22 @@ export class OverpassError extends Error {
  * OverpassError.
  */
 export async function fetchOsm(
+  bbox: BBox,
+  signal: AbortSignal,
+  endpoints: readonly string[] = OVERPASS_ENDPOINTS,
+  queryOptions: QueryOptions = {}
+): Promise<OsmResponse> {
+  try {
+    return await fetchOnce(bbox, signal, endpoints, queryOptions);
+  } catch (err) {
+    if (signal.aborted) throw err;
+    // Mirrors rate-limit bursts of requests; one pause usually clears it.
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+    return fetchOnce(bbox, signal, endpoints, queryOptions);
+  }
+}
+
+async function fetchOnce(
   bbox: BBox,
   signal: AbortSignal,
   endpoints: readonly string[] = OVERPASS_ENDPOINTS,
@@ -58,7 +75,13 @@ export async function fetchOsm(
       if (!res.ok) {
         throw new OverpassError(`${url} returned ${res.status}`, res.status);
       }
-      return (await res.json()) as OsmResponse;
+      const body = (await res.json()) as OsmResponse & { remark?: string };
+      // Overpass answers 200 with a remark when it ran out of time or memory,
+      // and the elements it did return are partial or empty.
+      if (body.remark && /runtime error|timed out|out of memory/i.test(body.remark)) {
+        throw new OverpassError(`${url} gave up: ${body.remark}`);
+      }
+      return body;
     } finally {
       clearTimeout(timeout);
     }

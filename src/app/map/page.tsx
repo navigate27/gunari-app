@@ -16,7 +16,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { downloadMapPng, shareMapPng } from "@/lib/render/png-map";
 
 export default function MapPage() {
-  const { input, update, updateLocation, randomize, pan, setPan, commitPan, data, geometry, loading } =
+  const { input, update, updateLocation, randomize, pan, setPan, commitPan, data, geometry, loading, error, retry } =
     useMapPrintState();
   const [generating, setGenerating] = React.useState(false);
   const [flash, setFlash] = React.useState<string | null>(null);
@@ -121,7 +121,16 @@ export default function MapPage() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const preview = (
-    <LivePreview
+    <>
+      {error && !loading && (
+        <div role="alert" className="mx-auto mb-3 flex w-full max-w-md items-center justify-between gap-3 rounded-lg border border-white/15 bg-surface-raised px-4 py-3 text-sm text-mist">
+          <span>The map data didn&apos;t load.</span>
+          <button type="button" onClick={retry} className="cursor-pointer text-gold underline underline-offset-4">
+            Try again
+          </button>
+        </div>
+      )}
+      <LivePreview
       input={input}
       data={data}
       geometry={geometry}
@@ -132,6 +141,7 @@ export default function MapPage() {
       onPinChange={(pin) => update("pin", pin)}
       onZoom={(km) => update("viewKm", km)}
     />
+    </>
   );
 
   const editor = (
